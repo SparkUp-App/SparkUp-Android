@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:toasty_box/toasty_box.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -195,7 +198,7 @@ Widget _buildDatePicker(String label, String key) {
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildTextField('個人簡介', 'bio', maxLines: 3),
+          _buildTextField('個人簡介', 'bio', maxLines: 4),
           Text(
             "My Details",
             style: TextStyle(
@@ -226,7 +229,16 @@ Widget _buildDatePicker(String label, String key) {
   }
 
   void _saveProfile() {
+    if(_profileData['name']==null||_profileData['nickname']==null||_profileData['gender']==null||_profileData['phone']==null){
+      ToastService.showErrorToast(
+        context,
+        length: ToastLength.medium,
+        expandedHeight: 100,
+        message: "有些必填資訊未如實填寫",
+      );
+    }
     // TODO: 跟server做上傳資料，上傳資料格式在_profileData
+    
     _profileData.forEach((key, value) {
       print('Key: $key, Value: $value');
     });
