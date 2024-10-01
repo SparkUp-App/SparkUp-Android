@@ -10,7 +10,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  Map<String, String?> _profileData = {
+  final Map<String, String?> _profileData = {
     'bio': null,
     'name': null,
     'nickname': null,
@@ -25,14 +25,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'interests': null,
   };
 
-  Map<String, List<String>> _dropdownOptions = {
+  final Map<String, List<String>> _dropdownOptions = {
     'gender': ['Male', 'Female', 'Non-Binary'],
     'marital_status': ['Single', 'Married'],
     'zodiac_signs': ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'],
     'eat_habit': ['meat-based', 'Vegan', 'Lacto-vegetarian'],
   };
 
-  List<String> _selectedTags = [];
+  final List<String> _selectedTags = [];
   final List<String> _availableTags = [
     'Music', 'Traval', 'Photography', 'Reading', 'Sports', 'Draw', 'Dancing','Fashion','Movie'
   ];
@@ -43,10 +43,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 140,
             child: Text(
-              '興趣標籤',
+              'Interesting Tags',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
@@ -58,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   spacing: 8,
                   runSpacing: 4,
                   children: _selectedTags.map((tag) => Chip(
-                    label: Text('#'+tag),
+                    label: Text('#$tag'),
                     onDeleted: () {
                       setState(() {
                         _selectedTags.remove(tag);
@@ -68,11 +68,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     backgroundColor: Colors.grey[200],
                   )).toList(),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 InkWell(
                   onTap: () => _showTagSelectionDialog(),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
@@ -100,7 +100,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('選擇你的興趣'),
+              title: const Text('Choose Your Interesting'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -108,7 +108,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     spacing: 8.0,
                     children: _availableTags.map((String tag) {
                       return FilterChip(
-                        label: Text("#"+tag),
+                        label: Text("#$tag"),
                         selected: _selectedTags.contains(tag),
                         onSelected: (bool selected) {
                           setState(() {
@@ -129,7 +129,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('確定'),
+                  child: const Text('Confirm'),
                   onPressed: () {
                     this.setState(() {
                       _profileData['interests'] = _selectedTags.join(',');
@@ -158,10 +158,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: RichText(
               text: TextSpan(
                 text: label,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(color:Colors.black,fontSize: 16, fontWeight: FontWeight.bold),
                 children: [
                   if (isRequired)
-                    TextSpan(
+                    const TextSpan(
                       text: ' *',
                       style: TextStyle(color: Colors.red, fontSize: 16),
                     ),
@@ -173,11 +173,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: DropdownButtonFormField<String>(
               value: _profileData[key],
               isExpanded: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               ),
-              hint: Text('請選擇'),
+              hint: const Text('Select Here', style: TextStyle(color: Colors.black26),),
               items: _dropdownOptions[key]?.map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -208,7 +208,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             width: 140,
             child: Text(
               label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
@@ -232,9 +232,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: IgnorePointer( //忽略點擊的textfield，只做顯示
                 child: TextFormField(
                   controller: controller,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    hintText: "xxxx/xx/xx",
+                    hintStyle: TextStyle(color: Colors.black26),
+                    icon: Icon(Icons.edit_calendar)
                   ),
                 ),
               ),
@@ -256,10 +259,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: RichText(
               text: TextSpan(
                 text: label,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                 children: [
                   if (isRequired)
-                    TextSpan(
+                    const TextSpan(
                       text: ' *',
                       style: TextStyle(color: Colors.red, fontSize: 16),
                     ),
@@ -268,20 +271,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
           Expanded(
-            child: TextFormField(
+            child: TextField(
               maxLines: maxLines,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                hintText: "Enter $label here",
+                hintStyle: const TextStyle(color: Colors.black26),
               ),
-              validator: isRequired
-                  ? (value) {
-                if (value == null || value.isEmpty) {
-                  return '請輸入$label';
-                }
-                return null;
-              }
-                  : null,
               onChanged: (value) {
                 setState(() {
                   _profileData[key] = value;
@@ -297,9 +294,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
-          Text(
+          const Text(
             "About Me",
             style: TextStyle(
               color: Colors.black,
@@ -307,7 +304,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
+          const Text(
             "Make it easy for others to get a sense of who you are",
             style: TextStyle(
               color: Colors.black26,
@@ -315,8 +312,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildTextField('個人簡介', 'bio', maxLines: 4),
-          Text(
+          _buildTextField('Bio', 'bio', maxLines: 4),
+          const Text(
             "My Details",
             style: TextStyle(
               color: Colors.black,
@@ -324,24 +321,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildTextField('姓名', 'name', isRequired: true),
-          _buildTextField('暱稱', 'nickname',isRequired: true),
-          _buildTextField('電話', 'phone', isRequired: true),
-          _buildDropdown('性別', 'gender', isRequired:true),
-          _buildDatePicker('出生日期', 'birth_date'),
-          _buildDropdown('飲食習慣', 'eat_habit'),
-          _buildTextField('職業', 'career'),
-          _buildTextField('學校', 'school'),
-          _buildTextField('居住地', 'home'),
-          _buildDropdown('婚姻狀況', 'marital_status'),
-          _buildDropdown('星座', 'zodiac_signs'),
+          _buildTextField('Name', 'name', isRequired: true),
+          _buildTextField('Nick Name', 'nickname',isRequired: true),
+          _buildTextField('Phone', 'phone', isRequired: true),
+          _buildDropdown('Gender', 'gender', isRequired:true),
+          _buildDatePicker('Birthday', 'birth_date'),
+          _buildDropdown('Diet', 'eat_habit'),
+          _buildTextField('Career', 'career'),
+          _buildTextField('School', 'school'),
+          _buildTextField('Address', 'home'),
+          _buildDropdown('Material status', 'marital_status'),
+          _buildDropdown('Zodiac', 'zodiac_signs'),
           _buildTagSelector(),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
-            child: Text('保存'),
             onPressed: _saveProfile,
+            child: const Text('Save'),
           ),
-          SizedBox(height: 30,)
+          const SizedBox(height: 30,)
         ],
       ),
     );
@@ -363,7 +360,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     // TODO: 跟server做上傳資料，上傳資料格式在_profileData
 
     _profileData.forEach((key, value) {
-      print('Key: $key, Value: $value');
+      debugPrint('Key: $key, Value: $value');
     });
   }
 }
