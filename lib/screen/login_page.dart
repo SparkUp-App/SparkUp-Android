@@ -83,40 +83,41 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {
                           isLoading = false;
                         });
-                        
-                        debugPrint("${response["status"]}");
-                        if (response["status"] == "success") {
-                          //TODO Route to home page
-                          //TODO Set up info at home page or here
-                          //Navigator.pushNamed(context, Homepage);
-                          debugPrint("Login success");
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Container(
-                                    alignment: Alignment.center,
-                                    height: 40.0,
-                                    child: const Text("Information"),
-                                  ),
-                                  content: Container(
-                                    alignment: Alignment.center,
-                                    height: 40.0,
-                                    child: Text(
-                                        response["data"]["message"]),
-                                  ),
-                                  actions: [
-                                    Container(
-                                        alignment: Alignment.centerRight,
-                                        height: 40.0,
-                                        child: TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: const Text("OK")))
-                                  ],
-                                );
-                              });
+
+                        if (context.mounted) {
+                          debugPrint("${response["status"]}");
+                          if (response["status"] == "success") {
+                            //TODO Route to home page
+                            //TODO Set up info at home page or here
+                            //Navigator.pushNamed(context, Homepage);
+                            debugPrint("Login success");
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Container(
+                                      alignment: Alignment.center,
+                                      height: 40.0,
+                                      child: const Text("System Message"),
+                                    ),
+                                    content: Container(
+                                      alignment: Alignment.center,
+                                      height: 40.0,
+                                      child: Text(response["data"]["message"]),
+                                    ),
+                                    actions: [
+                                      Container(
+                                          alignment: Alignment.centerRight,
+                                          height: 40.0,
+                                          child: TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text("OK")))
+                                    ],
+                                  );
+                                });
+                          }
                         }
                       },
                       child: const Text(
