@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/const_variable.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 
 class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
+
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
@@ -26,16 +28,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   };
 
   final Map<String, List<String>> _dropdownOptions = {
-    'gender': ['Male', 'Female', 'Non-Binary'],
-    'marital_status': ['Single', 'Married'],
-    'zodiac_signs': ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'],
-    'eat_habit': ['meat-based', 'Vegan', 'Lacto-vegetarian'],
+    'gender': genderList,
+    'marital_status': materialStatue,
+    'zodiac_signs': zodiacSigns,
+    'eat_habit': eatHabit,
   };
 
   final List<String> _selectedTags = [];
-  final List<String> _availableTags = [
-    'Music', 'Traval', 'Photography', 'Reading', 'Sports', 'Draw', 'Dancing','Fashion','Movie'
-  ];
+  final List<String> _availableTags = eventType;
 
   Widget _buildTagSelector() { //整行的顯示
     return Padding(
