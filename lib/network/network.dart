@@ -9,6 +9,7 @@ import "package:spark_up/network/httpprotocol.dart";
 class Network{
   static const baseUrl = "sparkup-9db24d093e0f.herokuapp.com";
   static Network manager = Network();
+  int? userToken;
 
   Future<Map> sendRequest(
     {
@@ -51,6 +52,16 @@ class Network{
       debugPrint("Response Status Code: ${response.statusCode}");
       return {"status" : "faild", "data" : jsonDecode(response.body)};}
     
+  }
+
+  void saveUserToken(int tokenData){
+    userToken = tokenData;
+    return;
+  }
+
+  void deleteUserToken(){
+    userToken = null;
+    return;
   }
 
 }

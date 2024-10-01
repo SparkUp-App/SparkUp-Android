@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (context.mounted) {
                           debugPrint("${response["status"]}");
                           if (response["status"] == "success") {
+                            Network.manager.saveUserToken(response["data"]["user_id"]);
                             Navigator.pushNamed(context, RouteMap.homePage);
                             debugPrint("Login success");
                           } else {

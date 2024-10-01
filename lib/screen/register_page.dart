@@ -112,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           child: TextButton(
                                               onPressed: (){
                                                   if(response["status"] == "success"){
+                                                    Network.manager.saveUserToken(response["data"]["user_id"]);
                                                     Navigator.pop(context);
                                                     Navigator.pushNamed(context, RouteMap.homePage);
                                                   } else{
