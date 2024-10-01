@@ -41,10 +41,11 @@ class Network{
       debugPrint("Error: $e");
     }
 
-    if(response.statusCode == 201){
-      debugPrint("Response: 201");
+    if(response.statusCode == 201 || response.statusCode == 200){
+      debugPrint("Response Status Code: ${response.statusCode}");
       return {"status" : "success", "data" : jsonDecode(response.body)};
     } else {
+      debugPrint("Response Status Code: ${response.statusCode}");
       return {"status" : "faild", "data" : jsonDecode(response.body)};}
     
   }
