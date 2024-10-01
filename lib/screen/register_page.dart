@@ -75,7 +75,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             setState(() {
                               isLoading = true;
                             });
-
+                            
+                            debugPrint("Sending Regist Request");
                             final response = await Network.manager.sendRequest(
                                 method: RequestMethod.post,
                                 path: AuthPath.register,
@@ -83,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   "email": emailController.text,
                                   "password": passwordController.text,
                                 });
+                            debugPrint("Regitst Request Finish");
 
                             setState(() {
                               isLoading = false;
@@ -96,22 +98,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                       title: Container(
                                           height: 40.0,
                                           alignment: Alignment.center,
-                                          child: const Text("Message")),
+                                          child: const Text("System Message")),
                                       content: Container(
                                         height: 40.0,
                                         alignment: Alignment.center,
-                                        child: response["status"] == "faild"
-                                            ? Text(response["data"]["message"])
-                                            : Text(response["data"]),
+                                        child: Text(response["data"]["message"]),
                                       ),
                                       actions: [
                                         Container(
                                           height: 40.0,
                                           alignment: Alignment.bottomRight,
                                           child: TextButton(
-                                              onPressed: () =>{
-                                                  Navigator.pop(context),
-                                                  Navigator.pop(context),
+                                              onPressed: (){
+                                                  if(response["status"] == "success"){
+                                                    Navigator.pop(context);
+                                                    //TODO: Navigate to Home Page
+                                                  } else{
+                                                    Navigator.pop(context);
+                                                  }
                                               },
                                               child: const Text("OK")),
                                         )
