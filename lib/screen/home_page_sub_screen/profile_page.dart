@@ -25,17 +25,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'interests': null,
   };
 
-  List<String> _selectedTags = [];
-  final List<String> _availableTags = [
-    'Music', 'Traval', 'Photography', 'Reading', 'Sports', 'Draw', 'Dancing','Fashion','Movie'
-  ];
-
   Map<String, List<String>> _dropdownOptions = {
     'gender': ['Male', 'Female', 'Non-Binary'],
     'marital_status': ['Single', 'Married'],
     'zodiac_signs': ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'],
     'eat_habit': ['meat-based', 'Vegan', 'Lacto-vegetarian'],
   };
+
+  List<String> _selectedTags = [];
+  final List<String> _availableTags = [
+    'Music', 'Traval', 'Photography', 'Reading', 'Sports', 'Draw', 'Dancing','Fashion','Movie'
+  ];
+
   Widget _buildTagSelector() { //整行的顯示
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -350,7 +351,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if(_profileData['name']==null||
     _profileData['nickname']==null||
     _profileData['gender']==null||
-    _profileData['phone']==null){
+    _profileData['phone']==null
+    ){
       ToastService.showErrorToast(
         context,
         length: ToastLength.medium,
