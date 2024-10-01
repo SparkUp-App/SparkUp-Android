@@ -14,6 +14,7 @@ class _EventShowPageState extends State<EventShowPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             "SparkUp!",
             style: TextStyle(

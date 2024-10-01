@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
+import 'package:spark_up/route.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -112,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                               onPressed: (){
                                                   if(response["status"] == "success"){
                                                     Navigator.pop(context);
-                                                    //TODO: Navigate to Home Page
+                                                    Navigator.pushNamed(context, RouteMap.homePage);
                                                   } else{
                                                     Navigator.pop(context);
                                                   }

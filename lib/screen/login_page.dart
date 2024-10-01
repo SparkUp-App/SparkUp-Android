@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:http/http.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/route.dart";
@@ -87,9 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (context.mounted) {
                           debugPrint("${response["status"]}");
                           if (response["status"] == "success") {
-                            //TODO Route to home page
-                            //TODO Set up info at home page or here
-                            //Navigator.pushNamed(context, Homepage);
+                            Navigator.pushNamed(context, RouteMap.homePage);
                             debugPrint("Login success");
                           } else {
                             showDialog(
