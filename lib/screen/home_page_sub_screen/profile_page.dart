@@ -35,7 +35,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   };
 
 
-  List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
+  final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
   final List<String> _availableInterestTags = eventType;
   //List<String> _selectedSkillTags = [];
 
@@ -83,7 +83,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(
+                    child: const Text(
                       '+',
                       style: TextStyle(
                         color:Colors.grey,
