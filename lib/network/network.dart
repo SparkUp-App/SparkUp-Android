@@ -9,6 +9,7 @@ import "package:spark_up/network/httpprotocol.dart";
 class Network{
   static const baseUrl = "sparkup-9db24d093e0f.herokuapp.com";
   static Network manager = Network();
+  int? userToken;
 
   Future<Map> sendRequest(
     {
@@ -35,18 +36,32 @@ class Network{
       }
     } on TimeoutException catch(e){
       debugPrint("TimeoutException: $e");
+      return {"status":"error", "data" : {"message" : "Timeout Error"}};
     } on SocketException catch(e){
       debugPrint("SocketException: $e");
+      return {"status" : "error", "data" :{"message" : "Socket Error"}};
     } on Error catch(e){
       debugPrint("Error: $e");
+      return {"status" : "error", "data" : {"message" : "Error"}};
     }
 
-    if(response.statusCode == 201){
-      debugPrint("Response: 201");
+    if(response.statusCode == 201 || response.statusCode == 200){
+      debugPrint("Response Status Code: ${response.statusCode}");
       return {"status" : "success", "data" : jsonDecode(response.body)};
     } else {
+      debugPrint("Response Status Code: ${response.statusCode}");
       return {"status" : "faild", "data" : jsonDecode(response.body)};}
     
+  }
+
+  void saveUserToken(int tokenData){
+    userToken = tokenData;
+    return;
+  }
+
+  void deleteUserToken(){
+    userToken = null;
+    return;
   }
 
 }

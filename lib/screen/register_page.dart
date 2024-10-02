@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
+import 'package:spark_up/route.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -75,7 +76,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             setState(() {
                               isLoading = true;
                             });
-
+                            
+                            debugPrint("Sending Regist Request");
                             final response = await Network.manager.sendRequest(
                                 method: RequestMethod.post,
                                 path: AuthPath.register,
@@ -83,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   "email": emailController.text,
                                   "password": passwordController.text,
                                 });
+                            debugPrint("Regitst Request Finish");
 
                             setState(() {
                               isLoading = false;
@@ -96,22 +99,25 @@ class _RegisterPageState extends State<RegisterPage> {
                                       title: Container(
                                           height: 40.0,
                                           alignment: Alignment.center,
-                                          child: const Text("Message")),
+                                          child: const Text("System Message")),
                                       content: Container(
                                         height: 40.0,
                                         alignment: Alignment.center,
-                                        child: response["status"] == "faild"
-                                            ? Text(response["data"]["message"])
-                                            : Text(response["data"]),
+                                        child: Text(response["data"]["message"]),
                                       ),
                                       actions: [
                                         Container(
                                           height: 40.0,
                                           alignment: Alignment.bottomRight,
                                           child: TextButton(
-                                              onPressed: () =>{
-                                                  Navigator.pop(context),
-                                                  Navigator.pop(context),
+                                              onPressed: (){
+                                                  if(response["status"] == "success"){
+                                                    Network.manager.saveUserToken(response["data"]["user_id"]);
+                                                    Navigator.pop(context);
+                                                    Navigator.pushNamed(context, RouteMap.homePage);
+                                                  } else{
+                                                    Navigator.pop(context);
+                                                  }
                                               },
                                               child: const Text("OK")),
                                         )
