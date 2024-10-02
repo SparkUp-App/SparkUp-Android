@@ -34,45 +34,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'eat_habit': eatHabit,
   };
 
-  final List<String> _selectedTags = [];
-  final List<String> _availableTags = eventType;
 
-  Widget _buildTagSelector() { //整行的顯示
+  List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
+  final List<String> _availableInterestTags = eventType;
+  //List<String> _selectedSkillTags = [];
+
+  // Available tags for selection
+  //final List<String> _availableSkillTags = ["Dart", "Flutter", "Python"];
+
+  Widget _buildTagSelector(String label, String key,List<String> selectedTags, List<String> availableTags) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 140,
             child: Text(
-              'Interesting Tags',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
+                Wrap(//更彈性的Row
                   spacing: 8,
                   runSpacing: 4,
-                  children: _selectedTags.map((tag) => Chip(
-                    label: Text('#$tag'),
+                  children: selectedTags.map((tag) => Chip(
+                    label: Text('#' + tag),
                     onDeleted: () {
                       setState(() {
-                        _selectedTags.remove(tag);
+                        selectedTags.remove(tag);
+                        _profileData[key] = selectedTags.join(','); //要時刻記錄當前操作資訊，避免在這一層刪除資訊但沒紀錄到
                       });
                     },
                     deleteIconColor: Colors.grey,
                     backgroundColor: Colors.grey[200],
                   )).toList(),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 InkWell(
-                  onTap: () => _showTagSelectionDialog(),
+                  onTap: () => _showTagSelectionDialog(label, key, selectedTags, availableTags),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
@@ -80,7 +86,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Text(
                       '+',
                       style: TextStyle(
-                        color: _selectedTags.isEmpty ? Colors.grey : Colors.black,
+                        color:Colors.grey,
                       ),
                     ),
                   ),
@@ -93,58 +99,59 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void _showTagSelectionDialog() { // 新增標籤的介面
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Choose Your Interesting'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Wrap(
-                    spacing: 8.0,
-                    children: _availableTags.map((String tag) {
-                      return FilterChip(
-                        label: Text("#$tag"),
-                        selected: _selectedTags.contains(tag),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              _selectedTags.add(tag);
-                            } else {
-                              _selectedTags.remove(tag);
-                            }
-                          });
-                        },
-                        showCheckmark: false, // No checkmark when selected
-                        selectedColor: Colors.blueAccent.withOpacity(0.3), // Change color when selected
-                        backgroundColor: Colors.grey[200], // Default color when not selected
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Confirm'),
-                  onPressed: () {
-                    this.setState(() {
-                      _profileData['interests'] = _selectedTags.join(',');
-                    });
-                    Navigator.of(context).pop();
-                  },
+void _showTagSelectionDialog(String label, String key, List<String> selectedTags, List<String> availableTags) {
+  showDialog(
+    context: context, 
+    barrierDismissible: false, // 防止點擊外部關閉
+    builder: (BuildContext context) {
+      return StatefulBuilder( //點擊按下要改變背景顏色，需要這一層來控制
+        builder: (context, setState) { 
+          return AlertDialog(
+            title: Text('選擇你的' + label),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Wrap(
+                  spacing: 8.0,
+                  children: availableTags.map((String tag) {
+                    return FilterChip(
+                      label: Text("#" + tag),
+                      selected: selectedTags.contains(tag),
+                      onSelected: (bool selected) {
+                        setState(() { 
+                          if (selected) {
+                            selectedTags.add(tag);
+                          } else {
+                            selectedTags.remove(tag);
+                          }
+                        });
+                      },
+                      showCheckmark: false,
+                      selectedColor: Colors.blueAccent.withOpacity(0.3),
+                      backgroundColor: Colors.grey[200],
+                    );
+                  }).toList(),
                 ),
               ],
-            );
-          },
-        );
-      },
-    );
-  }
-
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('確定'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 關閉對話框
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  ).then((_) { //等上面確認跳出視窗後，再做setState更新資訊(使_profileData能吃到更新資訊)，並且更新使selectedTags.map((tag) => Chip重新運作
+    setState(() { //這裡只要等按下確認後更新資訊就好
+      _profileData[label] = selectedTags.join(',');
+    });
+  });
+}
 
 
   Widget _buildDropdown(String label, String key, {isRequired = false}) {
@@ -332,7 +339,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _buildTextField('Address', 'home'),
           _buildDropdown('Material status', 'marital_status'),
           _buildDropdown('Zodiac', 'zodiac_signs'),
-          _buildTagSelector(),
+          _buildTagSelector(
+            'Intrest', 
+            'Intrest',
+            _selectedInterestTags, 
+            _availableInterestTags, 
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _saveProfile,

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: "SparUp",
       debugShowCheckedModeBanner: false,
       routes: RouteMap.routes,
-      initialRoute: RouteMap.loginPage,//testing home_page , initial used to be loginPage
+      initialRoute: RouteMap.homePage,//testing home_page , initial used to be loginPage
     );
   }
 }
