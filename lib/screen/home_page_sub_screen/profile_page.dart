@@ -32,10 +32,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'ethnicity':'Prefer not to say',
     'diet':'Prefer not to say',
     /*
-    'smoke':null,
-    'drinking':null,
-    'marijuana':null,
-    'drugs':null,
+    'smoke':'Prefer not to say',
+    'drinking':'Prefer not to say',
+    'marijuana':'Prefer not to say',
+    'drugs':'Prefer not to say',
     */    
     'skills':null,
     'personalities':null,
@@ -379,6 +379,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
             _selectedInterestTags, 
             _availableInterestTags, 
           ),
+          // Doesn't have language , personalities , skills
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _saveProfile,
