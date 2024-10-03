@@ -13,34 +13,50 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final Map<String, String?> _profileData = {
-    'bio': null,
-    'name': null,
-    'nickname': null,
+    //'name': null,
     'phone': null,
-    'home': null,
+    'nickname': null,
+    'dob': null,
     'gender': null,
-    'school': null,
-    'marital_status': null,
-    'birth_date': null,
-    'career': null,
-    'eat_habit': null,
-    'interests': null,
+    'bio': null,
+    'current_location': null,
+    'hometown':null,
+    'college': null,
+    'job_title':null,
+    'education_level': 'Prefer not to say',
+    'mbti':'Prefer not to say',
+    'constellation': 'Prefer not to say',
+    'blood_type': 'Prefer not to say',
+    'religion': 'Prefer not to say',
+    'sexuality':'Prefer not to say',
+    'ethnicity':'Prefer not to say',
+    'diet':'Prefer not to say',
+    /*
+    'smoke':null,
+    'drinking':null,
+    'marijuana':null,
+    'drugs':null,
+    */    
+    'skills':null,
+    'personalities':null,
+    'languages':null,
+    'interest_types':null,
   };
 
   final Map<String, List<String>> _dropdownOptions = {
     'gender': genderList,
-    'marital_status': materialStatue,
-    'zodiac_signs': zodiacSigns,
-    'eat_habit': eatHabit,
+    'education_level':educationLevelList,
+    'mbti':mbtiList,
+    'constellation':constellationList,
+    'blood_type':bloodTypeList,
+    'religion':religionList,
+    'sexuality':sexualityList,
+    'ethnicity':ethnicityList,
+    'diet':dietList,
   };
-
 
   final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
   final List<String> _availableInterestTags = eventType;
-  //List<String> _selectedSkillTags = [];
-
-  // Available tags for selection
-  //final List<String> _availableSkillTags = ["Dart", "Flutter", "Python"];
 
   Widget _buildTagSelector(String label, String key,List<String> selectedTags, List<String> availableTags) {
     return Padding(
@@ -107,7 +123,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
       return StatefulBuilder( //點擊按下要改變背景顏色，需要這一層來控制
         builder: (context, setState) { 
           return AlertDialog(
-            title: Text('選擇你的' + label),
+            title: Text('Choose your ' + label),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -136,7 +152,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('確定'),
+                child: const Text('Confirm'),
                 onPressed: () {
                   Navigator.of(context).pop(); // 關閉對話框
                 },
@@ -147,8 +163,8 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
       );
     },
   ).then((_) { //等上面確認跳出視窗後，再做setState更新資訊(使_profileData能吃到更新資訊)，並且更新使selectedTags.map((tag) => Chip重新運作
-    setState(() { //這裡只要等按下確認後更新資訊就好
-      _profileData[label] = selectedTags.join(',');
+    setState(() { //只要這個視窗跳走，就會記錄當前有的資訊
+      _profileData[key] = selectedTags.join(',');
     });
   });
 }
@@ -203,7 +219,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
     );
   }
 
-  Widget _buildDatePicker(String label, String key) {
+  Widget _buildDatePicker(String label, String key,{bool isRequired = false}) {
     TextEditingController controller = TextEditingController(text: _profileData[key] ?? '');
 
     return Padding(
@@ -213,9 +229,18 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
         children: [
           SizedBox(
             width: 140,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            child: RichText(
+              text: TextSpan(
+                text: label,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                children: [
+                  if (isRequired)
+                    const TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -286,6 +311,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
                 hintText: "Enter $label here",
                 hintStyle: const TextStyle(color: Colors.black26),
               ),
+              controller: TextEditingController(text: _profileData[key] ?? ''), //當物件太多的時候，滑動到下方，他會將此widget刪除，所以重建時，要顯示輸入情況
               onChanged: (value) {
                 setState(() {
                   _profileData[key] = value;
@@ -328,20 +354,28 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildTextField('Name', 'name', isRequired: true),
-          _buildTextField('Nick Name', 'nickname',isRequired: true),
+          //_buildTextField('Name', 'name', isRequired: true),
           _buildTextField('Phone', 'phone', isRequired: true),
+          _buildTextField('Nick Name', 'nickname',isRequired: true),
+          _buildDatePicker('Birthday', 'dob',isRequired:true),
           _buildDropdown('Gender', 'gender', isRequired:true),
-          _buildDatePicker('Birthday', 'birth_date'),
-          _buildDropdown('Diet', 'eat_habit'),
-          _buildTextField('Career', 'career'),
-          _buildTextField('School', 'school'),
-          _buildTextField('Address', 'home'),
-          _buildDropdown('Material status', 'marital_status'),
-          _buildDropdown('Zodiac', 'zodiac_signs'),
+          _buildTextField('Current Location','current_location'),
+          _buildTextField('Hometown','hometown'),
+          _buildTextField('College', 'college'),
+          _buildTextField('Job Title', 'job_title'),
+          _buildDropdown('Education', 'education_level'),
+          _buildDropdown('MBTI', 'mbti'),
+          _buildDropdown('Constellation', 'constellation'),
+          _buildDropdown('Blood Type', 'blood_type'),
+          _buildDropdown('Religion', 'religion'),
+          _buildDropdown('Sexuality', 'sexuality'),
+          _buildDropdown("Ethnicity", 'ethnicity'),
+          _buildDropdown('Diet', 'diet'),
+          // Doesn't have drugs , smoke , drinking , marijuana
+
           _buildTagSelector(
             'Intrest', 
-            'Intrest',
+            'interest_types',
             _selectedInterestTags, 
             _availableInterestTags, 
           ),
@@ -357,10 +391,11 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
   }
 
   void _saveProfile() {
-    if(_profileData['name']==null||
+    if(
     _profileData['nickname']==null||
     _profileData['gender']==null||
-    _profileData['phone']==null
+    _profileData['phone']==null||
+    _profileData['dob']==null
     ){
       ToastService.showErrorToast(
         context,
@@ -370,7 +405,29 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
       );
     }
     // TODO: 跟server做上傳資料，上傳資料格式在_profileData
-
+    /*
+      Key: phone, Value: CCCC
+      Key: nickname, Value: DDDD
+      Key: dob, Value: 2004/01/14
+      Key: gender, Value: Female
+      Key: bio, Value: null
+      Key: current_location, Value: null
+      Key: hometown, Value: null
+      Key: college, Value: null
+      Key: job_title, Value: null
+      Key: education_level, Value: Prefer not to say
+      Key: mbti, Value: Prefer not to say
+      Key: constellation, Value: Prefer not to say
+      Key: blood_type, Value: Prefer not to say
+      Key: religion, Value: Prefer not to say
+      Key: sexuality, Value: Prefer not to say
+      Key: ethnicity, Value: Prefer not to say
+      Key: diet, Value: Prefer not to say
+      Key: skills, Value: null
+      Key: personalities, Value: null
+      Key: languages, Value: null
+      Key: interest_types, Value: Sports,Travel
+    */
     _profileData.forEach((key, value) {
       debugPrint('Key: $key, Value: $value');
     });
