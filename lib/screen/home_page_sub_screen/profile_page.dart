@@ -90,7 +90,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     backgroundColor: Colors.grey[200],
                   )).toList(),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 InkWell(
                   onTap: () => _showTagSelectionDialog(label, key, selectedTags, availableTags),
                   child: Container(
@@ -391,7 +391,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
   }
 
   void _saveProfile() {
-    if(
+    if( //如果資料不對，應該要在這裡阻斷
     _profileData['nickname']==null||
     _profileData['gender']==null||
     _profileData['phone']==null||
@@ -403,6 +403,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
         expandedHeight: 100,
         message: "The required information should be accurately filled out.",
       );
+      return;
     }
     // TODO: 跟server做上傳資料，上傳資料格式在_profileData
     /*
