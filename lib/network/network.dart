@@ -9,19 +9,26 @@ import "package:spark_up/network/httpprotocol.dart";
 class Network{
   static const baseUrl = "sparkup-9db24d093e0f.herokuapp.com";
   static Network manager = Network();
-  int? userToken;
+  int? userId;
 
   Future<Map> sendRequest(
     {
       required RequestMethod method, 
       required HttpPath path,
       required Map<dynamic,dynamic>? data,
+      List<String> pathMid = const[],
     }
   ) async {
     //Http requst base info
-    final url = Uri.https(baseUrl, path.getPath);
+    var finalPath = path.getPath;
+    for(int i = 0; i < pathMid.length; i++){
+      finalPath = finalPath.replaceFirst("%$i", pathMid[i]);
+    }
+
+    final url = Uri.https(baseUrl, finalPath);
     final headers = {"Content-Type" : "application/json"};
     final body = jsonEncode(data);
+    
 
     dynamic response;
     
@@ -54,16 +61,8 @@ class Network{
     
   }
 
-  void saveUserToken(int tokenData){
-    userToken = tokenData;
-    return;
-  }
-
-  void deleteUserToken(){
-    userToken = null;
-    return;
-  }
-
+  void saveUserId(int id) => userId = id;
+  void removeUserId() => userId = null;
 }
 
 enum RequestMethod{
