@@ -41,13 +41,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData dynamicTheme = ThemeData(
-      appBarTheme: AppBarTheme(),
-    );
 
-    return Theme(
-      data: dynamicTheme,
-      child: Scaffold(
+    return Scaffold(
         body: _getPage(_selectedIndex),
         floatingActionButton: SizedBox(
           width: 55,
@@ -65,7 +60,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
+          items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
@@ -92,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
-      ),
+      
     );
   }
 }

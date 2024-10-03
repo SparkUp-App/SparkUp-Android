@@ -13,55 +13,77 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final Map<String, String?> _profileData = {
-    'bio': null,
-    'name': null,
-    'nickname': null,
+    //'name': null,
     'phone': null,
-    'home': null,
+    'nickname': null,
+    'dob': null,
     'gender': null,
-    'school': null,
-    'marital_status': null,
-    'birth_date': null,
-    'career': null,
-    'eat_habit': null,
-    'interests': null,
+    'bio': null,
+    'current_location': null,
+    'hometown':null,
+    'college': null,
+    'job_title':null,
+    'education_level': 'Prefer not to say',
+    'mbti':'Prefer not to say',
+    'constellation': 'Prefer not to say',
+    'blood_type': 'Prefer not to say',
+    'religion': 'Prefer not to say',
+    'sexuality':'Prefer not to say',
+    'ethnicity':'Prefer not to say',
+    'diet':'Prefer not to say',
+    /*
+    'smoke':'Prefer not to say',
+    'drinking':'Prefer not to say',
+    'marijuana':'Prefer not to say',
+    'drugs':'Prefer not to say',
+    */    
+    'skills':null,
+    'personalities':null,
+    'languages':null,
+    'interest_types':null,
   };
 
   final Map<String, List<String>> _dropdownOptions = {
     'gender': genderList,
-    'marital_status': materialStatue,
-    'zodiac_signs': zodiacSigns,
-    'eat_habit': eatHabit,
+    'education_level':educationLevelList,
+    'mbti':mbtiList,
+    'constellation':constellationList,
+    'blood_type':bloodTypeList,
+    'religion':religionList,
+    'sexuality':sexualityList,
+    'ethnicity':ethnicityList,
+    'diet':dietList,
   };
 
-  final List<String> _selectedTags = [];
-  final List<String> _availableTags = eventType;
+  final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
+  final List<String> _availableInterestTags = eventType;
 
-  Widget _buildTagSelector() { //整行的顯示
+  Widget _buildTagSelector(String label, String key,List<String> selectedTags, List<String> availableTags) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 140,
             child: Text(
-              'Interesting Tags',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
+                Wrap(//更彈性的Row
                   spacing: 8,
                   runSpacing: 4,
-                  children: _selectedTags.map((tag) => Chip(
-                    label: Text('#$tag'),
+                  children: selectedTags.map((tag) => Chip(
+                    label: Text('#' + tag),
                     onDeleted: () {
                       setState(() {
-                        _selectedTags.remove(tag);
+                        selectedTags.remove(tag);
+                        _profileData[key] = selectedTags.join(','); //要時刻記錄當前操作資訊，避免在這一層刪除資訊但沒紀錄到
                       });
                     },
                     deleteIconColor: Colors.grey,
@@ -70,17 +92,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 const SizedBox(height: 8),
                 InkWell(
-                  onTap: () => _showTagSelectionDialog(),
+                  onTap: () => _showTagSelectionDialog(label, key, selectedTags, availableTags),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(
+                    child: const Text(
                       '+',
                       style: TextStyle(
-                        color: _selectedTags.isEmpty ? Colors.grey : Colors.black,
+                        color:Colors.grey,
                       ),
                     ),
                   ),
@@ -93,58 +115,59 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void _showTagSelectionDialog() { // 新增標籤的介面
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Choose Your Interesting'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Wrap(
-                    spacing: 8.0,
-                    children: _availableTags.map((String tag) {
-                      return FilterChip(
-                        label: Text("#$tag"),
-                        selected: _selectedTags.contains(tag),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              _selectedTags.add(tag);
-                            } else {
-                              _selectedTags.remove(tag);
-                            }
-                          });
-                        },
-                        showCheckmark: false, // No checkmark when selected
-                        selectedColor: Colors.blueAccent.withOpacity(0.3), // Change color when selected
-                        backgroundColor: Colors.grey[200], // Default color when not selected
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Confirm'),
-                  onPressed: () {
-                    this.setState(() {
-                      _profileData['interests'] = _selectedTags.join(',');
-                    });
-                    Navigator.of(context).pop();
-                  },
+void _showTagSelectionDialog(String label, String key, List<String> selectedTags, List<String> availableTags) {
+  showDialog(
+    context: context, 
+    barrierDismissible: false, // 防止點擊外部關閉
+    builder: (BuildContext context) {
+      return StatefulBuilder( //點擊按下要改變背景顏色，需要這一層來控制
+        builder: (context, setState) { 
+          return AlertDialog(
+            title: Text('Choose your ' + label),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Wrap(
+                  spacing: 8.0,
+                  children: availableTags.map((String tag) {
+                    return FilterChip(
+                      label: Text("#" + tag),
+                      selected: selectedTags.contains(tag),
+                      onSelected: (bool selected) {
+                        setState(() { 
+                          if (selected) {
+                            selectedTags.add(tag);
+                          } else {
+                            selectedTags.remove(tag);
+                          }
+                        });
+                      },
+                      showCheckmark: false,
+                      selectedColor: Colors.blueAccent.withOpacity(0.3),
+                      backgroundColor: Colors.grey[200],
+                    );
+                  }).toList(),
                 ),
               ],
-            );
-          },
-        );
-      },
-    );
-  }
-
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Confirm'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 關閉對話框
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  ).then((_) { //等上面確認跳出視窗後，再做setState更新資訊(使_profileData能吃到更新資訊)，並且更新使selectedTags.map((tag) => Chip重新運作
+    setState(() { //只要這個視窗跳走，就會記錄當前有的資訊
+      _profileData[key] = selectedTags.join(',');
+    });
+  });
+}
 
 
   Widget _buildDropdown(String label, String key, {isRequired = false}) {
@@ -196,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildDatePicker(String label, String key) {
+  Widget _buildDatePicker(String label, String key,{bool isRequired = false}) {
     TextEditingController controller = TextEditingController(text: _profileData[key] ?? '');
 
     return Padding(
@@ -206,9 +229,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
         children: [
           SizedBox(
             width: 140,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            child: RichText(
+              text: TextSpan(
+                text: label,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                children: [
+                  if (isRequired)
+                    const TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -223,7 +255,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                 if (selectedDate != null) {
                   setState(() {
-                    String formattedDate = "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}";
+                    String formattedDate = selectedDate.toIso8601String().split('T')[0]; //ISO format
                     _profileData[key] = formattedDate;
                     controller.text = formattedDate;
                   });
@@ -235,7 +267,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    hintText: "xxxx/xx/xx",
+                    hintText: "xxxx-xx-xx",
                     hintStyle: TextStyle(color: Colors.black26),
                     icon: Icon(Icons.edit_calendar)
                   ),
@@ -279,6 +311,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintText: "Enter $label here",
                 hintStyle: const TextStyle(color: Colors.black26),
               ),
+              controller: TextEditingController(text: _profileData[key] ?? ''), //當物件太多的時候，滑動到下方，他會將此widget刪除，所以重建時，要顯示輸入情況
               onChanged: (value) {
                 setState(() {
                   _profileData[key] = value;
@@ -321,18 +354,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildTextField('Name', 'name', isRequired: true),
-          _buildTextField('Nick Name', 'nickname',isRequired: true),
+          //_buildTextField('Name', 'name', isRequired: true),
           _buildTextField('Phone', 'phone', isRequired: true),
+          _buildTextField('Nick Name', 'nickname',isRequired: true),
+          _buildDatePicker('Birthday', 'dob',isRequired:true),
           _buildDropdown('Gender', 'gender', isRequired:true),
-          _buildDatePicker('Birthday', 'birth_date'),
-          _buildDropdown('Diet', 'eat_habit'),
-          _buildTextField('Career', 'career'),
-          _buildTextField('School', 'school'),
-          _buildTextField('Address', 'home'),
-          _buildDropdown('Material status', 'marital_status'),
-          _buildDropdown('Zodiac', 'zodiac_signs'),
-          _buildTagSelector(),
+          _buildTextField('Current Location','current_location'),
+          _buildTextField('Hometown','hometown'),
+          _buildTextField('College', 'college'),
+          _buildTextField('Job Title', 'job_title'),
+          _buildDropdown('Education', 'education_level'),
+          _buildDropdown('MBTI', 'mbti'),
+          _buildDropdown('Constellation', 'constellation'),
+          _buildDropdown('Blood Type', 'blood_type'),
+          _buildDropdown('Religion', 'religion'),
+          _buildDropdown('Sexuality', 'sexuality'),
+          _buildDropdown("Ethnicity", 'ethnicity'),
+          _buildDropdown('Diet', 'diet'),
+          // Doesn't have drugs , smoke , drinking , marijuana
+
+          _buildTagSelector(
+            'Intrest', 
+            'interest_types',
+            _selectedInterestTags, 
+            _availableInterestTags, 
+          ),
+          // Doesn't have language , personalities , skills
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _saveProfile,
@@ -345,10 +392,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveProfile() {
-    if(_profileData['name']==null||
+    if( //如果資料不對，應該要在這裡阻斷
     _profileData['nickname']==null||
     _profileData['gender']==null||
-    _profileData['phone']==null
+    _profileData['phone']==null||
+    _profileData['dob']==null
     ){
       ToastService.showErrorToast(
         context,
@@ -356,9 +404,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
         expandedHeight: 100,
         message: "The required information should be accurately filled out.",
       );
+      return;
     }
     // TODO: 跟server做上傳資料，上傳資料格式在_profileData
-
+    /*
+      Key: phone, Value: CCCC
+      Key: nickname, Value: DDDD
+      Key: dob, Value: 2004/01/14
+      Key: gender, Value: Female
+      Key: bio, Value: null
+      Key: current_location, Value: null
+      Key: hometown, Value: null
+      Key: college, Value: null
+      Key: job_title, Value: null
+      Key: education_level, Value: Prefer not to say
+      Key: mbti, Value: Prefer not to say
+      Key: constellation, Value: Prefer not to say
+      Key: blood_type, Value: Prefer not to say
+      Key: religion, Value: Prefer not to say
+      Key: sexuality, Value: Prefer not to say
+      Key: ethnicity, Value: Prefer not to say
+      Key: diet, Value: Prefer not to say
+      Key: skills, Value: null
+      Key: personalities, Value: null
+      Key: languages, Value: null
+      Key: interest_types, Value: Sports,Travel
+    */
     _profileData.forEach((key, value) {
       debugPrint('Key: $key, Value: $value');
     });
