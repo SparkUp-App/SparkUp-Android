@@ -255,7 +255,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
 
                 if (selectedDate != null) {
                   setState(() {
-                    String formattedDate = "${selectedDate.year}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}";
+                    String formattedDate = selectedDate.toIso8601String().split('T')[0]; //ISO format
                     _profileData[key] = formattedDate;
                     controller.text = formattedDate;
                   });
@@ -267,7 +267,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    hintText: "xxxx/xx/xx",
+                    hintText: "xxxx-xx-xx",
                     hintStyle: TextStyle(color: Colors.black26),
                     icon: Icon(Icons.edit_calendar)
                   ),
