@@ -393,10 +393,10 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
 
   void _saveProfile() {
     if( //如果資料不對，應該要在這裡阻斷
-    _profileData['nickname']==null||
-    _profileData['gender']==null||
-    _profileData['phone']==null||
-    _profileData['dob']==null
+    _profileData['nickname']?.length==0||
+    _profileData['gender']?.length==0||
+    _profileData['phone']?.length==0||
+    _profileData['dob']?.length==0
     ){
       ToastService.showErrorToast(
         context,
