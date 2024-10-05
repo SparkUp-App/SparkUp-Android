@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
-class profileTextfield extends StatefulWidget {
-  const profileTextfield({
+class profileDropdown extends StatefulWidget {
+  const profileDropdown({
     super.key,
     required this.label,
-    required this.hintLabel,
-    required this.textFieldIcon,
     required this.value,
-    required this.onChanged, 
-    this.isRequired = true,
+    required this.dropdownIcon,
+    required this.options,
+    required this.onChanged,
+    this.isRequired = false,
   });
 
   final String label;
-  final String hintLabel;
-  final String value;
-  final IconData textFieldIcon;
-  final Function(String?) onChanged; // 回條函數
+  final String? value;
+  final IconData dropdownIcon;
+  final List<String> options;
+  final Function(String?) onChanged;
   final bool isRequired;
+
   @override
-  State<profileTextfield> createState() => _profile_TextfieldState();
+  State<profileDropdown> createState() => _ProfileDropdownState();
 }
 
-class _profile_TextfieldState extends State<profileTextfield> {
-  var textController = TextEditingController();
-
+class _ProfileDropdownState extends State<profileDropdown> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -43,8 +42,9 @@ class _profile_TextfieldState extends State<profileTextfield> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2.0),
               width: MediaQuery.of(context).size.width * 0.80,
-              child: TextField(
-                controller:  textController,
+              child: DropdownButtonFormField<String>(
+                value: widget.value,
+                isExpanded: true,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Color(0xFFE9765B)),
@@ -58,16 +58,18 @@ class _profile_TextfieldState extends State<profileTextfield> {
                     borderSide: const BorderSide(color: Color(0xFFE9765B)),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  prefixIcon: Icon(widget.textFieldIcon),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  prefixIcon: Icon(widget.dropdownIcon),
                   prefixIconColor: Colors.black26,
-                  hintText: widget.hintLabel,
-                  hintStyle: const TextStyle(
-                    color: Colors.black26,
-                  ),
                 ),
-                onChanged: (value) {
-                  widget.onChanged(value); // 将改变的值传递给父级
-                },
+                hint: const Text('Select Here', style: TextStyle(color: Colors.black26)),
+                items: widget.options.map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: widget.onChanged,
               ),
             ),
           ],
@@ -76,5 +78,3 @@ class _profile_TextfieldState extends State<profileTextfield> {
     );
   }
 }
-
-

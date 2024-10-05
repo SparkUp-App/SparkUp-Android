@@ -37,10 +37,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'marijuana':'Prefer not to say',
     'drugs':'Prefer not to say',
     */    
-    'skills':null,
-    'personalities':null,
-    'languages':null,
-    'interest_types':null,
+    'skills':'',
+    'personalities':'',
+    'languages':'',
+    'interest_types':'',
   };
 
   final Map<String, List<String>> _dropdownOptions = {

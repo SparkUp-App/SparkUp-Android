@@ -1,44 +1,32 @@
 import 'package:flutter/material.dart';
 
-class profieldDatapicker extends StatefulWidget {
-  const profieldDatapicker({
+class profieldDatepicker extends StatefulWidget {
+  const profieldDatepicker({
     super.key,
     required this.label,
     required this.value,
+    required this.datepickerIcon,
     required this.onChanged,
     this.isRequired = true,
   });
 
   final String label;
   final String value;
-  final Function(String) onChanged;
+  final IconData datepickerIcon;
+  final Function(String?) onChanged;
   final bool isRequired;
 
   @override
-  State<profieldDatapicker> createState() => _ProfileDatePickerState();
+  State<profieldDatepicker> createState() => _ProfileDatePickerState();
 }
 
-class _ProfileDatePickerState extends State<profieldDatapicker> {
+class _ProfileDatePickerState extends State<profieldDatepicker> {
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.value);
-  }
-
-  @override
-  void didUpdateWidget(profieldDatapicker oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      _controller.text = widget.value;
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -91,9 +79,9 @@ class _ProfileDatePickerState extends State<profieldDatapicker> {
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon: const Icon(Icons.calendar_today),
+                      prefixIcon: Icon(widget.datepickerIcon),
                       prefixIconColor: Colors.black26,
-                      hintText: "yyyy-MM-dd",
+                      hintText: "yyyy-mm-dd",
                       hintStyle: const TextStyle(
                         color: Colors.black26,
                       ),
