@@ -14,15 +14,15 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final Map<String, String?> _profileData = {
     //'name': null,
-    'phone': null,
-    'nickname': null,
-    'dob': null,
-    'gender': null,
-    'bio': null,
-    'current_location': null,
-    'hometown':null,
-    'college': null,
-    'job_title':null,
+    'phone': '',
+    'nickname': '',
+    'dob': '',
+    'gender': '',
+    'bio': '',
+    'current_location': '',
+    'hometown':'',
+    'college': '',
+    'job_title':'',
     'education_level': 'Prefer not to say',
     'mbti':'Prefer not to say',
     'constellation': 'Prefer not to say',
@@ -37,10 +37,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'marijuana':'Prefer not to say',
     'drugs':'Prefer not to say',
     */    
-    'skills':null,
-    'personalities':null,
-    'languages':null,
-    'interest_types':null,
+    'skills':'',
+    'personalities':'',
+    'languages':'',
+    'interest_types':'',
   };
 
   final Map<String, List<String>> _dropdownOptions = {
