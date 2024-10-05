@@ -126,3 +126,4 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
     );
   }
 }
+//這裡部處理任何資料上傳的部分，這裡填寫的資訊都會被帶到下一頁(initial_profileData_detail)當中，所以這裡完全不用跟server連動，要就只要處理detail那一頁

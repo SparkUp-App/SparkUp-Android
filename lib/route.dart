@@ -14,6 +14,6 @@ class RouteMap{
     loginPage : (context) => const LoginPage(),
     registerPage : (context) => const RegisterPage(),
     homePage : (context) => const HomePage(),
-    initialProfileDataPage : (context) => const BasicProfilePage(),
+    initialProfileDataPage : (context) => const BasicProfilePage(),//註冊完轉到initial個人資訊的頁面
   };
 }
