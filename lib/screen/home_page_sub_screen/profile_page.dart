@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/const_variable.dart';
+import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/profile_path.dart';
 import 'package:toasty_box/toasty_box.dart';
@@ -16,39 +17,9 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool isLoading = false;
-  final Map<String, String?> _profileData = {
-    //'name': null,
-    'phone': null,
-    'nickname': null,
-    'dob': null,
-    'gender': null,
-    'bio': null,
-    'current_location': null,
-    'hometown': null,
-    'college': null,
-    'job_title': null,
-    'education_level': 'Prefer not to say',
-    'mbti': 'Prefer not to say',
-    'constellation': 'Prefer not to say',
-    'blood_type': 'Prefer not to say',
-    'religion': 'Prefer not to say',
-    'sexuality': 'Prefer not to say',
-    'ethnicity': 'Prefer not to say',
-    'diet': 'Prefer not to say',
-    'smoke':'Prefer not to say',
-    'drinking':'Prefer not to say',
-    'marijuana':'Prefer not to say',
-    'drugs':'Prefer not to say',
-    'skills': null,
-    'personalities': null,
-    'languages': null,
-    'interest_types': null,
-  
-    'skills':'',
-    'personalities':'',
-    'languages':'',
-    'interest_types':'',
-  };
+  late Profile profileTransformer;
+  late Map<String, dynamic> _profileData;
+  late Map<String, TextEditingController> _textContollerMap;
 
   final Map<String, List<String>> _dropdownOptions = {
     'gender': genderList,
@@ -60,10 +31,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'sexuality': sexualityList,
     'ethnicity': ethnicityList,
     'diet': dietList,
-    'smoke' : smokeList,
-    'drinking' : drinkingList,
-    'marijuana' : marijuanaList,
-    'drugs' : drugsList,
+    'smoke': smokeList,
+    'drinking': drinkingList,
+    'marijuana': marijuanaList,
+    'drugs': drugsList,
   };
   late Map<String, TextEditingController> _controllers; //TextField改用TextEditingController去防問題，也避免他重製輸入標
   @override
@@ -373,10 +344,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintText: "Enter $label here",
                 hintStyle: const TextStyle(color: Colors.black26),
               ),
+              controller: _textContollerMap[key],
               onChanged: (value) {
-                setState(() {
-                  _profileData[key] = value;
-                });
+                _profileData[key] = value;
               },
               controller: _controllers[key], //放棄根據_profileData的string進行防守。改利用textEditingController去防
             ),
@@ -389,86 +359,109 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            const Text(
-              "About Me",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              "Make it easy for others to get a sense of who you are",
-              style: TextStyle(
-                color: Colors.black26,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            _buildTextField('Bio', 'bio', maxLines: 4),
-            const Text(
-              "My Details",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-              _buildTextField('Phone', 'phone', isRequired: true),
-            _buildTextField('Nick Name', 'nickname', isRequired: true),
-            _buildDatePicker('Birthday', 'dob', isRequired: true),
-            _buildDropdown('Gender', 'gender', isRequired: true),
-            _buildTextField('Current Location', 'current_location'),
-            _buildTextField('Hometown', 'hometown'),
-            _buildTextField('College', 'college'),
-            _buildTextField('Job Title', 'job_title'),
-            _buildDropdown('Education', 'education_level'),
-            _buildDropdown('MBTI', 'mbti'),
-            _buildDropdown('Constellation', 'constellation'),
-            _buildDropdown('Blood Type', 'blood_type'),
-            _buildDropdown('Religion', 'religion'),
-            _buildDropdown('Sexuality', 'sexuality'),
-            _buildDropdown("Ethnicity", 'ethnicity'),
-            _buildDropdown('Diet', 'diet'),
-            _buildDropdown('Smoke', 'smoke'),
-            _buildDropdown('Drinking', 'drinking'),
-            _buildDropdown('Marijuana', 'marijuana'),
-            _buildDropdown('Drugs', 'drugs'),
-            // Doesn't have drugs , smoke , drinking , marijuana
+    return FutureBuilder(
+      future: Network.manager.sendRequest(
+          method: RequestMethod.get,
+          path: ProfilePath.view,
+          pathMid: ["${Network.manager.userId}"]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (snapshot.hasData) {
+          profileTransformer = Profile.initfromData(snapshot.data!["data"]);
+          _profileData = profileTransformer.toProfile;
+          _textContollerMap = _profileData.map((key, value) =>
+              value.runtimeType == String
+                  ? MapEntry(key, TextEditingController(text: value))
+                  : MapEntry(key, TextEditingController()));
+          return Stack(children: [
+            Scaffold(
+              body: ListView(
+                padding: const EdgeInsets.all(16.0),
+                children: [
+                  const Text(
+                    "About Me",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    "Make it easy for others to get a sense of who you are",
+                    style: TextStyle(
+                      color: Colors.black26,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  _buildTextField('Bio', 'bio', maxLines: 4),
+                  const Text(
+                    "My Details",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  //_buildTextField('Name', 'name', isRequired: true),
+                  _buildTextField('Phone', 'phone', isRequired: true),
+                  _buildTextField('Nick Name', 'nickname', isRequired: true),
+                  _buildDatePicker('Birthday', 'dob', isRequired: true),
+                  _buildDropdown('Gender', 'gender', isRequired: true),
+                  _buildTextField('Current Location', 'current_location'),
+                  _buildTextField('Hometown', 'hometown'),
+                  _buildTextField('College', 'college'),
+                  _buildTextField('Job Title', 'job_title'),
+                  _buildDropdown('Education', 'education_level'),
+                  _buildDropdown('MBTI', 'mbti'),
+                  _buildDropdown('Constellation', 'constellation'),
+                  _buildDropdown('Blood Type', 'blood_type'),
+                  _buildDropdown('Religion', 'religion'),
+                  _buildDropdown('Sexuality', 'sexuality'),
+                  _buildDropdown("Ethnicity", 'ethnicity'),
+                  _buildDropdown('Diet', 'diet'),
+                  _buildDropdown('Smoke', 'smoke'),
+                  _buildDropdown('Drinking', 'drinking'),
+                  _buildDropdown('Marijuana', 'marijuana'),
+                  _buildDropdown('Drugs', 'drugs'),
+                  // Doesn't have drugs , smoke , drinking , marijuana
 
-            _buildTagSelector(
-              'Intrest',
-              'interest_types',
-              _selectedInterestTags,
-              _availableInterestTags,
+                  _buildTagSelector(
+                    'Intrest',
+                    'interest_types',
+                    _selectedInterestTags,
+                    _availableInterestTags,
+                  ),
+                  // Doesn't have language , personalities , skills
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _saveProfile,
+                    child: const Text('Save'),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  )
+                ],
+              ),
             ),
-            // Doesn't have language , personalities , skills
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveProfile,
-              child: const Text('Save'),
-            ),
-            const SizedBox(
-              height: 30,
-            )
-          ],
-        ),
-      ),
-      if (isLoading) ...[
-        Opacity(
-          opacity: 0.8,
-          child: Container(
-            color: Colors.black,
-          ),
-        ),
-        const Center(child: CircularProgressIndicator())
-      ]
-    ]);
+            if (isLoading) ...[
+              Opacity(
+                opacity: 0.8,
+                child: Container(
+                  color: Colors.black,
+                ),
+              ),
+              const Center(child: CircularProgressIndicator())
+            ]
+          ]);
+        } else {
+          return Center(child: Text("Error: ${snapshot.data!["status"]}"));
+        }
+      },
+    );
   }
 
   void _saveProfile() async {
@@ -517,11 +510,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       isLoading = true;
     });
 
+    profileTransformer = Profile.initfromData(_profileData);
+
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
         path: ProfilePath.update,
         pathMid: ["${Network.manager.userId}"],
-        data: _profileData);
+        data: profileTransformer.toMap);
 
     setState(() {
       isLoading = false;
@@ -541,7 +536,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             builder: (context) {
               return const SystemMessage(content: "Profile Update Failed");
             });
-      } 
+      }
     }
   }
 }
