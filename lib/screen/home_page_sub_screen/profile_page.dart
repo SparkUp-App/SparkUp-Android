@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/network/network.dart';
-import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/network/path/profile_path.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
@@ -36,12 +35,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'sexuality': 'Prefer not to say',
     'ethnicity': 'Prefer not to say',
     'diet': 'Prefer not to say',
-    /*
     'smoke':'Prefer not to say',
     'drinking':'Prefer not to say',
     'marijuana':'Prefer not to say',
     'drugs':'Prefer not to say',
-    */
     'skills': null,
     'personalities': null,
     'languages': null,
@@ -63,6 +60,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'sexuality': sexualityList,
     'ethnicity': ethnicityList,
     'diet': dietList,
+    'smoke' : smokeList,
+    'drinking' : drinkingList,
+    'marijuana' : marijuanaList,
+    'drugs' : drugsList,
   };
   late Map<String, TextEditingController> _controllers; //TextField改用TextEditingController去防問題，也避免他重製輸入標
   @override
@@ -434,6 +435,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             _buildDropdown('Sexuality', 'sexuality'),
             _buildDropdown("Ethnicity", 'ethnicity'),
             _buildDropdown('Diet', 'diet'),
+            _buildDropdown('Smoke', 'smoke'),
+            _buildDropdown('Drinking', 'drinking'),
+            _buildDropdown('Marijuana', 'marijuana'),
+            _buildDropdown('Drugs', 'drugs'),
             // Doesn't have drugs , smoke , drinking , marijuana
 
             _buildTagSelector(
@@ -536,7 +541,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             builder: (context) {
               return const SystemMessage(content: "Profile Update Failed");
             });
-      }
+      } 
     }
   }
 }
