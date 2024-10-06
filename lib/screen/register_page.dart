@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
 import 'package:spark_up/route.dart';
@@ -94,36 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (context.mounted) {
                               showDialog(
                                   context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Container(
-                                          height: 40.0,
-                                          alignment: Alignment.center,
-                                          child: const Text("System Message")),
-                                      content: Container(
-                                        height: 40.0,
-                                        alignment: Alignment.center,
-                                        child: Text(response["data"]["message"]),
-                                      ),
-                                      actions: [
-                                        Container(
-                                          height: 40.0,
-                                          alignment: Alignment.bottomRight,
-                                          child: TextButton(
-                                              onPressed: (){
-                                                  if(response["status"] == "success"){
-                                                    Network.manager.saveUserId(response["data"]["user_id"]);
-                                                    Navigator.pop(context);
-                                                    Navigator.pushNamed(context, RouteMap.homePage);
-                                                  } else{
-                                                    Navigator.pop(context);
-                                                  }
-                                              },
-                                              child: const Text("OK")),
-                                        )
-                                      ],
-                                    );
-                                  });
+                                  builder: (context) => SystemMessage(content: response["data"]["message"]));
                             }
                           },
                           child: const Text(
