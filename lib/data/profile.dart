@@ -2,6 +2,8 @@ import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/network/httpprotocol.dart';
 
 class Profile extends HttpData {
+  static late Profile manager;
+  
   late String phone;
   late String nickname;
   late String dob;
