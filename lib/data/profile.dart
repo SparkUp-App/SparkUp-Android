@@ -94,10 +94,10 @@ class Profile extends HttpData {
       drugs: data["drugs"].runtimeType == String
           ? Drugs.fromString(data["drugs"])
           : Drugs.fromint(data["drugs"]),
-      skills: data["skills"] ?? [],
-      personalities: data["personalities"] ?? [],
-      languages: data["languages"] ?? [],
-      interestTypes: data["interest_types"] ?? [],
+      skills: List<String>.from(data["skills"]),
+      personalities: List<String>.from(data["personalities"]),
+      languages: List<String>.from(data["languages"]),
+      interestTypes: List<String>.from(data["interest_types"]),
     );
   }
 
