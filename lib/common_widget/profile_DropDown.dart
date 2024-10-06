@@ -32,7 +32,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.label,
+              widget.label + (widget.isRequired ? " *" : ""),
               style: const TextStyle(
                 fontSize: 16,
                 color: Color(0xFFE9765B),

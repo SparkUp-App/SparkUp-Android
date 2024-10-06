@@ -193,6 +193,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                 _profileData['bio'] = newValue;
               });
             },
+            maxLine: 4,
           ),
           const Text(
             "Additional Details",
@@ -246,22 +247,12 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               });
             },
           ),
-          profieldDatepicker(
+          profileDropdown(
             label: 'Education', 
             value: _profileData['education_level']??"",
-            datepickerIcon: Icons.school,
-            onChanged: (newValue) {
-              setState(() {
-                _profileData['education_level'] = newValue;
-              });
-            },
-          ),
-          profileDropdown(
-            label: 'Gender', 
-            value: _profileData['education_level']??"",
             dropdownIcon: Icons.school,
-            options: genderList, 
-            onChanged:(newValue) {
+            options: educationLevelList, 
+            onChanged: (newValue) {
               setState(() {
                 _profileData['education_level'] = newValue;
               });
