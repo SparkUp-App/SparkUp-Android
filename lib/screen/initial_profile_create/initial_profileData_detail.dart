@@ -21,8 +21,8 @@ class DetailedProfilePage extends StatefulWidget {
 class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool isLoading = false;
   late Map<String, dynamic> _profileData;
-  final List<String> _selectedInterestTags = [];
-  final List<String> _availableInterestTags = eventType;
+  late List<String> _selectedInterestTags;
+  late List<String> _availableInterestTags;
 
   @override
   void initState() {
@@ -45,6 +45,9 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       'diet': 'Prefer not to say',
       'interest_types': [],
     };
+
+    _selectedInterestTags = [];
+    _availableInterestTags = List<String>.from(eventType);
   }
 
   Widget _buildTagSelector(String label, String key, List<String> selectedTags,
@@ -74,7 +77,8 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                             onDeleted: () {
                               setState(() {
                                 selectedTags.remove(tag);
-                                _profileData[key] = selectedTags.join(',');
+                                availableTags.add(tag);
+                                _profileData[key] = selectedTags;
                               });
                             },
                             deleteIconColor: Colors.grey,
@@ -132,8 +136,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                           setState(() {
                             if (selected) {
                               selectedTags.add(tag);
+                              availableTags.remove(tag);
                             } else {
                               selectedTags.remove(tag);
+                              availableTags.add(tag);
                             }
                           });
                         },
@@ -159,7 +165,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       },
     ).then((_) {
       setState(() {
-        _profileData[key] = selectedTags.join(',');
+        _profileData[key] = selectedTags;
       });
     });
   }
