@@ -23,10 +23,10 @@ class Profile extends HttpData {
   late Drinking drinking;
   late Marijuana marijuana;
   late Drugs drugs;
-  List<String> skills;
-  List<String> personalities;
-  List<String> languages;
-  List<String> interestTypes;
+  List<dynamic> skills;
+  List<dynamic> personalities;
+  List<dynamic> languages;
+  List<dynamic> interestTypes;
 
   Profile({
     required this.phone,
@@ -50,10 +50,10 @@ class Profile extends HttpData {
     this.drinking = Drinking.notToSay,
     this.marijuana = Marijuana.notToSay,
     this.drugs = Drugs.notToSay,
-    List<String>? skills,
-    List<String>? personalities,
-    List<String>? languages,
-    List<String>? interestTypes,
+    List<dynamic>? skills,
+    List<dynamic>? personalities,
+    List<dynamic>? languages,
+    List<dynamic>? interestTypes,
   })  : skills = skills ?? [],
         personalities = personalities ?? [],
         languages = languages ?? [],
@@ -61,25 +61,25 @@ class Profile extends HttpData {
 
   factory Profile.initfromData(Map data) {
     return Profile(
-      phone: data["phone"],
-      nickname: data["nickname"],
-      dob: data["dob"],
+      phone: data["phone"] ?? "",
+      nickname: data["nickname"] ?? "",
+      dob: data["dob"] ?? "",
       gneder: data["gender"].runtimeType == String
-          ? Gender.fromString(data["gnder"])
+          ? Gender.fromString(data["gender"])
           : Gender.fromint(data["gender"]),
-      bio: data["bio"],
-      currentLocation: data["current_location"],
-      hoemTown: data["hometown"],
-      college: data["college"],
-      jobTitle: data["job_title"],
-      educationLevel: data["education_level"],
-      mbti: data["mbti"],
-      constellation: data["constellation"],
-      bloodType: data["blood_tpye"],
-      religion: data["religion"],
-      sexuality: data["sexuality"],
-      ethnicity: data["ethnicity"],
-      diet: data["diet"],
+      bio: data["bio"] ?? "",
+      currentLocation: data["current_location"] ?? "",
+      hoemTown: data["hometown"] ?? "",
+      college: data["college"] ?? "",
+      jobTitle: data["job_title"] ?? "",
+      educationLevel: data["education_level"] ?? "Prefer not to say",
+      mbti: data["mbti"] ?? "Prefer not to say",
+      constellation: data["constellation"] ?? "Prefer not to say",
+      bloodType: data["blood_type"] ?? "Prefer not to say",
+      religion: data["religion"] ?? "Prefer not to say",
+      sexuality: data["sexuality"] ?? "Prefer not to say",
+      ethnicity: data["ethnicity"] ?? "Prefer not to say",
+      diet: data["diet"] ?? "Prefer not to say",
       smoke: data["smoke"].runtimeType == String
           ? Smoke.fromString(data["smoke"])
           : Smoke.fromint(data["smoke"]),
@@ -92,14 +92,14 @@ class Profile extends HttpData {
       drugs: data["drugs"].runtimeType == String
           ? Drugs.fromString(data["drugs"])
           : Drugs.fromint(data["drugs"]),
-      skills: data["skills"],
-      personalities: data["personalitites"],
-      languages: data["languages"],
-      interestTypes: data["interest_types"],
+      skills: data["skills"] ?? [],
+      personalities: data["personalitites"] ?? [],
+      languages: data["languages"] ?? [],
+      interestTypes: data["interest_types"] ?? [],
     );
   }
 
-  Map<dynamic, dynamic> get toProfile{
+  Map<String, dynamic> get toProfile{
     return {
       "phone": phone,
       "nickname": nickname,
