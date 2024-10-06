@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class profileTextfield extends StatefulWidget {
-  const profileTextfield({
+  const profileTextfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填
     super.key,
     required this.label,
     required this.hintLabel,
     required this.textFieldIcon,
     required this.value,
     required this.onChanged, 
-    this.isRequired = true,
+    this.isRequired = false,
   });
 
   final String label;

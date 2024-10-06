@@ -30,7 +30,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
     super.initState();
     _profileData = {
       ...widget.basicProfileData,//將basicInfo在此組合，所以只需要對_profileData進行包裝成.json格式送給brian就好
-      'bio': '',
+      'bio': '',//現在先預設沒資料==空字串
       'current_location': '',
       'hometown': '',
       'college': '',

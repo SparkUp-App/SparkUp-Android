@@ -61,6 +61,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                 _basicProfileData['phone'] = newValue;
               });
             },
+            isRequired: true,
           ),
           profileTextfield(
             label: 'nickname',
@@ -72,6 +73,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                 _basicProfileData['nickname'] = newValue;
               });
             },
+            isRequired: true,
           ),
           profieldDatepicker(
             label: 'Date of Birth', 
@@ -82,6 +84,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                 _basicProfileData['dob'] = newValue;
               });
             },
+            isRequired: true,
           ),
           profileDropdown(
             label: 'Gender', 
@@ -93,6 +96,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                 _basicProfileData['gender'] = newValue;
               });
             },
+            isRequired: true,
           ),
           const SizedBox(height: 20),
           ElevatedButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class profileDropdown extends StatefulWidget {
-  const profileDropdown({
+  const profileDropdown({//要求:key，標籤，他所對應的值，此文字框的icon，選項(const xxxList)，回調函數，是否為必填
     super.key,
     required this.label,
     required this.value,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class profieldDatepicker extends StatefulWidget {
-  const profieldDatepicker({
+  const profieldDatepicker({//要求:key，標籤，他所對應的值，此文字框的icon，回調函數，是否為必填
     super.key,
     required this.label,
     required this.value,
     required this.datepickerIcon,
     required this.onChanged,
-    this.isRequired = true,
+    this.isRequired = false,
   });
 
   final String label;
