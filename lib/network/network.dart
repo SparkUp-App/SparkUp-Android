@@ -15,7 +15,7 @@ class Network{
     {
       required RequestMethod method, 
       required HttpPath path,
-      required Map<dynamic,dynamic>? data,
+      Map<dynamic,dynamic>? data,
       List<String> pathMid = const[],
     }
   ) async {
