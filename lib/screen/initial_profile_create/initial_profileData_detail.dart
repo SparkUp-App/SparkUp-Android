@@ -7,6 +7,7 @@ import 'package:spark_up/network/path/profile_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:spark_up/common_widget/profile_DropDown.dart';
+import 'package:spark_up/common_widget/profile_TagSelector.dart';
 
 //這裡有的資料除了自己這一頁以外，還有夾帶上一頁basicInfo的資訊
 class DetailedProfilePage extends StatefulWidget {
@@ -28,8 +29,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
   void initState() {
     super.initState();
     _profileData = {
-      ...widget
-          .basicProfileData, //將basicInfo在此組合，所以只需要對_profileData進行包裝成.json格式送給brian就好
+      ...widget.basicProfileData, //將basicInfo在此組合，所以只需要對_profileData進行包裝成.json格式送給brian就好
       'bio': '', //現在先預設沒資料==空字串
       'current_location': '',
       'hometown': '',
@@ -48,126 +48,6 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
 
     _selectedInterestTags = [];
     _availableInterestTags = List<String>.from(eventType);
-  }
-
-  Widget _buildTagSelector(String label, String key, List<String> selectedTags,
-      List<String> availableTags) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: selectedTags
-                      .map((tag) => Chip(
-                            label: Text('#$tag'),
-                            onDeleted: () {
-                              setState(() {
-                                selectedTags.remove(tag);
-                                availableTags.add(tag);
-                                _profileData[key] = selectedTags;
-                              });
-                            },
-                            deleteIconColor: Colors.grey,
-                            backgroundColor: Colors.grey[200],
-                          ))
-                      .toList(),
-                ),
-                const SizedBox(height: 8),
-                InkWell(
-                  onTap: () => _showTagSelectionDialog(
-                      label, key, selectedTags, availableTags),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      '+',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showTagSelectionDialog(String label, String key,
-      List<String> selectedTags, List<String> availableTags) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text('Choose your $label'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Wrap(
-                    spacing: 8.0,
-                    children: availableTags.map((String tag) {
-                      return FilterChip(
-                        label: Text("#$tag"),
-                        selected: selectedTags.contains(tag),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              selectedTags.add(tag);
-                              availableTags.remove(tag);
-                            } else {
-                              selectedTags.remove(tag);
-                              availableTags.add(tag);
-                            }
-                          });
-                        },
-                        showCheckmark: false,
-                        selectedColor: Colors.blueAccent.withOpacity(0.3),
-                        backgroundColor: Colors.grey[200],
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Confirm'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ).then((_) {
-      setState(() {
-        _profileData[key] = selectedTags;
-      });
-    });
   }
 
   @override
@@ -348,12 +228,16 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                 });
               },
             ),
-            _buildTagSelector(
-              // TagSelector我還未處理，我還沒把他建立成common_widget，抱歉
-              'Interest',
-              'interest_types',
-              _selectedInterestTags,
-              _availableInterestTags,
+            profileTagSelector(
+              label: "Interests",
+              selectedTags: _selectedInterestTags,
+              availableTags: _availableInterestTags,
+              onChanged: (updatedTags) {
+                setState(() {
+                  _selectedInterestTags = updatedTags;
+                });
+              },
+              isRequired: true,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
