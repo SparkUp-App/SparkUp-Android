@@ -99,6 +99,36 @@ class Profile extends HttpData {
     );
   }
 
+  Map<dynamic, dynamic> get toProfile{
+    return {
+      "phone": phone,
+      "nickname": nickname,
+      "dob": dob,
+      "gender": gneder.label,
+      "bio": bio,
+      "current_location": currentLocation,
+      "hometown": hoemTown,
+      "college": college,
+      "job_title": jobTitle,
+      "education_level": educationLevel,
+      "mbti": mbti,
+      "constellation": constellation,
+      "blood_type": bloodType,
+      "religion": religion,
+      "sexuality": sexuality,
+      "ethnicity": ethnicity,
+      "diet": diet,
+      "smoke": smoke.label,
+      "drinking": drinking.label,
+      "marijuana": marijuana.label,
+      "drugs": drugs.label,
+      "skills": skills,
+      "personalities": personalities,
+      "languages": languages,
+      "interest_types": interestTypes,
+    };
+  }
+
   @override
   Map<dynamic, dynamic> get toMap {
     return {
