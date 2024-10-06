@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:spark_up/common_widget/system_message.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/route.dart";
@@ -70,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         });
 
                         debugPrint("Sending Login Request");
+
                         dynamic response = await Network.manager.sendRequest(
                             method: RequestMethod.post,
                             path: AuthPath.login,
@@ -77,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                               "email": emailController.text,
                               "password": passwordController.text,
                             });
+
                         debugPrint("Login Request Finished");
 
                         setState(() {
@@ -86,35 +89,15 @@ class _LoginPageState extends State<LoginPage> {
                         if (context.mounted) {
                           debugPrint("${response["status"]}");
                           if (response["status"] == "success") {
-                            Network.manager.saveUserId(response["data"]["user_id"]);
+                            Network.manager
+                                .saveUserId(response["data"]["user_id"]);
                             Navigator.pushNamed(context, RouteMap.homePage);
                             debugPrint("Login success");
                           } else {
                             showDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Container(
-                                      alignment: Alignment.center,
-                                      height: 40.0,
-                                      child: const Text("System Message"),
-                                    ),
-                                    content: Container(
-                                      alignment: Alignment.center,
-                                      height: 40.0,
-                                      child: Text(response["data"]["message"]),
-                                    ),
-                                    actions: [
-                                      Container(
-                                          alignment: Alignment.centerRight,
-                                          height: 40.0,
-                                          child: TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text("OK")))
-                                    ],
-                                  );
-                                });
+                                builder: (context) => SystemMessage(
+                                    content: response["data"]["message"]));
                           }
                         }
                       },
