@@ -69,7 +69,9 @@ class _ProfileDropdownState extends State<profileDropdown> {
                     child: Text(option),
                   );
                 }).toList(),
-                onChanged: widget.onChanged,
+                onChanged: (value) {
+                  widget.onChanged(value); // 将改变的值传递给父级
+                },
               ),
             ),
           ],
