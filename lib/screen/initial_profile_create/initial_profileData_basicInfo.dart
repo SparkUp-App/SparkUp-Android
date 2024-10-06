@@ -3,11 +3,9 @@ import 'package:spark_up/const_variable.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
-
 import 'package:spark_up/common_widget/profile_Textfield.dart'; //建立common_widget
 import 'package:spark_up/common_widget/profile_DatePicker.dart';//建立common_widget
 import 'package:spark_up/common_widget/profile_DropDown.dart';//建立common_widget
-
 import 'package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart';//導航到detail頁面，順便將當前basicInfo資料賺到detail身上
 
 class BasicProfilePage extends StatefulWidget {
