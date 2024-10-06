@@ -36,29 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'marijuana': marijuanaList,
     'drugs': drugsList,
   };
-  late Map<String, TextEditingController> _controllers; //TextField改用TextEditingController去防問題，也避免他重製輸入標
-  @override
-  void initState() {
-    super.initState();
-    _controllers = {
-      'phone': TextEditingController(text: _profileData['phone'] ?? ''),
-      'nickname': TextEditingController(text: _profileData['nickname'] ?? ''),
-      'bio': TextEditingController(text: _profileData['bio'] ?? ''),
-      'current_location': TextEditingController(text: _profileData['current_location'] ?? ''),
-      'hometown': TextEditingController(text: _profileData['hometown'] ?? ''),
-      'college': TextEditingController(text: _profileData['college'] ?? ''),
-      'job_title': TextEditingController(text: _profileData['job_title'] ?? ''),
-    };
 
-    // 為每個控制器添加Listener
-    //宣告各自textEditingController去做到"當文本更新的時候，自動同步到_profiledData上"
-    _controllers.forEach((key, controller) {
-      controller.addListener(() {
-        // 當文本變化時，更新 _profileData 中對應的值
-        _profileData[key] = controller.text;
-      });
-    });
-  }
   final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
   final List<String> _availableInterestTags = eventType;
 
@@ -104,7 +82,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   onTap: () => _showTagSelectionDialog(
                       label, key, selectedTags, availableTags),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
@@ -348,14 +327,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onChanged: (value) {
                 _profileData[key] = value;
               },
-              controller: _controllers[key], //放棄根據_profileData的string進行防守。改利用textEditingController去防
             ),
           ),
         ],
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -516,4 +493,3 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 }
-  
