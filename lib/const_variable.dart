@@ -33,7 +33,7 @@ enum Gender{
         return Gender.values.firstWhere((element) => element.label == label, orElse: ()=>Gender.notToSay);
     }
 
-    factory Gender.fromint(int value){
+    factory Gender.fromint(int? value){
         return Gender.values.firstWhere((element) => element.value == value, orElse: ()=>Gender.notToSay);
     }
 }
@@ -54,7 +54,7 @@ enum Smoke{
         return Smoke.values.firstWhere((element) => element.label == label, orElse: ()=>Smoke.notToSay);
     }
 
-    factory Smoke.fromint(int value){
+    factory Smoke.fromint(int? value){
         return Smoke.values.firstWhere((element) => element.value == value, orElse: ()=>Smoke.notToSay);
     }
 }
@@ -74,7 +74,7 @@ enum Drinking{
         return Drinking.values.firstWhere((element) => element.label == label, orElse: ()=>Drinking.notToSay);
     }
 
-    factory Drinking.fromint(int value){
+    factory Drinking.fromint(int? value){
         return Drinking.values.firstWhere((element) => element.value == value, orElse: ()=>Drinking.notToSay);
     }
 }
@@ -94,7 +94,7 @@ enum Marijuana{
         return Marijuana.values.firstWhere((element) => element.label == label, orElse: ()=>Marijuana.notToSay);
     }
 
-    factory Marijuana.fromint(int value){
+    factory Marijuana.fromint(int? value){
         return Marijuana.values.firstWhere((element) => element.value == value, orElse: ()=>Marijuana.notToSay);
     }
 }
@@ -114,7 +114,7 @@ enum Drugs{
         return Drugs.values.firstWhere((element) => element.label == label, orElse: ()=>Drugs.notToSay);
     }
 
-    factory Drugs.fromint(int value){
+    factory Drugs.fromint(int? value){
         return Drugs.values.firstWhere((element) => element.value == value, orElse: ()=>Drugs.notToSay);
     }
 }
