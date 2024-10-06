@@ -22,7 +22,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
     'phone': '',
     'nickname': '',
     'dob': '',
-    'gender': 'Prefer not to say',
+    'gender': 'Prefer not to say',//如果這裡給""字串會炸，除非我們在gender當中的選項放一個""，不然他會顯示"匹配不到而整格炸掉不顯示"
   };
 
   @override
@@ -108,7 +108,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
     );
   }
 
-  void _navigateToDetailedProfile() {
+  void _navigateToDetailedProfile() { // 當使用這按下"Next"按鈕時，先進行判斷，因為此頁屬於必填，不能亂跳
     if (_basicProfileData['phone']?.isEmpty == true ||
         _basicProfileData['nickname']?.isEmpty == true ||
         _basicProfileData['dob']?.isEmpty == true ||
