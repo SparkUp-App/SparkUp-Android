@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
 import 'package:spark_up/route.dart';
@@ -76,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             setState(() {
                               isLoading = true;
                             });
-                            
+
                             debugPrint("Sending Regist Request");
                             final response = await Network.manager.sendRequest(
                                 method: RequestMethod.post,
@@ -92,38 +93,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
 
                             if (context.mounted) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Container(
-                                          height: 40.0,
-                                          alignment: Alignment.center,
-                                          child: const Text("System Message")),
-                                      content: Container(
-                                        height: 40.0,
-                                        alignment: Alignment.center,
-                                        child: Text(response["data"]["message"]),
-                                      ),
-                                      actions: [
-                                        Container(
-                                          height: 40.0,
-                                          alignment: Alignment.bottomRight,
-                                          child: TextButton(
-                                              onPressed: (){
-                                                  if(response["status"] == "success"){
-                                                    Network.manager.saveUserId(response["data"]["user_id"]);
-                                                    Navigator.pop(context);
-                                                    Navigator.pushNamed(context, RouteMap.homePage);
-                                                  } else{
-                                                    Navigator.pop(context);
-                                                  }
-                                              },
-                                              child: const Text("OK")),
-                                        )
-                                      ],
-                                    );
-                                  });
+                              if (response["status"] == "success") {
+                                Network.manager.saveUserId(response["data"]["user_id"]);
+                                Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => SystemMessage(
+                                        content: response["data"]["message"]));
+                              }
                             }
                           },
                           child: const Text(

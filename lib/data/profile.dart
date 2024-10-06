@@ -2,6 +2,8 @@ import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/network/httpprotocol.dart';
 
 class Profile extends HttpData {
+  static late Profile manager;
+
   late String phone;
   late String nickname;
   late String dob;
@@ -23,10 +25,10 @@ class Profile extends HttpData {
   late Drinking drinking;
   late Marijuana marijuana;
   late Drugs drugs;
-  List<dynamic> skills;
-  List<dynamic> personalities;
-  List<dynamic> languages;
-  List<dynamic> interestTypes;
+  List<String> skills;
+  List<String> personalities;
+  List<String> languages;
+  List<String> interestTypes;
 
   Profile({
     required this.phone,
@@ -50,10 +52,10 @@ class Profile extends HttpData {
     this.drinking = Drinking.notToSay,
     this.marijuana = Marijuana.notToSay,
     this.drugs = Drugs.notToSay,
-    List<dynamic>? skills,
-    List<dynamic>? personalities,
-    List<dynamic>? languages,
-    List<dynamic>? interestTypes,
+    List<String>? skills,
+    List<String>? personalities,
+    List<String>? languages,
+    List<String>? interestTypes,
   })  : skills = skills ?? [],
         personalities = personalities ?? [],
         languages = languages ?? [],
@@ -92,14 +94,14 @@ class Profile extends HttpData {
       drugs: data["drugs"].runtimeType == String
           ? Drugs.fromString(data["drugs"])
           : Drugs.fromint(data["drugs"]),
-      skills: data["skills"] ?? [],
-      personalities: data["personalitites"] ?? [],
-      languages: data["languages"] ?? [],
-      interestTypes: data["interest_types"] ?? [],
+      skills: data["skills"].runtimeType == Null? []:List<String>.from(data["skills"]),
+      personalities: data["personalities"].runtimeType == Null? []:List<String>.from(data["personalities"]),
+      languages: data["languages"].runtimeType == Null? []:List<String>.from(data["languages"]),
+      interestTypes: data["interest_types"].runtimeType == Null? []: List<String>.from(data["interest_types"]),
     );
   }
 
-  Map<String, dynamic> get toProfile{
+  Map<String, dynamic> get toProfile {
     return {
       "phone": phone,
       "nickname": nickname,

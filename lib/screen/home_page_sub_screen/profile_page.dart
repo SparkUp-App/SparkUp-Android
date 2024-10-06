@@ -17,7 +17,6 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool isLoading = false;
-  late Profile profileTransformer;
   late Map<String, dynamic> _profileData;
   late Map<String, TextEditingController> _textContollerMap;
 
@@ -37,8 +36,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'drugs': drugsList,
   };
 
-  final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
-  final List<String> _availableInterestTags = eventType;
+  late List<String> _selectedInterestTags; //紀錄當前選擇的tag
+  late List<String> _availableInterestTags;
+
+  @override
+  initState() {
+    super.initState();
+    
+    _profileData = Profile.manager.toProfile;
+    _textContollerMap = _profileData.map(
+      (key, value) {
+        return value.runtimeType == String
+            ? MapEntry(key, TextEditingController(text: value))
+            : MapEntry(key, TextEditingController());
+      },
+    );
+
+    _availableInterestTags = List<String>.from(eventType);
+    _selectedInterestTags = _profileData["interest_types"];
+    for(var type in _selectedInterestTags){
+      _availableInterestTags.remove(type);
+    }
+  }
 
   Widget _buildTagSelector(String label, String key, List<String> selectedTags,
       List<String> availableTags) {
@@ -68,8 +87,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             onDeleted: () {
                               setState(() {
                                 selectedTags.remove(tag);
-                                _profileData[key] = selectedTags
-                                    .join(','); //要時刻記錄當前操作資訊，避免在這一層刪除資訊但沒紀錄到
+                                availableTags.add(tag);
+                                _profileData[key] = selectedTags;
                               });
                             },
                             deleteIconColor: Colors.grey,
@@ -128,7 +147,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           setState(() {
                             if (selected) {
                               selectedTags.add(tag);
+                              availableTags.remove(tag);
                             } else {
+                              availableTags.remove(tag);
                               selectedTags.remove(tag);
                             }
                           });
@@ -157,7 +178,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       //等上面確認跳出視窗後，再做setState更新資訊(使_profileData能吃到更新資訊)，並且更新使selectedTags.map((tag) => Chip重新運作
       setState(() {
         //只要這個視窗跳走，就會記錄當前有的資訊
-        _profileData[key] = selectedTags.join(',');
+        _profileData[key] = selectedTags;
       });
     });
   }
@@ -336,108 +357,86 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Network.manager.sendRequest(
-          method: RequestMethod.get,
-          path: ProfilePath.view,
-          pathMid: ["${Network.manager.userId}"]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
-        } else if (snapshot.hasData) {
-          profileTransformer = Profile.initfromData(snapshot.data!["data"]);
-          _profileData = profileTransformer.toProfile;
-          _textContollerMap = _profileData.map((key, value) =>
-              value.runtimeType == String
-                  ? MapEntry(key, TextEditingController(text: value))
-                  : MapEntry(key, TextEditingController()));
-          return Stack(children: [
-            Scaffold(
-              body: ListView(
-                padding: const EdgeInsets.all(16.0),
-                children: [
-                  const Text(
-                    "About Me",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Text(
-                    "Make it easy for others to get a sense of who you are",
-                    style: TextStyle(
-                      color: Colors.black26,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  _buildTextField('Bio', 'bio', maxLines: 4),
-                  const Text(
-                    "My Details",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  //_buildTextField('Name', 'name', isRequired: true),
-                  _buildTextField('Phone', 'phone', isRequired: true),
-                  _buildTextField('Nick Name', 'nickname', isRequired: true),
-                  _buildDatePicker('Birthday', 'dob', isRequired: true),
-                  _buildDropdown('Gender', 'gender', isRequired: true),
-                  _buildTextField('Current Location', 'current_location'),
-                  _buildTextField('Hometown', 'hometown'),
-                  _buildTextField('College', 'college'),
-                  _buildTextField('Job Title', 'job_title'),
-                  _buildDropdown('Education', 'education_level'),
-                  _buildDropdown('MBTI', 'mbti'),
-                  _buildDropdown('Constellation', 'constellation'),
-                  _buildDropdown('Blood Type', 'blood_type'),
-                  _buildDropdown('Religion', 'religion'),
-                  _buildDropdown('Sexuality', 'sexuality'),
-                  _buildDropdown("Ethnicity", 'ethnicity'),
-                  _buildDropdown('Diet', 'diet'),
-                  _buildDropdown('Smoke', 'smoke'),
-                  _buildDropdown('Drinking', 'drinking'),
-                  _buildDropdown('Marijuana', 'marijuana'),
-                  _buildDropdown('Drugs', 'drugs'),
-
-                  _buildTagSelector(
-                    'Inetrest',
-                    'interest_types',
-                    _selectedInterestTags,
-                    _availableInterestTags,
-                  ),
-                  // Doesn't have language , personalities , skills
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _saveProfile,
-                    child: const Text('Save'),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  )
-                ],
+    return Stack(children: [
+      Scaffold(
+        body: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            const Text(
+              "About Me",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            if (isLoading) ...[
-              Opacity(
-                opacity: 0.8,
-                child: Container(
-                  color: Colors.black,
-                ),
+            const Text(
+              "Make it easy for others to get a sense of who you are",
+              style: TextStyle(
+                color: Colors.black26,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              const Center(child: CircularProgressIndicator())
-            ]
-          ]);
-        } else {
-          return Center(child: Text("Error: ${snapshot.data!["status"]}"));
-        }
-      },
-    );
+            ),
+            _buildTextField('Bio', 'bio', maxLines: 4),
+            const Text(
+              "My Details",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            //_buildTextField('Name', 'name', isRequired: true),
+            _buildTextField('Phone', 'phone', isRequired: true),
+            _buildTextField('Nick Name', 'nickname', isRequired: true),
+            _buildDatePicker('Birthday', 'dob', isRequired: true),
+            _buildDropdown('Gender', 'gender', isRequired: true),
+            _buildTextField('Current Location', 'current_location'),
+            _buildTextField('Hometown', 'hometown'),
+            _buildTextField('College', 'college'),
+            _buildTextField('Job Title', 'job_title'),
+            _buildDropdown('Education', 'education_level'),
+            _buildDropdown('MBTI', 'mbti'),
+            _buildDropdown('Constellation', 'constellation'),
+            _buildDropdown('Blood Type', 'blood_type'),
+            _buildDropdown('Religion', 'religion'),
+            _buildDropdown('Sexuality', 'sexuality'),
+            _buildDropdown("Ethnicity", 'ethnicity'),
+            _buildDropdown('Diet', 'diet'),
+            _buildDropdown('Smoke', 'smoke'),
+            _buildDropdown('Drinking', 'drinking'),
+            _buildDropdown('Marijuana', 'marijuana'),
+            _buildDropdown('Drugs', 'drugs'),
+
+            _buildTagSelector(
+              'Inetrest',
+              'interest_types',
+              _selectedInterestTags,
+              _availableInterestTags,
+            ),
+            // Doesn't have language , personalities , skills
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _saveProfile,
+              child: const Text('Save'),
+            ),
+            const SizedBox(
+              height: 30,
+            )
+          ],
+        ),
+      ),
+      if (isLoading) ...[
+        Opacity(
+          opacity: 0.8,
+          child: Container(
+            color: Colors.black,
+          ),
+        ),
+        const Center(child: CircularProgressIndicator())
+      ]
+    ]);
   }
 
   void _saveProfile() async {
@@ -463,7 +462,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       isLoading = true;
     });
 
-    profileTransformer = Profile.initfromData(_profileData);
+    Profile profileTransformer = Profile.initfromData(_profileData);
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -477,6 +476,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (context.mounted) {
       if (response["status"] == "success") {
+        Profile.manager = profileTransformer;
         showDialog(
           context: context,
           builder: (context) {
