@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class profileTagSelector extends StatefulWidget {
   const profileTagSelector({
-    Key? key,
+    super.key,
     required this.label,
     required this.selectedTags,
     required this.availableTags,
     required this.onChanged,
     this.isRequired = false,
-  }) : super(key: key);
+  });
 
   final String label;
   final List<String> selectedTags;
