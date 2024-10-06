@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             setState(() {
                               isLoading = true;
                             });
-                            
+
                             debugPrint("Sending Regist Request");
                             final response = await Network.manager.sendRequest(
                                 method: RequestMethod.post,
@@ -93,9 +93,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
 
                             if (context.mounted) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => SystemMessage(content: response["data"]["message"]));
+                              if (response["status"] == "success") {
+                                Network.manager.saveUserId(response["data"]["user_id"]);
+                                Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => SystemMessage(
+                                        content: response["data"]["message"]));
+                              }
                             }
                           },
                           child: const Text(
