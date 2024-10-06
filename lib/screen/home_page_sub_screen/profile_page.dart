@@ -86,7 +86,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   runSpacing: 4,
                   children: selectedTags
                       .map((tag) => Chip(
-                            label: Text('#' + tag),
+                            label: Text('#$tag'),
                             onDeleted: () {
                               setState(() {
                                 selectedTags.remove(tag);
@@ -104,7 +104,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   onTap: () => _showTagSelectionDialog(
                       label, key, selectedTags, availableTags),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4),
@@ -135,7 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           //點擊按下要改變背景顏色，需要這一層來控制
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Choose your ' + label),
+              title: Text('Choose your $label'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -143,7 +143,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     spacing: 8.0,
                     children: availableTags.map((String tag) {
                       return FilterChip(
-                        label: Text("#" + tag),
+                        label: Text("#$tag"),
                         selected: selectedTags.contains(tag),
                         onSelected: (bool selected) {
                           setState(() {
@@ -427,10 +427,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   _buildDropdown('Drinking', 'drinking'),
                   _buildDropdown('Marijuana', 'marijuana'),
                   _buildDropdown('Drugs', 'drugs'),
-                  // Doesn't have drugs , smoke , drinking , marijuana
 
                   _buildTagSelector(
-                    'Intrest',
+                    'Inetrest',
                     'interest_types',
                     _selectedInterestTags,
                     _availableInterestTags,
@@ -478,30 +477,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       );
       return;
     }
-    // TODO: 跟server做上傳資料，上傳資料格式在_profileData
-    /*
-      Key: phone, Value: CCCC
-      Key: nickname, Value: DDDD
-      Key: dob, Value: 2004/01/14
-      Key: gender, Value: Female
-      Key: bio, Value: null
-      Key: current_location, Value: null
-      Key: hometown, Value: null
-      Key: college, Value: null
-      Key: job_title, Value: null
-      Key: education_level, Value: Prefer not to say
-      Key: mbti, Value: Prefer not to say
-      Key: constellation, Value: Prefer not to say
-      Key: blood_type, Value: Prefer not to say
-      Key: religion, Value: Prefer not to say
-      Key: sexuality, Value: Prefer not to say
-      Key: ethnicity, Value: Prefer not to say
-      Key: diet, Value: Prefer not to say
-      Key: skills, Value: null
-      Key: personalities, Value: null
-      Key: languages, Value: null
-      Key: interest_types, Value: Sports,Travel
-    */
+
     _profileData.forEach((key, value) {
       debugPrint('Key: $key, Value: $value');
     });
