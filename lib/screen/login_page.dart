@@ -91,7 +91,11 @@ class _LoginPageState extends State<LoginPage> {
                           if (response["status"] == "success") {
                             Network.manager
                                 .saveUserId(response["data"]["user_id"]);
-                            Navigator.pushNamed(context, RouteMap.homePage);
+                            if(response["data"]["profile_exists"]){
+                              Navigator.pushNamed(context, RouteMap.homePage);
+                            } else {
+                              Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                            }
                             debugPrint("Login success");
                           } else {
                             showDialog(
