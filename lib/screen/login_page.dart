@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:spark_up/common_widget/system_message.dart";
+import "package:spark_up/data/profile.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
+import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
 
 class LoginPage extends StatefulWidget {
@@ -91,10 +93,26 @@ class _LoginPageState extends State<LoginPage> {
                           if (response["status"] == "success") {
                             Network.manager
                                 .saveUserId(response["data"]["user_id"]);
-                            if(response["data"]["profile_exists"]){
-                              Navigator.pushNamed(context, RouteMap.homePage);
+                            if (response["data"]["profile_exists"]) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              debugPrint("Sending Profile View Request");
+                              final profileResponse = await Network.manager
+                                  .sendRequest(
+                                      method: RequestMethod.get,
+                                      path: ProfilePath.view,
+                                      pathMid: ["${Network.manager.userId}"]);
+                              debugPrint("Finished Profile View Request");
+                              debugPrint("Profile Response Status: ${profileResponse["status"]}");
+                              Profile.manager = Profile.initfromData(profileResponse["data"]);
+
+                              if(context.mounted){
+                                Navigator.pushNamed(context, RouteMap.homePage);
+                              }
                             } else {
-                              Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                              Navigator.pushNamed(
+                                  context, RouteMap.initialProfileDataPage);
                             }
                             debugPrint("Login success");
                           } else {
