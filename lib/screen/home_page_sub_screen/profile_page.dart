@@ -14,15 +14,15 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final Map<String, String?> _profileData = {
     //'name': null,
-    'phone': null,
-    'nickname': null,
-    'dob': null,
-    'gender': null,
-    'bio': null,
-    'current_location': null,
-    'hometown':null,
-    'college': null,
-    'job_title':null,
+    'phone': '',
+    'nickname': '',
+    'dob': '',
+    'gender': 'Prefer not to say', //給空字串會炸，除非我們genderList加一個''
+    'bio': '',
+    'current_location': '',
+    'hometown':'',
+    'college': '',
+    'job_title':'',
     'education_level': 'Prefer not to say',
     'mbti':'Prefer not to say',
     'constellation': 'Prefer not to say',
@@ -37,10 +37,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'marijuana':'Prefer not to say',
     'drugs':'Prefer not to say',
     */    
-    'skills':null,
-    'personalities':null,
-    'languages':null,
-    'interest_types':null,
+    'skills':'',
+    'personalities':'',
+    'languages':'',
+    'interest_types':'',
   };
 
   final Map<String, List<String>> _dropdownOptions = {
@@ -54,7 +54,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'ethnicity':ethnicityList,
     'diet':dietList,
   };
+  late Map<String, TextEditingController> _controllers; //TextField改用TextEditingController去防問題，也避免他重製輸入標
+  @override
+  void initState() {
+    super.initState();
+    _controllers = {
+      'phone': TextEditingController(text: _profileData['phone'] ?? ''),
+      'nickname': TextEditingController(text: _profileData['nickname'] ?? ''),
+      'bio': TextEditingController(text: _profileData['bio'] ?? ''),
+      'current_location': TextEditingController(text: _profileData['current_location'] ?? ''),
+      'hometown': TextEditingController(text: _profileData['hometown'] ?? ''),
+      'college': TextEditingController(text: _profileData['college'] ?? ''),
+      'job_title': TextEditingController(text: _profileData['job_title'] ?? ''),
+    };
 
+    // 為每個控制器添加Listener
+    //宣告各自textEditingController去做到"當文本更新的時候，自動同步到_profiledData上"
+    _controllers.forEach((key, controller) {
+      controller.addListener(() {
+        // 當文本變化時，更新 _profileData 中對應的值
+        _profileData[key] = controller.text;
+      });
+    });
+  }
   final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
   final List<String> _availableInterestTags = eventType;
 
@@ -284,7 +306,7 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, // 確保所有文本在垂直方向上對齊
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: 140,
@@ -311,18 +333,14 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
                 hintText: "Enter $label here",
                 hintStyle: const TextStyle(color: Colors.black26),
               ),
-              controller: TextEditingController(text: _profileData[key] ?? ''), //當物件太多的時候，滑動到下方，他會將此widget刪除，所以重建時，要顯示輸入情況
-              onChanged: (value) {
-                setState(() {
-                  _profileData[key] = value;
-                });
-              },
+              controller: _controllers[key], //放棄根據_profileData的string進行防守。改利用textEditingController去防
             ),
           ),
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -354,7 +372,6 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
               fontWeight: FontWeight.bold,
             ),
           ),
-          //_buildTextField('Name', 'name', isRequired: true),
           _buildTextField('Phone', 'phone', isRequired: true),
           _buildTextField('Nick Name', 'nickname',isRequired: true),
           _buildDatePicker('Birthday', 'dob',isRequired:true),
@@ -393,10 +410,10 @@ void _showTagSelectionDialog(String label, String key, List<String> selectedTags
 
   void _saveProfile() {
     if( //如果資料不對，應該要在這裡阻斷
-    _profileData['nickname']==null||
-    _profileData['gender']==null||
-    _profileData['phone']==null||
-    _profileData['dob']==null
+    _profileData['nickname']?.length==0||
+    _profileData['gender']?.length==0||
+    _profileData['phone']?.length==0||
+    _profileData['dob']?.length==0
     ){
       ToastService.showErrorToast(
         context,
