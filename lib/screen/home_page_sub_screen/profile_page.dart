@@ -36,13 +36,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'drugs': drugsList,
   };
 
-  final List<String> _selectedInterestTags = []; //紀錄當前選擇的tag
-  final List<String> _availableInterestTags = eventType;
+  late List<String> _selectedInterestTags; //紀錄當前選擇的tag
+  late List<String> _availableInterestTags;
 
   @override
   initState() {
     super.initState();
-
+    
     _profileData = Profile.manager.toProfile;
     _textContollerMap = _profileData.map(
       (key, value) {
@@ -51,6 +51,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
             : MapEntry(key, TextEditingController());
       },
     );
+
+    _availableInterestTags = List<String>.from(eventType);
+    _selectedInterestTags = _profileData["interest_types"];
+    for(var type in _selectedInterestTags){
+      _availableInterestTags.remove(type);
+    }
   }
 
   Widget _buildTagSelector(String label, String key, List<String> selectedTags,
@@ -81,8 +87,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             onDeleted: () {
                               setState(() {
                                 selectedTags.remove(tag);
-                                _profileData[key] = selectedTags
-                                    .join(','); //要時刻記錄當前操作資訊，避免在這一層刪除資訊但沒紀錄到
+                                availableTags.add(tag);
+                                _profileData[key] = selectedTags;
                               });
                             },
                             deleteIconColor: Colors.grey,
@@ -141,7 +147,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           setState(() {
                             if (selected) {
                               selectedTags.add(tag);
+                              availableTags.remove(tag);
                             } else {
+                              availableTags.remove(tag);
                               selectedTags.remove(tag);
                             }
                           });
@@ -170,7 +178,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       //等上面確認跳出視窗後，再做setState更新資訊(使_profileData能吃到更新資訊)，並且更新使selectedTags.map((tag) => Chip重新運作
       setState(() {
         //只要這個視窗跳走，就會記錄當前有的資訊
-        _profileData[key] = selectedTags.join(',');
+        _profileData[key] = selectedTags;
       });
     });
   }
