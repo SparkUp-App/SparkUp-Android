@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 50,
+                        height: 20,
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),

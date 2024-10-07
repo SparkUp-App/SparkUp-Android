@@ -18,13 +18,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFF16743), Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.center,
+        )
+      ),
+    child:Scaffold(
+      backgroundColor: Colors.transparent,
+        
         body: Center(
             child: Stack(
           children: [
@@ -35,30 +39,99 @@ class _RegisterPageState extends State<RegisterPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              hintText: "Please Enter Email",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              )),
-                        )),
-                    Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: TextField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              hintText: "Please Enter Password",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              )),
-                        )),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                "Email",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFFE9765B),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 2.0),
+                              width: double.infinity,
+                              child: TextField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  prefixIcon: const Icon(Icons.email), 
+                                  prefixIconColor: Colors.black26,
+                                  hintText: "Please Enter Email",
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black26,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                "Password",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFFE9765B),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 2.0),
+                              width: double.infinity,
+                              child: TextField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  prefixIcon: const Icon(Icons.lock), 
+                                  prefixIconColor: Colors.black26,
+                                  hintText: "Please Enter Password",
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black26,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     Container(
                         margin: const EdgeInsets.only(top: 50.0),
                         child: TextButton(
@@ -118,6 +191,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.black,
                       child: const Center(child: CircularProgressIndicator())))
           ],
-        )));
+        ))));
   }
 }
