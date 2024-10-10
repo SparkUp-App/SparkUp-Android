@@ -31,77 +31,127 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Basic Profile'),
-        automaticallyImplyLeading: false,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFF16743), Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.center,
+        ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          const Center(
-            child: Text(
-            "Please fill in the required information",
-            style: TextStyle(
-              color: Colors.black26,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+      child:Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+        ),
+        body: Center(
+          child:ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Before start",
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8), // Add some spacing between the texts
+                    Text(
+                      "Let us know something about you...",
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height:80),
+              profileTextfield(
+                label: 'Phone',
+                hintLabel: 'Enter phone number',
+                textFieldIcon: Icons.phone,
+                value: _basicProfileData['phone']??"",
+                onChanged: (newValue) {
+                  setState(() {
+                    _basicProfileData['phone'] = newValue;
+                  });
+                },
+                isRequired: true,
+              ),
+              profileTextfield(
+                label: 'nickname',
+                hintLabel: 'Enter nickname',
+                textFieldIcon: Icons.person,
+                value: _basicProfileData['nickname']??"",
+                onChanged: (newValue) {
+                  setState(() {
+                    _basicProfileData['nickname'] = newValue;
+                  });
+                },
+                isRequired: true,
+              ),
+              profieldDatepicker(
+                label: 'Date of Birth',
+                value: _basicProfileData['dob']??"",
+                datepickerIcon: Icons.calendar_month_rounded,
+                onChanged: (newValue) {
+                  setState(() {
+                    _basicProfileData['dob'] = newValue;
+                  });
+                },
+                isRequired: true,
+              ),
+              profileDropdown(
+                label: 'Gender',
+                value: _basicProfileData['gender']??"",
+                dropdownIcon: Icons.ac_unit,
+                options: genderList,
+                onChanged:(newValue) {
+                  setState(() {
+                    _basicProfileData['gender'] = newValue;
+                  });
+                },
+                isRequired: true,
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: SizedBox(
+                  width: 220,
+                  height: 47,
+                  child: ElevatedButton(
+                    onPressed: ()=> _navigateToDetailedProfile(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFF16743),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          ),
-          profileTextfield(
-            label: 'Phone',
-            hintLabel: 'Enter phone number',
-            textFieldIcon: Icons.phone,
-            value: _basicProfileData['phone']??"",
-            onChanged: (newValue) {
-              setState(() {
-                _basicProfileData['phone'] = newValue;
-              });
-            },
-            isRequired: true,
-          ),
-          profileTextfield(
-            label: 'nickname',
-            hintLabel: 'Enter nickname',
-            textFieldIcon: Icons.person,
-            value: _basicProfileData['nickname']??"",
-            onChanged: (newValue) {
-              setState(() {
-                _basicProfileData['nickname'] = newValue;
-              });
-            },
-            isRequired: true,
-          ),
-          profieldDatepicker(
-            label: 'Date of Birth', 
-            value: _basicProfileData['dob']??"",
-            datepickerIcon: Icons.calendar_month_rounded,
-            onChanged: (newValue) {
-              setState(() {
-                _basicProfileData['dob'] = newValue;
-              });
-            },
-            isRequired: true,
-          ),
-          profileDropdown(
-            label: 'Gender', 
-            value: _basicProfileData['gender']??"", 
-            dropdownIcon: Icons.ac_unit,
-            options: genderList, 
-            onChanged:(newValue) {
-              setState(() {
-                _basicProfileData['gender'] = newValue;
-              });
-            },
-            isRequired: true,
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _navigateToDetailedProfile,//導航到detail頁面
-            child: const Text('Next'),
-          ),
-        ],
+        ),
       ),
     );
   }
