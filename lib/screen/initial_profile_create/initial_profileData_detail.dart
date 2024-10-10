@@ -56,7 +56,8 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       appBar: AppBar(
         
       ),
-      body: Stack(children: [
+      body: Stack(
+        children: [
         ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
