@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (passwordController.text != confirmPasswordController.text) {
-                              showDialog(
+                              showDialog( //這裡我先多check密碼與確認密碼是否匹配
                                 context: context,
                                 builder: (context) => AlertDialog(
                                   title: Text('Error'),

@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
             width: double.infinity,
             child: TextField(
               controller: controller,
-              obscureText: isObscured, //確認是否要點點隱藏輸入的內容
+              obscureText: isObscured, //確認是否要用點點隱藏輸入的內容(密碼欄位最需要)
               decoration: InputDecoration(
                 filled: true, 
                 fillColor: Colors.white, 
@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               SizedBox(height: 10,),
                               Center(
-                                child: SizedBox( // SizedBox 控制按鈕大小
+                                child: SizedBox( // SizedBox 控制大小
                                   width: 220,
                                   height: 47,
                                   child: ElevatedButton(
