@@ -61,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "Email",
                                         style: const TextStyle(
+                                          fontFamily: 'IowanOldStyle',
                                           fontSize: 16,
                                           color: Color(0xFFE9765B),
                                           fontWeight: FontWeight.w600,
@@ -87,9 +88,10 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                           prefixIcon: const Icon(Icons.email),
                                           prefixIconColor: Colors.black26,
-                                          hintText: "Please Enter Email",
+                                          hintText: "Email Address",
                                           hintStyle: const TextStyle(
-                                            color: Colors.black26,
+                                            fontFamily: 'IowanOldStyle',
+                                            color: Colors.black38,
                                           ),
                                         ),
                                       ),
@@ -107,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "Password",
                                         style: const TextStyle(
+                                          fontFamily: 'IowanOldStyle',
                                           fontSize: 16,
                                           color: Color(0xFFE9765B),
                                           fontWeight: FontWeight.w600,
@@ -136,7 +139,8 @@ class _LoginPageState extends State<LoginPage> {
                                           prefixIconColor: Colors.black26,
                                           hintText: "Please Enter Password",
                                           hintStyle: const TextStyle(
-                                            color: Colors.black26,
+                                            fontFamily: 'IowanOldStyle',
+                                            color: Colors.black38,
                                           ),
                                         ),
                                       ),
@@ -150,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                               
                               Center( 
                                 child: SizedBox( //SizedBox鎖他大小
-                                  width: 200, 
+                                  width: 220, 
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () async {
@@ -216,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: const Text(
                                       'Login',
                                       style: TextStyle(
+                                        fontFamily: 'IowanOldStyle',
                                         color: Colors.white,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -227,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(height: 10,),
                               Center(
                                 child: SizedBox( // SizedBox 控制按鈕大小
-                                  width: 200,
+                                  width: 220,
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () {
@@ -242,6 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: const Text(
                                       'Sign Up', // 改為 'Register' 因為這個按鈕是用來註冊的
                                       style: TextStyle(
+                                        fontFamily: 'IowanOldStyle',
                                         color: Colors.white,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -250,6 +256,17 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
+                              Center(
+                                child: Text(
+                                  "Don't have an account?",
+                                  style: TextStyle(
+                                        fontFamily: 'IowanOldStyle',
+                                        color: Color(0xFFF16743),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              )
                             ],
                           )
                       ),

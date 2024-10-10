@@ -55,6 +55,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: IowanOldStyle
+      fonts:
+        - asset: assets/fonts/IowanOldStyle-Regular.ttf
   assets:
     - assets/
 
