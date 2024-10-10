@@ -102,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     if (passwordController.text != confirmPasswordController.text) {
-                                      showDialog(
+                                      showDialog( //如果密碼與確認密碼不匹配，就直接不讓他過，之後這些資訊都可以轉成toastybox顯示
                                         context: context,
                                         builder: (context) => AlertDialog(
                                           title: Text('Error'),
