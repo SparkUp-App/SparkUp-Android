@@ -43,6 +43,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: controller,
               obscureText: isObscured, //確認是否要點點隱藏輸入的內容
               decoration: InputDecoration(
+                filled: true, 
+                fillColor: Colors.white, 
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Color(0xFFE9765B)),
                   borderRadius: BorderRadius.circular(10.0),
@@ -85,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.transparent,
                   body: Center(
                     child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(), //物理動畫
                       child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
                           child: Column(
@@ -96,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 273,
                                 child: Image.asset(
                                   'assets/sparkUpMainIcon.png',
-                                  fit: BoxFit.contain, // 根據需求選擇如何適應容器（例如 cover, contain, fill）
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                               SizedBox(
@@ -200,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     child: const Text(
-                                      'Sign Up', // 改為 'Register' 因為這個按鈕是用來註冊的
+                                      'Sign Up', 
                                       style: TextStyle(
                                         fontFamily: 'IowanOldStyle',
                                         color: Colors.white,
