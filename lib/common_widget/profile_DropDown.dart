@@ -46,6 +46,8 @@ class _ProfileDropdownState extends State<profileDropdown> {
                 value: widget.value,
                 isExpanded: true,
                 decoration: InputDecoration(
+                  filled: true, 
+                  fillColor: Colors.white, 
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Color(0xFFE9765B)),
                     borderRadius: BorderRadius.circular(10.0),
