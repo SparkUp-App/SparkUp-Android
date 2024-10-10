@@ -17,8 +17,8 @@ class _RegisterPageState extends State<RegisterPage> {
   var confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
-  Widget login_TextField(IconData textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
-    return  Padding(
+  Widget login_TextField(IconData textFieldIcon, String label, String hintText, TextEditingController controller, {bool isObscured = false}) {
+    return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
             width: double.infinity,
             child: TextField(
               controller: controller,
-              obscureText: isObscured, //確認是否要點點隱藏輸入的內容
+              obscureText: isObscured,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Color(0xFFE9765B)),
@@ -72,114 +72,119 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF16743), Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.center,
-            )
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFF16743), Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.center,
         ),
-        child:Scaffold(
+      ),
+      child: Stack(
+        children: [
+          Scaffold(
             backgroundColor: Colors.transparent,
             body: Center(
-                child: Stack(
+              child: SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 25.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 50.0, horizontal: 25.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            login_TextField(Icons.email,'Email','Email Address',emailController),
-                            login_TextField(Icons.lock,'Password','Password',passwordController,isObscured: true),
-                            login_TextField(Icons.lock,'Confirm Password','Confirm Password',confirmPasswordController,isObscured: true),
-                            SizedBox(height: 70),
-                            Center(
-                              child: SizedBox( //SizedBox鎖他大小
-                                width: 220,
-                                height: 47,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    if (passwordController.text != confirmPasswordController.text) {
-                                      showDialog( //如果密碼與確認密碼不匹配，就直接不讓他過，之後這些資訊都可以轉成toastybox顯示
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: Text('Error'),
-                                          content: Text('Passwords do not match!'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('OK'),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-
-                                    debugPrint("Sending Regist Request");
-                                    final response = await Network.manager.sendRequest(
-                                        method: RequestMethod.post,
-                                        path: AuthPath.register,
-                                        data: {
-                                          "email": emailController.text,
-                                          "password": passwordController.text,
-                                        });
-                                    debugPrint("Regitst Request Finish");
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-
-                                    if (context.mounted) {
-                                      if (response["status"] == "success") {
-                                        Network.manager.saveUserId(response["data"]["user_id"]);
-                                        Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => SystemMessage(
-                                                content: response["data"]["message"]));
-                                      }
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFFF16743),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
+                    SizedBox(height: 100,),//確定他是否可以scroll
+                    login_TextField(Icons.email, 'Email', 'Email Address', emailController),
+                    login_TextField(Icons.lock, 'Password', 'Password', passwordController, isObscured: true),
+                    login_TextField(Icons.lock, 'Confirm Password', 'Confirm Password', confirmPasswordController, isObscured: true),
+                    SizedBox(height: 70),
+                    Center(
+                      child: SizedBox(
+                        width: 220,
+                        height: 47,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (passwordController.text != confirmPasswordController.text) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Error'),
+                                  content: Text('Passwords do not match!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
                                     ),
-                                  ),
-                                  child: const Text(
-                                    'Register!',
-                                    style: TextStyle(
-                                      fontFamily: 'IowanOldStyle',
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                              ),
-                            ),
+                              );
+                              return;
+                            }
+                            setState(() {
+                              isLoading = true;
+                            });
 
-                          ],
-                        )),
-                    if (isLoading)
-                      Opacity(
-                          opacity: 0.8,
-                          child: Container(
-                              color: Colors.black,
-                              child: const Center(child: CircularProgressIndicator())))
+                            debugPrint("Sending Register Request");
+                            final response = await Network.manager.sendRequest(
+                              method: RequestMethod.post,
+                              path: AuthPath.register,
+                              data: {
+                                "email": emailController.text,
+                                "password": passwordController.text,
+                              },
+                            );
+                            debugPrint("Register Request Finished");
+
+                            setState(() {
+                              isLoading = false;
+                            });
+
+                            if (context.mounted) {
+                              if (response["status"] == "success") {
+                                Network.manager.saveUserId(response["data"]["user_id"]);
+                                Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => SystemMessage(content: response["data"]["message"]),
+                                );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFF16743),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            'Register!',
+                            style: TextStyle(
+                              fontFamily: 'IowanOldStyle',
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
-                )
-            )
-        )
+                ),
+              ),
+              ),
+            ),
+          ),
+          // Display loading indicator on top of the other widgets if isLoading is true
+          if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.8), // Semi-transparent black
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
