@@ -54,7 +54,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detailed Profile'),
+        
       ),
       body: Stack(children: [
         ListView(

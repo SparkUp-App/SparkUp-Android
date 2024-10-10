@@ -49,9 +49,10 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
           child:ListView(
             padding: const EdgeInsets.all(16.0),
             children: [
-              const Center(
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.20,
+                child:const Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -76,7 +77,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                   ],
                 ),
               ),
-              SizedBox(height:80),
+              ),
               profileTextfield(
                 label: 'Phone',
                 hintLabel: 'Enter phone number',
