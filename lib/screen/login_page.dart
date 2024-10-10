@@ -18,6 +18,57 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
   bool isLoading = false;
 
+  Widget login_TextField(IconData textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
+    return  Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontFamily: 'IowanOldStyle',
+                fontSize: 16,
+                color: Color(0xFFE9765B),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            width: double.infinity,
+            child: TextField(
+              controller: controller,
+              obscureText: isObscured, //確認是否要點點隱藏輸入的內容
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                prefixIcon: Icon(textFieldIcon),
+                prefixIconColor: Colors.black26,
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                  fontFamily: 'IowanOldStyle',
+                  color: Colors.black38,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,107 +102,11 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(
                                 height: 40,
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        "Email",
-                                        style: const TextStyle(
-                                          fontFamily: 'IowanOldStyle',
-                                          fontSize: 16,
-                                          color: Color(0xFFE9765B),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                                      width: double.infinity,
-                                      child: TextField(
-                                        controller: emailController,
-                                        decoration: InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          prefixIcon: const Icon(Icons.email),
-                                          prefixIconColor: Colors.black26,
-                                          hintText: "Email Address",
-                                          hintStyle: const TextStyle(
-                                            fontFamily: 'IowanOldStyle',
-                                            color: Colors.black38,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        "Password",
-                                        style: const TextStyle(
-                                          fontFamily: 'IowanOldStyle',
-                                          fontSize: 16,
-                                          color: Color(0xFFE9765B),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                                      width: double.infinity,
-                                      child: TextField(
-                                        controller: passwordController,
-                                        obscureText: true,
-                                        decoration: InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                                            borderRadius: BorderRadius.circular(10.0),
-                                          ),
-                                          prefixIcon: const Icon(Icons.lock),
-                                          prefixIconColor: Colors.black26,
-                                          hintText: "Please Enter Password",
-                                          hintStyle: const TextStyle(
-                                            fontFamily: 'IowanOldStyle',
-                                            color: Colors.black38,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              login_TextField(Icons.email,'Email','Email Address',emailController),
+                              login_TextField(Icons.lock,'Password','Password',passwordController,isObscured: true),
                               SizedBox(
                                 height: 30,
                               ),
-                              
                               Center( 
                                 child: SizedBox( //SizedBox鎖他大小
                                   width: 220, 
