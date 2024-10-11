@@ -67,6 +67,8 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
+                      filled: true, 
+                      fillColor: Colors.white, 
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
                         borderRadius: BorderRadius.circular(10.0),

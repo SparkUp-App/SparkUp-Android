@@ -55,7 +55,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  fonts:
+    - family: IowanOldStyle
+      fonts:
+        - asset: assets/fonts/IowanOldStyle-Regular.ttf
+  assets:
+    - assets/
+    - assets/event/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

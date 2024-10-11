@@ -46,6 +46,8 @@ class _ProfileDropdownState extends State<profileDropdown> {
                 value: widget.value,
                 isExpanded: true,
                 decoration: InputDecoration(
+                  filled: true, 
+                  fillColor: Colors.white, 
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Color(0xFFE9765B)),
                     borderRadius: BorderRadius.circular(10.0),
@@ -66,11 +68,18 @@ class _ProfileDropdownState extends State<profileDropdown> {
                 items: widget.options.map((String option) {
                   return DropdownMenuItem<String>(
                     value: option,
-                    child: Text(option),
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        color: option == 'Prefer not to say'
+                            ? Colors.black38 // 如果選擇的是 'Prefer not to say'，顯示灰色
+                            : Colors.black, // 其他選項顯示黑色
+                      ),
+                    ),
                   );
                 }).toList(),
                 onChanged: (value) {
-                  widget.onChanged(value); // 将改变的值传递给父级
+                  widget.onChanged(value);
                 },
               ),
             ),
