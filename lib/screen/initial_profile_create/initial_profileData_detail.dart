@@ -257,13 +257,8 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               },
               isRequired: true,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveProfile,
-              child: const Text('Save'),
-            ),
             const SizedBox(
-              height: 30,
+              height: 100,
             )
           ],
         ),
@@ -287,7 +282,11 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
             right: 0,
             height: 100, // 設置背景的高度
             child: Container(
-              color: Colors.white.withOpacity(0.95),// 淺白色背景
+              //color: Colors.white.withOpacity(0.95),// 淺白色背景
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.black12)), 
+                color:Colors.white.withOpacity(0.9),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
