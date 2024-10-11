@@ -278,7 +278,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                   width: 150,
                   height: 47,
                   child:ElevatedButton(
-                    onPressed: () => _saveProfile(),
+                    onPressed: () => Navigator.pushNamed(context, RouteMap.eventTypeProfilePage),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF16743),
                       shape: RoundedRectangleBorder(
@@ -306,29 +306,5 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       ),
       ),
     );
-  }
-
-  void _saveProfile() async {
-// TODO: 跟server做上傳資料，上傳資料格式在_detailProfileData，作法應該跟profile_page一樣
-    /*
-      Key: bio, Value: null
-      Key: current_location, Value: null
-      Key: hometown, Value: null
-      Key: college, Value: null
-      Key: job_title, Value: null
-      Key: education_level, Value: Prefer not to say
-      Key: mbti, Value: Prefer not to say
-      Key: constellation, Value: Prefer not to say
-      Key: blood_type, Value: Prefer not to say
-      Key: religion, Value: Prefer not to say
-      Key: sexuality, Value: Prefer not to say
-      Key: ethnicity, Value: Prefer not to say
-      Key: diet, Value: Prefer not to say
-      Key: skills, Value: null
-      Key: personalities, Value: null
-      Key: languages, Value: null
-      Key: interest_types, Value: Sports,Travel
-    */
-    Navigator.pushNamed(context, RouteMap.eventTypeProfilePage);
   }
 }
