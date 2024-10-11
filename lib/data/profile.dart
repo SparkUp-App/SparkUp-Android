@@ -132,7 +132,7 @@ class Profile extends HttpData {
   }
 
   @override
-  Map<dynamic, dynamic> get toMap {
+  Map<String, dynamic> get toMap {
     return {
       "phone": phone,
       "nickname": nickname,
