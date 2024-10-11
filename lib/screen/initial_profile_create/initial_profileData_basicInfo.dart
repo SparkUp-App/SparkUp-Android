@@ -18,23 +18,7 @@ class BasicProfilePage extends StatefulWidget {
 }
 
 class _BasicProfilePageState extends State<BasicProfilePage> {
-
-  final Map<String, String?> _basicProfileData = {
-    'phone': '',
-    'nickname': '',
-    'dob': '',
-    'gender': 'Prefer not to say', //默認值
-  };
-
   bool _isKeyboardVisible = false;
-  //彥廷會做初始化
-
-  //TODO
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +82,10 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     label: 'Phone',
                     hintLabel: 'Enter phone number',
                     textFieldIcon: Icons.phone,
-                    value: _basicProfileData['phone'] ?? "",
+                    value: Profile.manager.phone,
                     onChanged: (newValue) {
                       setState(() {
-                        _basicProfileData['phone'] = newValue;
+                        Profile.manager.phone = newValue ?? "";
                       });
                     },
                     isRequired: true,
@@ -110,33 +94,33 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     label: 'Nickname',
                     hintLabel: 'Enter nickname',
                     textFieldIcon: Icons.person,
-                    value: _basicProfileData['nickname'] ?? "",
+                    value: Profile.manager.nickname,
                     onChanged: (newValue) {
                       setState(() {
-                        _basicProfileData['nickname'] = newValue;
+                        Profile.manager.nickname = newValue ?? "";
                       });
                     },
                     isRequired: true,
                   ),
                   profieldDatepicker(
                     label: 'Date of Birth',
-                    value: _basicProfileData['dob'] ?? "",
+                    value: Profile.manager.dob,
                     datepickerIcon: Icons.calendar_month_rounded,
                     onChanged: (newValue) {
                       setState(() {
-                        _basicProfileData['dob'] = newValue;
+                        Profile.manager.dob = newValue ?? "";
                       });
                     },
                     isRequired: true,
                   ),
                   profileDropdown(
                     label: 'Gender',
-                    value: _basicProfileData['gender'] ?? "",
+                    value: Profile.manager.gneder.label,
                     dropdownIcon: Icons.ac_unit,
                     options: genderList,
                     onChanged: (newValue) {
                       setState(() {
-                        _basicProfileData['gender'] = newValue;
+                        Profile.manager.gneder = Gender.fromString(newValue ?? "Prefer not to say");
                       });
                     },
                     isRequired: true,
@@ -187,10 +171,9 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
   }
 
   void _navigateToDetailedProfile() {
-    if (_basicProfileData['phone']?.isEmpty == true ||
-        _basicProfileData['nickname']?.isEmpty == true ||
-        _basicProfileData['dob']?.isEmpty == true ||
-        _basicProfileData['gender']?.isEmpty == true) {
+    if (Profile.manager.phone.isEmpty == true ||
+        Profile.manager.nickname.isEmpty == true ||
+        Profile.manager.dob.isEmpty == true) {
       ToastService.showErrorToast(
         context,
         length: ToastLength.medium,
@@ -199,10 +182,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
       );
       return;
     }
-    //Profile initial
-    //Profile.manager.phone = _basicProfileData["phone"]!;
     
-    //Profile initial
     Navigator.pushNamed(context, RouteMap.detailProfilePage);
   }
 }
