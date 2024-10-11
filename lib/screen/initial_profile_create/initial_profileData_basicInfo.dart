@@ -8,6 +8,7 @@ import 'package:spark_up/common_widget/profile_Textfield.dart'; // 建立 common
 import 'package:spark_up/common_widget/profile_DatePicker.dart'; // 建立 common_widget
 import 'package:spark_up/common_widget/profile_DropDown.dart'; // 建立 common_widget
 import 'package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart'; // 導航到 detail 頁面，並將當前 basicInfo 資料傳遞到 detail 頁面
+import "package:spark_up/route.dart";
 
 class BasicProfilePage extends StatefulWidget {
   const BasicProfilePage({Key? key}) : super(key: key);
@@ -202,11 +203,6 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
     //Profile.manager.phone = _basicProfileData["phone"]!;
     
     //Profile initial
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetailedProfilePage(basicProfileData: _basicProfileData), // 傳遞資料並導航至詳細頁面
-      ),
-    );
+    Navigator.pushNamed(context, RouteMap.detailProfilePage);
   }
 }

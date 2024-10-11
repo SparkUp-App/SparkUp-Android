@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:spark_up/route.dart";
 
 class EventTypeProfilePage extends StatefulWidget {
   const EventTypeProfilePage({super.key});
@@ -8,18 +9,18 @@ class EventTypeProfilePage extends StatefulWidget {
 }
 
 class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
-  List<String> _selectedItems = [];
+  List<String> _selectedEvent = [];
 
   Widget eventTypeContainer(String eventName, String imagePath) {
-    bool isSelected = _selectedItems.contains(eventName);
+    bool isSelected = _selectedEvent.contains(eventName);
 
     return GestureDetector(
       onTap: () {
         setState(() {
           if (isSelected) {
-            _selectedItems.remove(eventName);
+            _selectedEvent.remove(eventName);
           } else {
-            _selectedItems.add(eventName);
+            _selectedEvent.add(eventName);
           }
         });
       },
@@ -82,7 +83,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea( //會自動偵測，避免超過看的到的地方
-          child: SingleChildScrollView( //一次load好比ListView慢load好
+          child: Stack(children: [ SingleChildScrollView( //一次load好比ListView慢load好
             child: Container(
                 child: Column(
                   children: [
@@ -168,43 +169,79 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10,),
-                    Center( //現階段不確定為何加了center才可以調整按鈕大小，通常他都直接預設是跟ListView依樣寬
-                      child: SizedBox(
-                        width: 220,
-                        height: 47,
-                        child: ElevatedButton(
-                          onPressed: () => _navigateToNextProfile(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF16743),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: const Text(
-                            'Continue',
-                            style: TextStyle(
-                              fontFamily: 'IowanOldStyle',
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    SizedBox(height: 120,),
                   ],
                 )
             ),
-
+          ),
+            Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 100, // 設置背景的高度
+            child: Container(
+              color: Colors.white.withOpacity(0.95),// 淺白色背景
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                  width: 150,
+                  height: 47,
+                  child:ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, RouteMap.detailProfilePage),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF16743),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ),
+                  SizedBox(
+                  width: 150,
+                  height: 47,
+                  child:ElevatedButton(
+                    onPressed: () => _navigateToNextProfile(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF16743),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ]
           ),
         ),
       ),
     );
   }
   void _navigateToNextProfile(){
-    //Todo : 彥廷幫幫我儲存，List<String> _selectedItems的資料
-    _selectedItems.forEach((item) {
+    //Todo : 彥廷幫幫我儲存，selectedEvent的資料
+    
+    _selectedEvent.forEach((item) {
       debugPrint('Item: $item');
     });
   }

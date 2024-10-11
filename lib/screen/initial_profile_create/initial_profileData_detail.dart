@@ -11,25 +11,23 @@ import 'package:spark_up/common_widget/profile_TagSelector.dart';
 
 //這裡有的資料除了自己這一頁以外，還有夾帶上一頁basicInfo的資訊
 class DetailedProfilePage extends StatefulWidget {
-  final Map<String, String?> basicProfileData;
 
-  const DetailedProfilePage({super.key, required this.basicProfileData});
-
+  const DetailedProfilePage({super.key});
   @override
   _DetailedProfilePageState createState() => _DetailedProfilePageState();
 }
 
 class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool isLoading = false;
-  late Map<String, dynamic> _profileData;
+  late Map<String, dynamic> _detailProfileData;
   late List<String> _selectedInterestTags;
   late List<String> _availableInterestTags;
+  bool _isKeyboardVisible = false;
 
   @override
   void initState() {
     super.initState();
-    _profileData = {
-      ...widget.basicProfileData, //將basicInfo在此組合，所以只需要對_profileData進行包裝成.json格式送給brian就好
+    _detailProfileData = {
       'bio': '', //現在先預設沒資料==空字串
       'current_location': '',
       'hometown': '',
@@ -52,59 +50,78 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    if (isKeyboardVisible != _isKeyboardVisible) {
+      setState(() {
+        _isKeyboardVisible = isKeyboardVisible;
+      });
+    }
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFF16743), Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.center,
+        ),
       ),
-      body: Stack(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+      body:SafeArea(child:Stack(
         children: [
-        ListView(
+          SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          children: [
-            const Text(
-              "About Me",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              "Make it easy for others to get a sense of who you are",
-              style: TextStyle(
-                color: Colors.black26,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          child: Column(
+                children: [
+            SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "If you want others know more",
+                            style: TextStyle(
+                              fontFamily: 'IowanOldStyle',
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "about you...",
+                            style: TextStyle(
+                              fontFamily: 'IowanOldStyle',
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
             profileTextfield(
               label: 'Bio',
               hintLabel: 'Enter Bio',
               textFieldIcon: Icons.location_city,
-              value: _profileData['bio'] ?? "",
+              value: _detailProfileData['bio'] ?? "",
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['bio'] = newValue;
+                  _detailProfileData['bio'] = newValue;
                 });
               },
               maxLine: 4,
-            ),
-            const Text(
-              "Additional Details",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
             ),
             profileTextfield(
               label: 'Current Location',
               hintLabel: 'Enter current location',
               textFieldIcon: Icons.location_city,
-              value: _profileData['current_location'] ?? "",
+              value: _detailProfileData['current_location'] ?? "",
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['current_location'] = newValue;
+                  _detailProfileData['current_location'] = newValue;
                 });
               },
             ),
@@ -112,10 +129,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Hometown',
               hintLabel: 'Enter Hometown',
               textFieldIcon: Icons.home,
-              value: _profileData['hometown'] ?? "",
+              value: _detailProfileData['hometown'] ?? "",
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['hometown'] = newValue;
+                  _detailProfileData['hometown'] = newValue;
                 });
               },
             ),
@@ -123,10 +140,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'College',
               hintLabel: 'Enter College',
               textFieldIcon: Icons.school,
-              value: _profileData['college'] ?? "",
+              value: _detailProfileData['college'] ?? "",
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['college'] = newValue;
+                  _detailProfileData['college'] = newValue;
                 });
               },
             ),
@@ -134,98 +151,98 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Job Title',
               hintLabel: 'Enter Job Title',
               textFieldIcon: Icons.home,
-              value: _profileData['job_title'] ?? "",
+              value: _detailProfileData['job_title'] ?? "",
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['job_title'] = newValue;
+                  _detailProfileData['job_title'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Education',
-              value: _profileData['education_level'] ?? "",
+              value: _detailProfileData['education_level'] ?? "",
               dropdownIcon: Icons.school,
               options: educationLevelList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['education_level'] = newValue;
+                  _detailProfileData['education_level'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'MBTI',
-              value: _profileData['mbti'] ?? "",
+              value: _detailProfileData['mbti'] ?? "",
               dropdownIcon: Icons.person_add_outlined,
               options: mbtiList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['mbti'] = newValue;
+                  _detailProfileData['mbti'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Constellation',
-              value: _profileData['constellation'] ?? "",
+              value: _detailProfileData['constellation'] ?? "",
               dropdownIcon: Icons.star_outline,
               options: constellationList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['constellation'] = newValue;
+                  _detailProfileData['constellation'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Blood Type',
-              value: _profileData['blood_type'] ?? "",
+              value: _detailProfileData['blood_type'] ?? "",
               dropdownIcon: Icons.water_drop_outlined,
               options: bloodTypeList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['blood_type'] = newValue;
+                  _detailProfileData['blood_type'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Religion',
-              value: _profileData['religion'] ?? "",
+              value: _detailProfileData['religion'] ?? "",
               dropdownIcon: Icons.public_outlined,
               options: religionList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['religion'] = newValue;
+                  _detailProfileData['religion'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Sexuality',
-              value: _profileData['sexuality'] ?? "",
+              value: _detailProfileData['sexuality'] ?? "",
               dropdownIcon: Icons.favorite_outline,
               options: sexualityList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['sexuality'] = newValue;
+                  _detailProfileData['sexuality'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: "Ethnicity",
-              value: _profileData['ethnicity'] ?? "",
+              value: _detailProfileData['ethnicity'] ?? "",
               dropdownIcon: Icons.group_outlined,
               options: ethnicityList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['ethnicity'] = newValue;
+                  _detailProfileData['ethnicity'] = newValue;
                 });
               },
             ),
             profileDropdown(
               label: 'Diet',
-              value: _profileData['diet'] ?? "",
+              value: _detailProfileData['diet'] ?? "",
               dropdownIcon: Icons.restaurant_menu_outlined,
               options: dietList,
               onChanged: (newValue) {
                 setState(() {
-                  _profileData['diet'] = newValue;
+                  _detailProfileData['diet'] = newValue;
                 });
               },
             ),
@@ -250,6 +267,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
             )
           ],
         ),
+          ),
         if (isLoading) ...[
           Opacity(
             opacity: 0.8,
@@ -260,18 +278,78 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
           const Center(
             child: CircularProgressIndicator(),
           ),
-        ]
-      ]),
+        ],
+        Visibility(
+          visible: !isKeyboardVisible,
+          child: Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 100, // 設置背景的高度
+            child: Container(
+              color: Colors.white.withOpacity(0.95),// 淺白色背景
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                  width: 150,
+                  height: 47,
+                  child:ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, RouteMap.initialProfileDataPage),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF16743),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ),
+                  SizedBox(
+                  width: 150,
+                  height: 47,
+                  child:ElevatedButton(
+                    onPressed: () => _saveProfile(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF16743),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]
+      ),
+      ),
+      ),
     );
   }
 
   void _saveProfile() async {
-// TODO: 跟server做上傳資料，上傳資料格式在_profileData，作法應該跟profile_page一樣
+// TODO: 跟server做上傳資料，上傳資料格式在_detailProfileData，作法應該跟profile_page一樣
     /*
-      Key: phone, Value: CCCC
-      Key: nickname, Value: DDDD
-      Key: dob, Value: 2004/01/14
-      Key: gender, Value: Female
       Key: bio, Value: null
       Key: current_location, Value: null
       Key: hometown, Value: null
@@ -290,32 +368,9 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       Key: languages, Value: null
       Key: interest_types, Value: Sports,Travel
     */
-    _profileData.forEach((key, value) {
+    _detailProfileData.forEach((key, value) {
       debugPrint('Key: $key, Value: $value');
     });
-
-    final Profile profileTransformer = Profile.initfromData(_profileData);
-
-    setState(() => isLoading = true);
-
-    debugPrint("Sending Update Profile Request");
-    final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: ProfilePath.update,
-        pathMid: ["${Network.manager.userId}"],
-        data: profileTransformer.toMap);
-    debugPrint("Finished Update Profile Request");
-
-    setState(() => isLoading = false);
-
-    if (response["status"] == "success") {
-      Profile.manager = profileTransformer;
-      Navigator.pushNamed(context, RouteMap.homePage);
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) =>
-              SystemMessage(content: "${response["data"]["message"]}"));
-    }
+    Navigator.pushNamed(context, RouteMap.eventTypeProfilePage);
   }
 }
