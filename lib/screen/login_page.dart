@@ -154,11 +154,11 @@ class _LoginPageState extends State<LoginPage> {
                                             Profile.manager = Profile.initfromData(profileResponse["data"]);
 
                                             if(context.mounted){
-                                              Navigator.pushNamed(context, RouteMap.homePage);
+                                              Navigator.pushReplacementNamed(context, RouteMap.homePage);
                                             }
                                           } else {
                                             Profile.manager = Profile.initfromDefault();
-                                            Navigator.pushNamed(
+                                            Navigator.pushReplacementNamed(
                                                 context, RouteMap.initialProfileDataPage);
                                           }
                                           debugPrint("Login success");

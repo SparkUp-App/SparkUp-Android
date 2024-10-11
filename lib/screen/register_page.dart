@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (response["status"] == "success") {
                                 Network.manager.saveUserId(response["data"]["user_id"]);
                                 Profile.manager = Profile.initfromDefault();
-                                Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
+                                Navigator.pushReplacementNamed(context, RouteMap.initialProfileDataPage);
                               } else {
                                 showDialog(
                                   context: context,
