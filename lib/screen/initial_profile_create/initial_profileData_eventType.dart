@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/data/profile.dart';
 import "package:spark_up/route.dart";
 
 class EventTypeProfilePage extends StatefulWidget {
@@ -9,18 +10,17 @@ class EventTypeProfilePage extends StatefulWidget {
 }
 
 class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
-  List<String> _selectedEvent = [];
 
   Widget eventTypeContainer(String eventName, String imagePath) {
-    bool isSelected = _selectedEvent.contains(eventName);
+    bool isSelected = Profile.manager.interestTypes.contains(eventName);
 
     return GestureDetector(
       onTap: () {
         setState(() {
           if (isSelected) {
-            _selectedEvent.remove(eventName);
+            Profile.manager.interestTypes.remove(eventName);
           } else {
-            _selectedEvent.add(eventName);
+            Profile.manager.interestTypes.add(eventName);
           }
         });
       },
@@ -241,7 +241,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
   void _navigateToNextProfile(){
     //Todo : 彥廷幫幫我儲存，selectedEvent的資料
     
-    _selectedEvent.forEach((item) {
+    Profile.manager.interestTypes.forEach((item) {
       debugPrint('Item: $item');
     });
   }
