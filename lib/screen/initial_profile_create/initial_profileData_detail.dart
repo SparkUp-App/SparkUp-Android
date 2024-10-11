@@ -19,7 +19,6 @@ class DetailedProfilePage extends StatefulWidget {
 
 class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool isLoading = false;
-  late Map<String, dynamic> _detailProfileData;
   late List<String> _selectedInterestTags;
   late List<String> _availableInterestTags;
   bool _isKeyboardVisible = false;
@@ -27,22 +26,6 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
   @override
   void initState() {
     super.initState();
-    _detailProfileData = {
-      'bio': '', //現在先預設沒資料==空字串
-      'current_location': '',
-      'hometown': '',
-      'college': '',
-      'job_title': '',
-      'education_level': 'Prefer not to say',
-      'mbti': 'Prefer not to say',
-      'constellation': 'Prefer not to say',
-      'blood_type': 'Prefer not to say',
-      'religion': 'Prefer not to say',
-      'sexuality': 'Prefer not to say',
-      'ethnicity': 'Prefer not to say',
-      'diet': 'Prefer not to say',
-      'interest_types': [],
-    };
 
     _selectedInterestTags = [];
     _availableInterestTags = List<String>.from(eventType);
@@ -106,10 +89,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Bio',
               hintLabel: 'Enter Bio',
               textFieldIcon: Icons.location_city,
-              value: _detailProfileData['bio'] ?? "",
+              value: Profile.manager.bio,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['bio'] = newValue;
+                  Profile.manager.bio = newValue ?? "";
                 });
               },
               maxLine: 4,
@@ -118,10 +101,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Current Location',
               hintLabel: 'Enter current location',
               textFieldIcon: Icons.location_city,
-              value: _detailProfileData['current_location'] ?? "",
+              value: Profile.manager.currentLocation,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['current_location'] = newValue;
+                  Profile.manager.currentLocation = newValue ?? "";
                 });
               },
             ),
@@ -129,10 +112,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Hometown',
               hintLabel: 'Enter Hometown',
               textFieldIcon: Icons.home,
-              value: _detailProfileData['hometown'] ?? "",
+              value: Profile.manager.hoemTown,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['hometown'] = newValue;
+                  Profile.manager.hoemTown = newValue ?? "";
                 });
               },
             ),
@@ -140,10 +123,10 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'College',
               hintLabel: 'Enter College',
               textFieldIcon: Icons.school,
-              value: _detailProfileData['college'] ?? "",
+              value: Profile.manager.college,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['college'] = newValue;
+                  Profile.manager.college = newValue ?? "";
                 });
               },
             ),
@@ -151,98 +134,98 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
               label: 'Job Title',
               hintLabel: 'Enter Job Title',
               textFieldIcon: Icons.home,
-              value: _detailProfileData['job_title'] ?? "",
+              value: Profile.manager.jobTitle,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['job_title'] = newValue;
+                  Profile.manager.jobTitle = newValue ?? "";
                 });
               },
             ),
             profileDropdown(
               label: 'Education',
-              value: _detailProfileData['education_level'] ?? "",
+              value: Profile.manager.educationLevel,
               dropdownIcon: Icons.school,
               options: educationLevelList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['education_level'] = newValue;
+                  Profile.manager.educationLevel = newValue ?? "";
                 });
               },
             ),
             profileDropdown(
               label: 'MBTI',
-              value: _detailProfileData['mbti'] ?? "",
+              value: Profile.manager.mbti,
               dropdownIcon: Icons.person_add_outlined,
               options: mbtiList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['mbti'] = newValue;
+                  Profile.manager.mbti = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: 'Constellation',
-              value: _detailProfileData['constellation'] ?? "",
+              value: Profile.manager.constellation,
               dropdownIcon: Icons.star_outline,
               options: constellationList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['constellation'] = newValue;
+                  Profile.manager.constellation = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: 'Blood Type',
-              value: _detailProfileData['blood_type'] ?? "",
+              value: Profile.manager.bloodType,
               dropdownIcon: Icons.water_drop_outlined,
               options: bloodTypeList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['blood_type'] = newValue;
+                  Profile.manager.bloodType = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: 'Religion',
-              value: _detailProfileData['religion'] ?? "",
+              value: Profile.manager.religion,
               dropdownIcon: Icons.public_outlined,
               options: religionList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['religion'] = newValue;
+                  Profile.manager.religion = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: 'Sexuality',
-              value: _detailProfileData['sexuality'] ?? "",
+              value: Profile.manager.sexuality,
               dropdownIcon: Icons.favorite_outline,
               options: sexualityList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['sexuality'] = newValue;
+                  Profile.manager.sexuality = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: "Ethnicity",
-              value: _detailProfileData['ethnicity'] ?? "",
+              value: Profile.manager.ethnicity,
               dropdownIcon: Icons.group_outlined,
               options: ethnicityList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['ethnicity'] = newValue;
+                  Profile.manager.ethnicity = newValue ?? "Prefer not to say";
                 });
               },
             ),
             profileDropdown(
               label: 'Diet',
-              value: _detailProfileData['diet'] ?? "",
+              value: Profile.manager.diet,
               dropdownIcon: Icons.restaurant_menu_outlined,
               options: dietList,
               onChanged: (newValue) {
                 setState(() {
-                  _detailProfileData['diet'] = newValue;
+                  Profile.manager.diet = newValue ?? "Prefer not to say";
                 });
               },
             ),
@@ -367,9 +350,6 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       Key: languages, Value: null
       Key: interest_types, Value: Sports,Travel
     */
-    _detailProfileData.forEach((key, value) {
-      debugPrint('Key: $key, Value: $value');
-    });
     Navigator.pushNamed(context, RouteMap.eventTypeProfilePage);
   }
 }
