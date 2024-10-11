@@ -157,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                                               Navigator.pushNamed(context, RouteMap.homePage);
                                             }
                                           } else {
+                                            Profile.manager = Profile.initfromDefault();
                                             Navigator.pushNamed(
                                                 context, RouteMap.initialProfileDataPage);
                                           }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/system_message.dart';
+import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
 import 'package:spark_up/route.dart';
@@ -144,6 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (context.mounted) {
                               if (response["status"] == "success") {
                                 Network.manager.saveUserId(response["data"]["user_id"]);
+                                Profile.manager = Profile.initfromDefault();
                                 Navigator.pushNamed(context, RouteMap.initialProfileDataPage);
                               } else {
                                 showDialog(
