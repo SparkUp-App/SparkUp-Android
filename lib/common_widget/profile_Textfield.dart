@@ -24,7 +24,14 @@ class profileTextfield extends StatefulWidget {
 }
 
 class _profile_TextfieldState extends State<profileTextfield> {
-  var textController = TextEditingController();
+  late TextEditingController textController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    textController = TextEditingController(text: widget.value);
+  }
 
   @override
   Widget build(BuildContext context) {
