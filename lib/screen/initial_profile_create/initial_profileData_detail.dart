@@ -19,17 +19,7 @@ class DetailedProfilePage extends StatefulWidget {
 
 class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool isLoading = false;
-  late List<String> _selectedInterestTags;
-  late List<String> _availableInterestTags;
   bool _isKeyboardVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _selectedInterestTags = [];
-    _availableInterestTags = List<String>.from(eventType);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,17 +218,6 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                   Profile.manager.diet = newValue ?? "Prefer not to say";
                 });
               },
-            ),
-            profileTagSelector(
-              label: "Interests",
-              selectedTags: _selectedInterestTags,
-              availableTags: _availableInterestTags,
-              onChanged: (updatedTags) {
-                setState(() {
-                  _selectedInterestTags = updatedTags;
-                });
-              },
-              isRequired: true,
             ),
             const SizedBox(
               height: 100,
