@@ -61,6 +61,10 @@ class Profile extends HttpData {
         languages = languages ?? [],
         interestTypes = interestTypes ?? [];
 
+  factory Profile.initfromDefault() {
+    return Profile(phone: "", nickname: "", dob: "", gneder: Gender.notToSay);
+  }
+
   factory Profile.initfromData(Map data) {
     return Profile(
       phone: data["phone"] ?? "",
@@ -94,10 +98,18 @@ class Profile extends HttpData {
       drugs: data["drugs"].runtimeType == String
           ? Drugs.fromString(data["drugs"])
           : Drugs.fromint(data["drugs"]),
-      skills: data["skills"].runtimeType == Null? []:List<String>.from(data["skills"]),
-      personalities: data["personalities"].runtimeType == Null? []:List<String>.from(data["personalities"]),
-      languages: data["languages"].runtimeType == Null? []:List<String>.from(data["languages"]),
-      interestTypes: data["interest_types"].runtimeType == Null? []: List<String>.from(data["interest_types"]),
+      skills: data["skills"].runtimeType == Null
+          ? []
+          : List<String>.from(data["skills"]),
+      personalities: data["personalities"].runtimeType == Null
+          ? []
+          : List<String>.from(data["personalities"]),
+      languages: data["languages"].runtimeType == Null
+          ? []
+          : List<String>.from(data["languages"]),
+      interestTypes: data["interest_types"].runtimeType == Null
+          ? []
+          : List<String>.from(data["interest_types"]),
     );
   }
 
