@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dart";
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -101,21 +102,5 @@ class _CenterTestState extends State<CenterTest> {
   @override
   Widget build(BuildContext context) {
     return Center();
-  }
-}
-
-class SparkPage extends StatefulWidget {
-  const SparkPage({super.key});
-
-  @override
-  State<SparkPage> createState() => _SparkPageState();
-}
-
-class _SparkPageState extends State<SparkPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("this is a spark page"),
-    );
   }
 }
