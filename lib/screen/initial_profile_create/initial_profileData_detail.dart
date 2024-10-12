@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/profile.dart';
-import 'package:spark_up/network/network.dart';
-import 'package:spark_up/network/path/profile_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:spark_up/common_widget/profile_DropDown.dart';
-import 'package:spark_up/common_widget/profile_TagSelector.dart';
 
 //這裡有的資料除了自己這一頁以外，還有夾帶上一頁basicInfo的資訊
 class DetailedProfilePage extends StatefulWidget {
 
   const DetailedProfilePage({super.key});
   @override
-  _DetailedProfilePageState createState() => _DetailedProfilePageState();
+  State<DetailedProfilePage> createState() => _DetailedProfilePageState();
 }
 
 class _DetailedProfilePageState extends State<DetailedProfilePage> {
@@ -48,11 +44,11 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                 children: [
             SizedBox(
                     height: MediaQuery.of(context).size.height * 0.15,
-                    child: Center(
+                    child: const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             "If you want others know more",
                             style: TextStyle(
@@ -246,7 +242,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
             child: Container(
               //color: Colors.white.withOpacity(0.95),// 淺白色背景
               decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.black12)), 
+                border: const Border(top: BorderSide(color: Colors.black12)), 
                 color:Colors.white.withOpacity(0.9),
               ),
               child: Row(

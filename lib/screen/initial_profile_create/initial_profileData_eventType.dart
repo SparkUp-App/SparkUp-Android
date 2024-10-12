@@ -64,7 +64,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                   eventName,
                   style: TextStyle(
                     fontFamily: 'IowanOldStyle',
-                    color: isSelected ? Color(0xFFF16743) : Colors.white,
+                    color: isSelected ? const Color(0xFFF16743) : Colors.white,
                     fontSize: eventName.length >= 8 ? 18 : 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -95,7 +95,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
           child: Stack(children: [
             SingleChildScrollView(
               //一次load好比ListView慢load好
-              child: Container(
+              child: SizedBox(
                   child: Column(
                 children: [
                   const SizedBox(height: 30),
@@ -183,7 +183,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 120,
                   ),
                 ],

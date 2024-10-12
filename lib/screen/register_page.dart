@@ -18,16 +18,16 @@ class _RegisterPageState extends State<RegisterPage> {
   var confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
-  Widget login_TextField(IconData textFieldIcon, String label, String hintText,
+  Widget loginTextField(IconData textFieldIcon, String label, String hintText,
       TextEditingController controller,
       {bool isObscured = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
             child: Text(
               label,
               style: const TextStyle(
@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFFF16743), Colors.white],
           begin: Alignment.topCenter,
@@ -106,18 +106,18 @@ class _RegisterPageState extends State<RegisterPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 100,
                       ), //確定他是否可以scroll
-                      login_TextField(Icons.email, 'Email', 'Email Address',
+                      loginTextField(Icons.email, 'Email', 'Email Address',
                           emailController),
-                      login_TextField(Icons.lock, 'Password', 'Password',
+                      loginTextField(Icons.lock, 'Password', 'Password',
                           passwordController,
                           isObscured: true),
-                      login_TextField(Icons.lock, 'Confirm Password',
+                      loginTextField(Icons.lock, 'Confirm Password',
                           'Confirm Password', confirmPasswordController,
                           isObscured: true),
-                      SizedBox(height: 70),
+                      const SizedBox(height: 70),
                       Center(
                         child: SizedBox(
                           width: 220,
@@ -130,14 +130,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                   //這裡我先多check密碼與確認密碼是否匹配
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text('Error'),
-                                    content: Text('Passwords do not match!'),
+                                    title: const Text('Error'),
+                                    content: const Text('Passwords do not match!'),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('OK'),
+                                        child: const Text('OK'),
                                       ),
                                     ],
                                   ),
@@ -181,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFFF16743),
+                              backgroundColor: const Color(0xFFF16743),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),

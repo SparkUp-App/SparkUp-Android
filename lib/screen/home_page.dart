@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import "package:spark_up/network/network.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_page.dart";
 class HomePage extends StatefulWidget {

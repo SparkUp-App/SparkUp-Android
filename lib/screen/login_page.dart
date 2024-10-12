@@ -18,14 +18,14 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
   bool isLoading = false;
 
-  Widget login_TextField(IconData textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
+  Widget loginTextField(IconData textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
     return  Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
             child: Text(
               label,
               style: const TextStyle(
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFF16743), Colors.white],
               begin: Alignment.topCenter,
@@ -87,14 +87,14 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.transparent,
                   body: Center(
                     child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(), //物理動畫
+                      physics: const AlwaysScrollableScrollPhysics(), //物理動畫
                       child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 273,
                                 height: 273,
                                 child: Image.asset(
@@ -102,12 +102,12 @@ class _LoginPageState extends State<LoginPage> {
                                   fit: BoxFit.contain,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 40,
                               ),
-                              login_TextField(Icons.email,'Email','Email Address',emailController),
-                              login_TextField(Icons.lock,'Password','Password',passwordController,isObscured: true),
-                              SizedBox(
+                              loginTextField(Icons.email,'Email','Email Address',emailController),
+                              loginTextField(Icons.lock,'Password','Password',passwordController,isObscured: true),
+                              const SizedBox(
                                 height: 30,
                               ),
                               Center( 
@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFFF16743),
+                                      backgroundColor: const Color(0xFFF16743),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                               Center(
                                 child: SizedBox( // SizedBox 控制大小
                                   width: 220,
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Navigator.pushNamed(context, RouteMap.registerPage);
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFFF16743),
+                                      backgroundColor: const Color(0xFFF16743),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              Center(
+                              const Center(
                                 child: Text(
                                   "Don't have an account?",
                                   style: TextStyle(

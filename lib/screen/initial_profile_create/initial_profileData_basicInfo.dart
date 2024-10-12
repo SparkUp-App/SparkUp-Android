@@ -7,14 +7,13 @@ import 'package:toasty_box/toast_service.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart'; // 建立 common_widget
 import 'package:spark_up/common_widget/profile_DatePicker.dart'; // 建立 common_widget
 import 'package:spark_up/common_widget/profile_DropDown.dart'; // 建立 common_widget
-import 'package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart'; // 導航到 detail 頁面，並將當前 basicInfo 資料傳遞到 detail 頁面
 import "package:spark_up/route.dart";
 
 class BasicProfilePage extends StatefulWidget {
-  const BasicProfilePage({Key? key}) : super(key: key);
+  const BasicProfilePage({super.key});
 
   @override
-  _BasicProfilePageState createState() => _BasicProfilePageState();
+  State<BasicProfilePage> createState() => _BasicProfilePageState();
 }
 
 class _BasicProfilePageState extends State<BasicProfilePage> {
@@ -49,11 +48,11 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.20,
-                      child: Center(
+                      child: const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               "Before start",
                               style: TextStyle(

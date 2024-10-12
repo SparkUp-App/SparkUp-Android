@@ -4,7 +4,6 @@ import "package:spark_up/screen/login_page.dart";
 import "package:spark_up/screen/register_page.dart";
 import "package:spark_up/screen/home_page.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_basicInfo.dart";
-import "package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_eventType.dart";
 class RouteMap{
   //Regist Path for page
