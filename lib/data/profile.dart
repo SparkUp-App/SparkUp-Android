@@ -66,6 +66,10 @@ class Profile extends HttpData {
   }
 
   factory Profile.initfromData(Map data) {
+    // dob transform
+    data["dob"] = DateTime.parse(data["dob"]);
+    data["dob"] = data["dob"].toIso8601String().split("T")[0];
+
     return Profile(
       phone: data["phone"] ?? "",
       nickname: data["nickname"] ?? "",
@@ -145,10 +149,15 @@ class Profile extends HttpData {
 
   @override
   Map<String, dynamic> get toMap {
+    // Transform date time
+    List<String> dobInfo = dob.split("-");
+    dynamic dobDate = DateTime.utc(int.parse(dobInfo[0]), int.parse(dobInfo[1]), int.parse(dobInfo[2]));
+    dobDate = dobDate.toIso8601String();
+
     return {
       "phone": phone,
       "nickname": nickname,
-      "dob": dob,
+      "dob": dobDate,
       "gender": gneder.value,
       "bio": bio,
       "current_location": currentLocation,
