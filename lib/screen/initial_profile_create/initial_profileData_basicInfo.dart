@@ -22,7 +22,6 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     if (isKeyboardVisible != _isKeyboardVisible) {
@@ -40,132 +39,132 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body:SafeArea(
-        child: Stack(
-          children: [
-            // 放置在Stack的第一層，作為背景的可滾動內容
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Before start",
-                            style: TextStyle(
-                              fontFamily: 'IowanOldStyle',
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              // 放置在Stack的第一層，作為背景的可滾動內容
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Before start",
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 8), // 增加間距
-                          Text(
-                            "Let us know something about you...",
-                            style: TextStyle(
-                              fontFamily: 'IowanOldStyle',
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(height: 8), // 增加間距
+                            Text(
+                              "Let us know something about you...",
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  profileTextfield(
-                    label: 'Phone',
-                    hintLabel: 'Enter phone number',
-                    textFieldIcon: Icons.phone,
-                    value: Profile.manager.phone,
-                    onChanged: (newValue) {
-                      setState(() {
-                        Profile.manager.phone = newValue ?? "";
-                      });
-                    },
-                    isRequired: true,
-                  ),
-                  profileTextfield(
-                    label: 'Nickname',
-                    hintLabel: 'Enter nickname',
-                    textFieldIcon: Icons.person,
-                    value: Profile.manager.nickname,
-                    onChanged: (newValue) {
-                      setState(() {
-                        Profile.manager.nickname = newValue ?? "";
-                      });
-                    },
-                    isRequired: true,
-                  ),
-                  profieldDatepicker(
-                    label: 'Date of Birth',
-                    value: Profile.manager.dob,
-                    datepickerIcon: Icons.calendar_month_rounded,
-                    onChanged: (newValue) {
-                      setState(() {
-                        Profile.manager.dob = newValue ?? "";
-                      });
-                    },
-                    isRequired: true,
-                  ),
-                  profileDropdown(
-                    label: 'Gender',
-                    value: Profile.manager.gneder.label,
-                    dropdownIcon: Icons.ac_unit,
-                    options: genderList,
-                    onChanged: (newValue) {
-                      setState(() {
-                        Profile.manager.gneder = Gender.fromString(newValue ?? "Prefer not to say");
-                      });
-                    },
-                    isRequired: true,
-                  ),
-                  const SizedBox(height: 100), // 預留一些空間以避免被按鈕遮住
-                ],
+                    profileTextfield(
+                      label: 'Phone',
+                      hintLabel: 'Enter phone number',
+                      textFieldIcon: Icons.phone,
+                      value: Profile.manager.phone,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.phone = newValue ?? "";
+                        });
+                      },
+                      isRequired: true,
+                    ),
+                    profileTextfield(
+                      label: 'Nickname',
+                      hintLabel: 'Enter nickname',
+                      textFieldIcon: Icons.person,
+                      value: Profile.manager.nickname,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.nickname = newValue ?? "";
+                        });
+                      },
+                      isRequired: true,
+                    ),
+                    profieldDatepicker(
+                      label: 'Date of Birth',
+                      value: Profile.manager.dob,
+                      datepickerIcon: Icons.calendar_month_rounded,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.dob = newValue ?? "";
+                        });
+                      },
+                      isRequired: true,
+                    ),
+                    profileDropdown(
+                      label: 'Gender',
+                      value: Profile.manager.gneder.label,
+                      dropdownIcon: Icons.ac_unit,
+                      options: genderList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.gneder = Gender.fromString(
+                              newValue ?? "Prefer not to say");
+                        });
+                      },
+                      isRequired: true,
+                    ),
+                    const SizedBox(height: 100), // 預留一些空間以避免被按鈕遮住
+                  ],
+                ),
               ),
-            ),
 
-            Visibility(
-              visible: !isKeyboardVisible,
-              child: Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: SizedBox(
-                  width: 220,
-                  height: 47,
-                  child: ElevatedButton(
-                    onPressed: () => _navigateToDetailedProfile(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF16743),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        fontFamily: 'IowanOldStyle',
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+              Visibility(
+                visible: !isKeyboardVisible,
+                child: Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: SizedBox(
+                      width: 220,
+                      height: 47,
+                      child: ElevatedButton(
+                        onPressed: () => _navigateToDetailedProfile(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF16743),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontFamily: 'IowanOldStyle',
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-
       ),
     );
   }
@@ -181,8 +180,14 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
         message: "Please fill in all required fields.", // 防止跳轉前的檢查
       );
       return;
+    } else if (!phoneRegex.hasMatch(Profile.manager.phone)) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Please fill in correct phone number");
+      return;
     }
-    
+
     Navigator.pushNamed(context, RouteMap.detailProfilePage);
   }
 }
