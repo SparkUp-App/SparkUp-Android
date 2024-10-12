@@ -51,7 +51,7 @@ class BasePost extends HttpData {
       title: data["title"],
       content: data["content"],
       eventStartDate: data["event_start_date"],
-      evenEndDate: data["event_end_data"],
+      evenEndDate: data["event_end_date"],
       numberOfPeopleRequired: data["number_of_people_required"],
       location: data["location"],
       skills: data["skills"] ?? [],
@@ -63,6 +63,9 @@ class BasePost extends HttpData {
 
   @override
   Map<String, dynamic> get toMap {
+    eventStartDate = DateTime.parse(eventStartDate).toUtc().toIso8601String();
+    evenEndDate = DateTime.parse(evenEndDate).toUtc().toIso8601String();
+    
     return {
       "user_id": userId,
       "type": type,
@@ -70,7 +73,7 @@ class BasePost extends HttpData {
       "content": content,
       "event_start_date": eventStartDate,
       "event_end_date": evenEndDate,
-      "number_of_people_requried": numberOfPeopleRequired,
+      "number_of_people_required": numberOfPeopleRequired,
       "location": location,
       "skills": skills,
       "personalities": personalities,
