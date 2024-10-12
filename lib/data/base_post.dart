@@ -32,21 +32,33 @@ class BasePost extends HttpData {
         languages = languages ?? [],
         attributes = attributes ?? {};
 
+  factory BasePost.initfromDefaule(int userId) {
+    return BasePost(
+        userId: userId,
+        type: "",
+        title: "",
+        content: "",
+        eventStartDate: "",
+        evenEndDate: "",
+        numberOfPeopleRequired: 0,
+        location: "");
+  }
+
   factory BasePost.initfromData(Map data) {
     return BasePost(
-        userId: data["user_id"],
-        type: data["type"],
-        title: data["title"],
-        content: data["content"],
-        eventStartDate: data["event_start_date"],
-        evenEndDate: data["event_end_data"],
-        numberOfPeopleRequired: data["number_of_people_required"],
-        location: data["location"],
-        skills: data["skills"] ?? [],
-        personalities: data["personalities"] ?? [],
-        languages: data["languages"] ?? [],
-        attributes: data["attributes"] ?? {},
-        );
+      userId: data["user_id"],
+      type: data["type"],
+      title: data["title"],
+      content: data["content"],
+      eventStartDate: data["event_start_date"],
+      evenEndDate: data["event_end_data"],
+      numberOfPeopleRequired: data["number_of_people_required"],
+      location: data["location"],
+      skills: data["skills"] ?? [],
+      personalities: data["personalities"] ?? [],
+      languages: data["languages"] ?? [],
+      attributes: data["attributes"] ?? {},
+    );
   }
 
   @override
