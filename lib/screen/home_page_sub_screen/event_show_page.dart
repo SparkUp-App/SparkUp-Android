@@ -90,7 +90,6 @@ class _HotContentState extends State<HotContent> {
       }
     } else {
       //TODO Request Failed Process
-
     }
 
     isLoading = false;
@@ -183,12 +182,136 @@ class _HotContentState extends State<HotContent> {
   }
 }
 
-class FollowedContent extends StatelessWidget {
+class FollowedContent extends StatefulWidget {
+  const FollowedContent({super.key});
+
+  @override
+  State<FollowedContent> createState() => _FollowedContentState();
+}
+
+class _FollowedContentState extends State<FollowedContent> {
+  List<ListReceivePost> receivedPostList = [];
+  final scrollController = ScrollController();
+  bool isLoading = false;
+  bool noMoreData = false;
+  int page = 1, perPage = 20;
+
+  Future refresh() async {
+    if (isLoading) return;
+    isLoading = true;
+
+    receivedPostList.clear();
+    page = 1;
+    noMoreData = false;
+    setState(() {});
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: PostPath.list,
+        pathMid: ["${Network.manager.userId}"],
+        data: {"page": page, "per_page": perPage, "sort" : 0});
+
+    if (response["status"] == "success") {
+      if (response["data"]["posts"].length == 0) {
+        noMoreData = true;
+      } else {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        page++;
+      }
+    } else {
+      //TODO Request Failed Process
+    }
+
+    isLoading = false;
+    setState(() {});
+    return;
+  }
+
+  Future getPost() async {
+    if (isLoading) return;
+    isLoading = true;
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: PostPath.list,
+        pathMid: ["${Network.manager.userId}"],
+        data: {"page": page, "per_page": perPage, "sort" : 0});
+
+    if (response["status"] == "success") {
+      if (response["data"]["posts"].length == 0) {
+        noMoreData = true;
+      } else {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        page++;
+      }
+    } else {
+      //TODO Request Failed Process
+    }
+
+    isLoading = false;
+    setState(() {});
+    return;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getPost();
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        getPost();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('這是追蹤內容', style: TextStyle(fontSize: 24)),
-    );
+    return Container(
+        child: receivedPostList.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: refresh,
+                child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: receivedPostList.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < receivedPostList.length) {
+                        return Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            child: Center(
+                                child: postCard(
+                                    context, receivedPostList[index])));
+                      } else {
+                        return noMoreData
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child: Center(
+                                  child: Text("No More Data"),
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child:
+                                    Center(child: CircularProgressIndicator()));
+                      }
+                    })));
   }
 }
 
