@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
+import 'package:spark_up/route.dart';
 
 class EventShowPage extends StatefulWidget {
   const EventShowPage({super.key});
@@ -209,7 +210,7 @@ class _FollowedContentState extends State<FollowedContent> {
         method: RequestMethod.post,
         path: PostPath.list,
         pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage, "sort" : 0});
+        data: {"page": page, "per_page": perPage, "sort": 0});
 
     if (response["status"] == "success") {
       if (response["data"]["posts"].length == 0) {
@@ -238,7 +239,7 @@ class _FollowedContentState extends State<FollowedContent> {
         method: RequestMethod.post,
         path: PostPath.list,
         pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage, "sort" : 0});
+        data: {"page": page, "per_page": perPage, "sort": 0});
 
     if (response["status"] == "success") {
       if (response["data"]["posts"].length == 0) {
@@ -317,83 +318,88 @@ class _FollowedContentState extends State<FollowedContent> {
 
 Widget postCard(BuildContext context, ListReceivePost receivedPost) {
   return Center(
-      child: Card(
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.view_timeline,
-                  color: Colors.grey,
-                ),
-                Text(
-                  receivedPost.type,
-                  style: const TextStyle(color: Colors.grey),
-                )
-              ],
+      child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, RouteMap.eventDetailePage, arguments: receivedPost.postId);
+          },
+          child: Card(
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.view_timeline,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          receivedPost.type,
+                          style: const TextStyle(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                      child: Text(
+                    "Poseter: ${receivedPost.posterNickname}",
+                    style: const TextStyle(color: Colors.black),
+                  )),
+                  Container(
+                      child: Row(
+                    children: [
+                      const Icon(
+                        Icons.timelapse,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                          "Event Start Date: ${receivedPost.eventStartDate.toIso8601String().split("T")[0]} ${receivedPost.eventStartDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventStartDate.minute.toString().padLeft(2, "0")}")
+                    ],
+                  )),
+                  Container(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.timelapse,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                            "Event End Date: ${receivedPost.eventEndDate.toIso8601String().split("T")[0]} ${receivedPost.eventEndDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventEndDate.minute.toString().padLeft(2, "0")}")
+                      ],
+                    ),
+                  ),
+                  Container(
+                      child: Text(
+                    "Event Title: ${receivedPost.title}",
+                    style: const TextStyle(color: Colors.black),
+                  )),
+                  Container(
+                      child: Row(
+                    children: [
+                      const Icon(
+                        Icons.favorite,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        "${receivedPost.likes}",
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const Icon(
+                        Icons.chat_bubble,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        "${receivedPost.comments}",
+                        style: const TextStyle(color: Colors.grey),
+                      )
+                    ],
+                  ))
+                ],
+              ),
             ),
-          ),
-          Container(
-              child: Text(
-            "Poseter: ${receivedPost.posterNickname}",
-            style: const TextStyle(color: Colors.black),
-          )),
-          Container(
-              child: Row(
-            children: [
-              const Icon(
-                Icons.timelapse,
-                color: Colors.grey,
-              ),
-              Text(
-                  "Event Start Date: ${receivedPost.eventStartDate.toIso8601String().split("T")[0]} ${receivedPost.eventStartDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventStartDate.minute.toString().padLeft(2, "0")}")
-            ],
-          )),
-          Container(
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.timelapse,
-                  color: Colors.grey,
-                ),
-                Text(
-                    "Event End Date: ${receivedPost.eventEndDate.toIso8601String().split("T")[0]} ${receivedPost.eventEndDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventEndDate.minute.toString().padLeft(2, "0")}")
-              ],
-            ),
-          ),
-          Container(
-              child: Text(
-            "Event Title: ${receivedPost.title}",
-            style: const TextStyle(color: Colors.black),
-          )),
-          Container(
-              child: Row(
-            children: [
-              const Icon(
-                Icons.favorite,
-                color: Colors.grey,
-              ),
-              Text(
-                "${receivedPost.likes}",
-                style: const TextStyle(color: Colors.grey),
-              ),
-              const Icon(
-                Icons.chat_bubble,
-                color: Colors.grey,
-              ),
-              Text(
-                "${receivedPost.comments}",
-                style: const TextStyle(color: Colors.grey),
-              )
-            ],
-          ))
-        ],
-      ),
-    ),
-  ));
+          )));
 }
