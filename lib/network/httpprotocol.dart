@@ -3,5 +3,5 @@ abstract class HttpPath{
 }
 
 abstract class HttpData{
-  Map<dynamic,dynamic> get toMap;
+  Map<String,dynamic> get toMap;
 }

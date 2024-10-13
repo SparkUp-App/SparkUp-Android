@@ -42,7 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   initState() {
     super.initState();
-    
+
     _profileData = Profile.manager.toProfile;
     _textContollerMap = _profileData.map(
       (key, value) {
@@ -54,7 +54,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     _availableInterestTags = List<String>.from(eventType);
     _selectedInterestTags = _profileData["interest_types"];
-    for(var type in _selectedInterestTags){
+    for (var type in _selectedInterestTags) {
       _availableInterestTags.remove(type);
     }
   }
@@ -441,16 +441,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _saveProfile() async {
     if ( //如果資料不對，應該要在這裡阻斷
-        _profileData['nickname'] == null ||
-            _profileData['gender'] == null ||
-            _profileData['phone'] == null ||
-            _profileData['dob'] == null) {
+        _profileData['nickname'] == "" ||
+            _profileData['gender'] == "" ||
+            _profileData['phone'] == "" ||
+            _profileData['dob'] == "") {
       ToastService.showErrorToast(
         context,
         length: ToastLength.medium,
         expandedHeight: 100,
         message: "The required information should be accurately filled out.",
       );
+      return;
+    } else if (!phoneRegex.hasMatch(_profileData["phone"])) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Pleas filled the correct phone number");
       return;
     }
 

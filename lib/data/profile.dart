@@ -61,7 +61,15 @@ class Profile extends HttpData {
         languages = languages ?? [],
         interestTypes = interestTypes ?? [];
 
+  factory Profile.initfromDefault() {
+    return Profile(phone: "", nickname: "", dob: "", gneder: Gender.notToSay);
+  }
+
   factory Profile.initfromData(Map data) {
+    // dob transform
+    data["dob"] = DateTime.parse(data["dob"]);
+    data["dob"] = data["dob"].toIso8601String().split("T")[0];
+
     return Profile(
       phone: data["phone"] ?? "",
       nickname: data["nickname"] ?? "",
@@ -94,10 +102,18 @@ class Profile extends HttpData {
       drugs: data["drugs"].runtimeType == String
           ? Drugs.fromString(data["drugs"])
           : Drugs.fromint(data["drugs"]),
-      skills: data["skills"].runtimeType == Null? []:List<String>.from(data["skills"]),
-      personalities: data["personalities"].runtimeType == Null? []:List<String>.from(data["personalities"]),
-      languages: data["languages"].runtimeType == Null? []:List<String>.from(data["languages"]),
-      interestTypes: data["interest_types"].runtimeType == Null? []: List<String>.from(data["interest_types"]),
+      skills: data["skills"].runtimeType == Null
+          ? []
+          : List<String>.from(data["skills"]),
+      personalities: data["personalities"].runtimeType == Null
+          ? []
+          : List<String>.from(data["personalities"]),
+      languages: data["languages"].runtimeType == Null
+          ? []
+          : List<String>.from(data["languages"]),
+      interestTypes: data["interest_types"].runtimeType == Null
+          ? []
+          : List<String>.from(data["interest_types"]),
     );
   }
 
@@ -132,11 +148,16 @@ class Profile extends HttpData {
   }
 
   @override
-  Map<dynamic, dynamic> get toMap {
+  Map<String, dynamic> get toMap {
+    // Transform date time
+    List<String> dobInfo = dob.split("-");
+    dynamic dobDate = DateTime.utc(int.parse(dobInfo[0]), int.parse(dobInfo[1]), int.parse(dobInfo[2]));
+    dobDate = dobDate.toIso8601String();
+
     return {
       "phone": phone,
       "nickname": nickname,
-      "dob": dob,
+      "dob": dobDate,
       "gender": gneder.value,
       "bio": bio,
       "current_location": currentLocation,

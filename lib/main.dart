@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: "SparkUp",
       debugShowCheckedModeBanner: false,
       routes: RouteMap.routes,
-      initialRoute: RouteMap.eventTypeProfilePage,//testing home_page , initial used to be loginPage
+      initialRoute: RouteMap.loginPage,//testing home_page , initial used to be loginPage
       //如果你想要測試"註冊完轉到initial個人資訊的頁面"，call RouteMap.initialProfileDataPage,
     );
   }
