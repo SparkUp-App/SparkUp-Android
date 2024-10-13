@@ -6,7 +6,7 @@ class BasePost extends HttpData {
   late String title;
   late String content;
   late String eventStartDate;
-  late String evenEndDate;
+  late String eventEndDate;
   late int numberOfPeopleRequired;
   late String location;
   List<String> skills = [];
@@ -14,19 +14,37 @@ class BasePost extends HttpData {
   List<String> languages = [];
   Map<String, dynamic> attributes = {};
 
+  int? postId;
+  String? posterNickname;
+  int? likes;
+  bool? liked;
+  int? bookmarks;
+  bool? bookmarked;
+  int? comments;
+  int? applicants;
+
   BasePost({
     required this.userId,
     required this.type,
     required this.title,
     required this.content,
     required this.eventStartDate,
-    required this.evenEndDate,
+    required this.eventEndDate,
     required this.numberOfPeopleRequired,
     required this.location,
     List<String>? skills,
     List<String>? personalities,
     List<String>? languages,
     Map<String, dynamic>? attributes,
+
+    this.postId,
+    this.posterNickname,
+    this.likes,
+    this.liked,
+    this.bookmarks,
+    this.bookmarked,
+    this.comments,
+    this.applicants
   })  : skills = skills ?? [],
         personalities = personalities ?? [],
         languages = languages ?? [],
@@ -39,7 +57,7 @@ class BasePost extends HttpData {
         title: "",
         content: "",
         eventStartDate: "",
-        evenEndDate: "",
+        eventEndDate: "",
         numberOfPeopleRequired: 0,
         location: "");
   }
@@ -51,20 +69,26 @@ class BasePost extends HttpData {
       title: data["title"],
       content: data["content"],
       eventStartDate: data["event_start_date"],
-      evenEndDate: data["event_end_date"],
+      eventEndDate: data["event_end_date"],
       numberOfPeopleRequired: data["number_of_people_required"],
       location: data["location"],
       skills: data["skills"] ?? [],
       personalities: data["personalities"] ?? [],
       languages: data["languages"] ?? [],
       attributes: data["attributes"] ?? {},
+      postId: data["id"],
+      posterNickname: data["nickname"],
+      likes: data["likes"],
+      liked: data["liked"],
+      comments: data["comments"],
+      applicants: data["applicants"]
     );
   }
 
   @override
   Map<String, dynamic> get toMap {
     eventStartDate = DateTime.parse(eventStartDate).toUtc().toIso8601String();
-    evenEndDate = DateTime.parse(evenEndDate).toUtc().toIso8601String();
+    eventEndDate = DateTime.parse(eventEndDate).toUtc().toIso8601String();
     
     return {
       "user_id": userId,
@@ -72,7 +96,7 @@ class BasePost extends HttpData {
       "title": title,
       "content": content,
       "event_start_date": eventStartDate,
-      "event_end_date": evenEndDate,
+      "event_end_date": eventEndDate,
       "number_of_people_required": numberOfPeopleRequired,
       "location": location,
       "skills": skills,

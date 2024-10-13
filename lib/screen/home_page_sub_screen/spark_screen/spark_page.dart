@@ -510,7 +510,7 @@ class _SparkPageState extends State<SparkPage> {
     });
 
     basePost.eventStartDate = start.toIso8601String();
-    basePost.evenEndDate = end.toIso8601String();
+    basePost.eventEndDate = end.toIso8601String();
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
