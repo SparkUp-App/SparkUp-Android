@@ -20,9 +20,6 @@ class SparkPage extends StatefulWidget {
 class _SparkPageState extends State<SparkPage> {
   BasePost basePost = BasePost.initfromDefaule(Network.manager.userId!);
   final double marginVertical = 10.0, marginHorizontal = 20.0;
-  DateTime eventStartDate = DateTime.now(), eventEndDate = DateTime.now();
-  TimeOfDay eventStartTime = TimeOfDay(hour: 0, minute: 0),
-      eventEndTime = TimeOfDay(hour: 0, minute: 0);
   bool isLoading = false;
 
   @override
@@ -89,8 +86,7 @@ class _SparkPageState extends State<SparkPage> {
                   }),
             ),
             Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: marginVertical),
+              margin: EdgeInsets.symmetric(vertical: marginVertical),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -195,14 +191,19 @@ class _SparkPageState extends State<SparkPage> {
 
                             if (selectedDate != null) {
                               setState(() {
-                                eventStartDate = selectedDate;
+                                basePost.eventStartDate = DateTime(
+                                    selectedDate.year,
+                                    selectedDate.month,
+                                    selectedDate.day,
+                                    basePost.eventStartDate.hour,
+                                    basePost.eventStartDate.minute);
                               });
                             }
                           },
                           child: IgnorePointer(
                             child: TextField(
                               controller: TextEditingController(
-                                  text: eventStartDate
+                                  text: basePost.eventStartDate
                                       .toIso8601String()
                                       .split("T")[0]),
                               decoration: InputDecoration(
@@ -269,14 +270,20 @@ class _SparkPageState extends State<SparkPage> {
 
                             if (selectedTime != null) {
                               setState(() {
-                                eventStartTime = selectedTime;
+                                basePost.eventStartDate = DateTime(
+                                    basePost.eventStartDate.year,
+                                    basePost.eventStartDate.month,
+                                    basePost.eventStartDate.day,
+                                    selectedTime.hour,
+                                    selectedTime.minute);
                               });
                             }
                           },
                           child: IgnorePointer(
                             child: TextField(
                               controller: TextEditingController(
-                                  text: eventStartTime.format(context)),
+                                  text:
+                                      "${basePost.eventStartDate.hour >= 12 ? "PM" : "AM"} ${basePost.eventStartDate.hour.toString().padLeft(2, "0")}:${basePost.eventStartDate.minute.toString().padLeft(2, "0")}"),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
@@ -336,21 +343,26 @@ class _SparkPageState extends State<SparkPage> {
                           onTap: () async {
                             DateTime? selectedDate = await showDatePicker(
                               context: context,
-                              initialDate: eventStartDate,
-                              firstDate: eventStartDate,
+                              initialDate: basePost.eventStartDate,
+                              firstDate: basePost.eventStartDate,
                               lastDate: DateTime(9999),
                             );
 
                             if (selectedDate != null) {
                               setState(() {
-                                eventEndDate = selectedDate;
+                                basePost.eventEndDate = DateTime(
+                                    selectedDate.year,
+                                    selectedDate.month,
+                                    selectedDate.day,
+                                    basePost.eventEndDate.hour,
+                                    basePost.eventEndDate.minute);
                               });
                             }
                           },
                           child: IgnorePointer(
                             child: TextField(
                               controller: TextEditingController(
-                                  text: eventEndDate
+                                  text: basePost.eventEndDate
                                       .toIso8601String()
                                       .split("T")[0]),
                               decoration: InputDecoration(
@@ -417,14 +429,20 @@ class _SparkPageState extends State<SparkPage> {
 
                             if (selectedTime != null) {
                               setState(() {
-                                eventEndTime = selectedTime;
+                                basePost.eventEndDate = DateTime(
+                                    basePost.eventEndDate.year,
+                                    basePost.eventEndDate.month,
+                                    basePost.eventEndDate.day,
+                                    selectedTime.hour,
+                                    selectedTime.minute);
                               });
                             }
                           },
                           child: IgnorePointer(
                             child: TextField(
                               controller: TextEditingController(
-                                  text: eventEndTime.format(context)),
+                                  text:
+                                      "${basePost.eventEndDate.hour >= 12 ? "PM" : "AM"} ${basePost.eventEndDate.hour.toString().padLeft(2, "0")}:${basePost.eventEndDate.minute.toString().padLeft(2, "0")}"),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
@@ -475,11 +493,6 @@ class _SparkPageState extends State<SparkPage> {
   }
 
   void createEvent() async {
-    DateTime start = DateTime(eventStartDate.year, eventEndDate.month,
-        eventStartDate.day, eventStartTime.hour, eventStartTime.minute);
-    DateTime end = DateTime(eventEndDate.year, eventEndDate.month,
-        eventEndDate.day, eventEndTime.hour, eventEndTime.minute);
-
     if (basePost.type.isEmpty ||
         basePost.title.isEmpty ||
         basePost.content.isEmpty ||
@@ -498,19 +511,18 @@ class _SparkPageState extends State<SparkPage> {
           expandedHeight: 100,
           message:
               "Please fill the correct interger of number of people requried.");
-    } else if (start.isAfter(end)) {
+      return;
+    } else if (basePost.eventStartDate.isAfter(basePost.eventEndDate)) {
       ToastService.showErrorToast(context,
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event start time most before Event end time");
+      return;
     }
 
     setState(() {
       isLoading = true;
     });
-
-    basePost.eventStartDate = start.toIso8601String();
-    basePost.eventEndDate = end.toIso8601String();
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -526,6 +538,7 @@ class _SparkPageState extends State<SparkPage> {
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");
+      Navigator.pop(context);
     } else {
       showDialog(
           context: context,
