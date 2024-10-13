@@ -5,8 +5,8 @@ class BasePost extends HttpData {
   late String type;
   late String title;
   late String content;
-  late String eventStartDate;
-  late String eventEndDate;
+  late DateTime eventStartDate;
+  late DateTime eventEndDate;
   late int numberOfPeopleRequired;
   late String location;
   List<String> skills = [];
@@ -56,8 +56,8 @@ class BasePost extends HttpData {
         type: "",
         title: "",
         content: "",
-        eventStartDate: "",
-        eventEndDate: "",
+        eventStartDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        eventEndDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         numberOfPeopleRequired: 0,
         location: "");
   }
@@ -68,8 +68,8 @@ class BasePost extends HttpData {
       type: data["type"],
       title: data["title"],
       content: data["content"],
-      eventStartDate: data["event_start_date"],
-      eventEndDate: data["event_end_date"],
+      eventStartDate: DateTime.parse(data["event_start_date"]).toLocal(),
+      eventEndDate: DateTime.parse(data["event_end_date"]).toLocal(),
       numberOfPeopleRequired: data["number_of_people_required"],
       location: data["location"],
       skills: data["skills"] ?? [],
@@ -87,16 +87,13 @@ class BasePost extends HttpData {
 
   @override
   Map<String, dynamic> get toMap {
-    eventStartDate = DateTime.parse(eventStartDate).toUtc().toIso8601String();
-    eventEndDate = DateTime.parse(eventEndDate).toUtc().toIso8601String();
-    
     return {
       "user_id": userId,
       "type": type,
       "title": title,
       "content": content,
-      "event_start_date": eventStartDate,
-      "event_end_date": eventEndDate,
+      "event_start_date": eventStartDate.toUtc().toIso8601String(),
+      "event_end_date": eventEndDate.toUtc().toIso8601String(),
       "number_of_people_required": numberOfPeopleRequired,
       "location": location,
       "skills": skills,
