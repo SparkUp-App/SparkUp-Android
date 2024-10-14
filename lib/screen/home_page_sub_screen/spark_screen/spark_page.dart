@@ -21,7 +21,7 @@ class _SparkPageState extends State<SparkPage> {
   BasePost basePost = BasePost.initfromDefaule(Network.manager.userId!);
   final double marginVertical = 10.0, marginHorizontal = 20.0;
   bool isLoading = false;
-
+  int _index = 0; 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,14 +35,38 @@ class _SparkPageState extends State<SparkPage> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Stepper(
+      type: StepperType.horizontal,
+      currentStep: _index,
+      onStepCancel: () {
+        if (_index > 0) {
+          setState(() {
+            _index -= 1;
+          });
+        }
+      },
+      onStepContinue: () {
+        if (_index < 2) {
+          setState(() {
+            _index += 1;
+          });
+        }
+      },
+      onStepTapped: (int index) {
+        setState(() {
+          _index = index;
+        });
+      },
+      steps: <Step>[
+        Step(
+          title: const Text('Step 1 title'),
+          content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+            children: [
             Container(
               margin: EdgeInsets.symmetric(
-                  vertical: marginVertical, horizontal: marginHorizontal),
+              vertical: marginVertical, horizontal: marginHorizontal),
               child: profileDropdown(
                   isRequired: true,
                   label: "Type",
@@ -57,7 +81,7 @@ class _SparkPageState extends State<SparkPage> {
             ),
             Container(
               margin: EdgeInsets.symmetric(
-                  vertical: marginVertical, horizontal: marginHorizontal),
+              vertical: marginVertical, horizontal: marginHorizontal),
               child: profileTextfield(
                   isRequired: true,
                   label: "Title",
@@ -103,7 +127,7 @@ class _SparkPageState extends State<SparkPage> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        width: MediaQuery.of(context).size.width * 0.80,
+                        width: MediaQuery.of(context).size.width * 0.75,
                         child: TextField(
                           keyboardType: TextInputType.number,
                           maxLines: 1,
@@ -159,8 +183,14 @@ class _SparkPageState extends State<SparkPage> {
                         basePost.location = newValue ?? "";
                       });
                     })),
-            Container(
-              // Start Date Picker
+            ],
+          )
+        ),
+        Step(
+          title: Text('Step 2 title'),
+          content: Column(
+            children: [
+              Container(
               margin: EdgeInsets.symmetric(
                   vertical: marginVertical, horizontal: marginHorizontal),
               child: Row(
@@ -477,6 +507,27 @@ class _SparkPageState extends State<SparkPage> {
                 ],
               ),
             ),
+            ],
+          )
+        ),
+          if(basePost.type == 'sport')Step(
+            title: const Text("Additional Info"),
+            content: Column(
+              children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      vertical: marginVertical,
+                      horizontal: marginHorizontal,
+                    ),
+                    child: Text("SPORT"),
+                  ),
+              ],
+            ),
+          ),
+      ],
+      ),
+    );/*SingleChildScrollView(
+            
             Container(
               margin: const EdgeInsets.all(10.0),
               child: Center(
@@ -546,5 +597,7 @@ class _SparkPageState extends State<SparkPage> {
               content:
                   "Event Create Failed (Error: ${response["data"]["message"]})"));
     }
+  }
+  */
   }
 }
