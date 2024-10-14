@@ -17,10 +17,65 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool isLoading = false;
   bool _isKeyboardVisible = false;
 
+
+  List<TextEditingController> skillControllers = [];
+  int howManySkillTextField = 1;
+  void _updateSkills() {
+    Profile.manager.skills = skillControllers.map((controller) => controller.text.trim()).where((skill) => skill.isNotEmpty).toList();
+  }  
+
+  void _initializeSkillControllers() {
+    skillControllers = Profile.manager.skills.map((skill) => TextEditingController(text: skill)).toList();
+    howManySkillTextField = skillControllers.length;
+  }
+
+  Widget SkillsInput(int index) {
+    return Center(
+      child:
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: TextFormField(
+          controller: skillControllers[index],
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.safety_check),
+            prefixIconColor: Colors.black26,
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black12),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0xFFE9765B)),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black12),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            hintText: "Skill",
+            hintStyle: const TextStyle(
+              color: Colors.black26,
+            ),
+          ),
+          onChanged: (value) {
+            _updateSkills();
+          },
+        ),
+      ),
+
+    );
+  }
+
+  void initState() {
+    super.initState();
+    _initializeSkillControllers();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-
     if (isKeyboardVisible != _isKeyboardVisible) {
       setState(() {
         _isKeyboardVisible = isKeyboardVisible;
@@ -36,270 +91,356 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-      body:SafeArea(child:Stack(
-        children: [
-          SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-                children: [
-            SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: const Center(
-                      child: Column(
+        body:SafeArea(child:Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "If you want others know more",
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "about you...",
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    profileTextfield(
+                      label: 'Bio',
+                      hintLabel: 'Enter Bio',
+                      textFieldIcon: Icons.location_city,
+                      value: Profile.manager.bio,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.bio = newValue ?? "";
+                        });
+                      },
+                      maxLine: 4,
+                    ),
+                    profileTextfield(
+                      label: 'Current Location',
+                      hintLabel: 'Enter current location',
+                      textFieldIcon: Icons.location_city,
+                      value: Profile.manager.currentLocation,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.currentLocation = newValue ?? "";
+                        });
+                      },
+                    ),
+                    profileTextfield(
+                      label: 'Hometown',
+                      hintLabel: 'Enter Hometown',
+                      textFieldIcon: Icons.home,
+                      value: Profile.manager.hoemTown,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.hoemTown = newValue ?? "";
+                        });
+                      },
+                    ),
+                    profileTextfield(
+                      label: 'College',
+                      hintLabel: 'Enter College',
+                      textFieldIcon: Icons.school,
+                      value: Profile.manager.college,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.college = newValue ?? "";
+                        });
+                      },
+                    ),
+                    profileTextfield(
+                      label: 'Job Title',
+                      hintLabel: 'Enter Job Title',
+                      textFieldIcon: Icons.home,
+                      value: Profile.manager.jobTitle,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.jobTitle = newValue ?? "";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Education',
+                      value: Profile.manager.educationLevel,
+                      dropdownIcon: Icons.school,
+                      options: educationLevelList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.educationLevel = newValue ?? "";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'MBTI',
+                      value: Profile.manager.mbti,
+                      dropdownIcon: Icons.person_add_outlined,
+                      options: mbtiList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.mbti = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Constellation',
+                      value: Profile.manager.constellation,
+                      dropdownIcon: Icons.star_outline,
+                      options: constellationList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.constellation = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Blood Type',
+                      value: Profile.manager.bloodType,
+                      dropdownIcon: Icons.water_drop_outlined,
+                      options: bloodTypeList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.bloodType = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Religion',
+                      value: Profile.manager.religion,
+                      dropdownIcon: Icons.public_outlined,
+                      options: religionList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.religion = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Sexuality',
+                      value: Profile.manager.sexuality,
+                      dropdownIcon: Icons.favorite_outline,
+                      options: sexualityList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.sexuality = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: "Ethnicity",
+                      value: Profile.manager.ethnicity,
+                      dropdownIcon: Icons.group_outlined,
+                      options: ethnicityList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.ethnicity = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    profileDropdown(
+                      label: 'Diet',
+                      value: Profile.manager.diet,
+                      dropdownIcon: Icons.restaurant_menu_outlined,
+                      options: dietList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          Profile.manager.diet = newValue ?? "Prefer not to say";
+                        });
+                      },
+                    ),
+                    Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "If you want others know more",
-                            style: TextStyle(
-                              fontFamily: 'IowanOldStyle',
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                        children:[
+                          Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Skills",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFFE9765B),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.75,
+                              height: 1,
+                            ),
+                            for (int i = 0; i < howManySkillTextField; i++) SkillsInput(i),
+                          ],
+                        ),
+                        ]
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children:[
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.35,
+                            child:ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  howManySkillTextField++;
+                                  skillControllers.add(TextEditingController());
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFFE9765B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          Text(
-                            "about you...",
-                            style: TextStyle(
-                              fontFamily: 'IowanOldStyle',
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.35,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (howManySkillTextField > 0) { 
+                                    howManySkillTextField--;
+                                    skillControllers.removeLast();
+                                    _updateSkills();
+                                  }
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black26,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0), 
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.remove,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ]
                     ),
-                  ),
-            profileTextfield(
-              label: 'Bio',
-              hintLabel: 'Enter Bio',
-              textFieldIcon: Icons.location_city,
-              value: Profile.manager.bio,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.bio = newValue ?? "";
-                });
-              },
-              maxLine: 4,
-            ),
-            profileTextfield(
-              label: 'Current Location',
-              hintLabel: 'Enter current location',
-              textFieldIcon: Icons.location_city,
-              value: Profile.manager.currentLocation,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.currentLocation = newValue ?? "";
-                });
-              },
-            ),
-            profileTextfield(
-              label: 'Hometown',
-              hintLabel: 'Enter Hometown',
-              textFieldIcon: Icons.home,
-              value: Profile.manager.hoemTown,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.hoemTown = newValue ?? "";
-                });
-              },
-            ),
-            profileTextfield(
-              label: 'College',
-              hintLabel: 'Enter College',
-              textFieldIcon: Icons.school,
-              value: Profile.manager.college,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.college = newValue ?? "";
-                });
-              },
-            ),
-            profileTextfield(
-              label: 'Job Title',
-              hintLabel: 'Enter Job Title',
-              textFieldIcon: Icons.home,
-              value: Profile.manager.jobTitle,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.jobTitle = newValue ?? "";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Education',
-              value: Profile.manager.educationLevel,
-              dropdownIcon: Icons.school,
-              options: educationLevelList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.educationLevel = newValue ?? "";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'MBTI',
-              value: Profile.manager.mbti,
-              dropdownIcon: Icons.person_add_outlined,
-              options: mbtiList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.mbti = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Constellation',
-              value: Profile.manager.constellation,
-              dropdownIcon: Icons.star_outline,
-              options: constellationList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.constellation = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Blood Type',
-              value: Profile.manager.bloodType,
-              dropdownIcon: Icons.water_drop_outlined,
-              options: bloodTypeList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.bloodType = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Religion',
-              value: Profile.manager.religion,
-              dropdownIcon: Icons.public_outlined,
-              options: religionList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.religion = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Sexuality',
-              value: Profile.manager.sexuality,
-              dropdownIcon: Icons.favorite_outline,
-              options: sexualityList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.sexuality = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: "Ethnicity",
-              value: Profile.manager.ethnicity,
-              dropdownIcon: Icons.group_outlined,
-              options: ethnicityList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.ethnicity = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            profileDropdown(
-              label: 'Diet',
-              value: Profile.manager.diet,
-              dropdownIcon: Icons.restaurant_menu_outlined,
-              options: dietList,
-              onChanged: (newValue) {
-                setState(() {
-                  Profile.manager.diet = newValue ?? "Prefer not to say";
-                });
-              },
-            ),
-            const SizedBox(
-              height: 100,
-            )
-          ],
-        ),
-          ),
-        if (isLoading) ...[
-          Opacity(
-            opacity: 0.8,
-            child: Container(
-              color: Colors.black,
-            ),
-          ),
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-        Visibility(
-          visible: !isKeyboardVisible,
-          child: Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 100, // 設置背景的高度
-            child: Container(
-              //color: Colors.white.withOpacity(0.95),// 淺白色背景
-              decoration: BoxDecoration(
-                border: const Border(top: BorderSide(color: Colors.black12)), 
-                color:Colors.white.withOpacity(0.9),
+                    if(!isKeyboardVisible)const SizedBox(height: 100,)
+                    
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                  width: 150,
-                  height: 47,
-                  child:ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, RouteMap.initialProfileDataPage),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF16743),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+              if (isLoading) ...[
+                Opacity(
+                  opacity: 0.8,
+                  child: Container(
+                    color: Colors.black,
+                  ),
+                ),
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+              Visibility(
+                visible: !isKeyboardVisible,
+                child: Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 100, 
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: const Border(top: BorderSide(color: Colors.black12)),
+                      color:Colors.white.withOpacity(0.9),
                     ),
-                    child: const Text(
-                      'Back',
-                      style: TextStyle(
-                        fontFamily: 'IowanOldStyle',
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 47,
+                          child:ElevatedButton(
+                            onPressed: () => Navigator.pushNamed(context, RouteMap.initialProfileDataPage),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF16743),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Back',
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 150,
+                          height: 47,
+                          child:ElevatedButton(
+                            onPressed: () =>{
+                              print(Profile.manager.skills), // 可能彥廷要幫我確認這樣ok不ok
+                              Navigator.pushNamed(context, RouteMap.eventTypeProfilePage),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF16743),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Continue',
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  ),
-                  SizedBox(
-                  width: 150,
-                  height: 47,
-                  child:ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, RouteMap.eventTypeProfilePage),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF16743),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        fontFamily: 'IowanOldStyle',
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
+            ]
         ),
-      ]
-      ),
-      ),
+        ),
       ),
     );
   }
