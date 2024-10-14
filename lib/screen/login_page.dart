@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true, 
                 fillColor: Colors.white, 
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 prefixIcon: Icon(textFieldIcon),

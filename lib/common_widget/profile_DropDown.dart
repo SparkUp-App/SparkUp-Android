@@ -41,7 +41,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2.0),
-              width: MediaQuery.of(context).size.width * 0.80,
+              width: MediaQuery.of(context).size.width * 0.75,
               child: DropdownButtonFormField<String>(
                 value: widget.value,
                 isExpanded: true,
@@ -49,7 +49,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
                   filled: true, 
                   fillColor: Colors.white, 
                   enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -57,7 +57,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

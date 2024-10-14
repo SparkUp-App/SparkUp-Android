@@ -47,7 +47,7 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2.0),
-              width: MediaQuery.of(context).size.width * 0.80,
+              width: MediaQuery.of(context).size.width * 0.75,
               child: InkWell(
                 onTap: () async {
                   DateTime? selectedDate = await showDatePicker(
@@ -70,7 +70,7 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
                       filled: true, 
                       fillColor: Colors.white, 
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderSide: BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -78,7 +78,7 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderSide: BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       prefixIcon: Icon(widget.datepickerIcon),
