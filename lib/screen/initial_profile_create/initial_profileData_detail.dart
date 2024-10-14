@@ -18,18 +18,19 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
   bool _isKeyboardVisible = false;
 
 
-  List<TextEditingController> skillControllers = [];
-  int howManySkillTextField = 1;
-  void _updateSkills() {
+  List<TextEditingController> skillControllers = []; //因為skills這個區塊，textfield是彈性成長，所以我用一個List記住他
+  int howManySkillTextField = 1;//並利用一個int去記到底有多長(有助於下面Widget SkillsInput()中到底在更新那一個TextField)
+
+  void _updateSkills() { //如果有更新資訊的話，同步到Profile.manager.skills
     Profile.manager.skills = skillControllers.map((controller) => controller.text.trim()).where((skill) => skill.isNotEmpty).toList();
   }  
 
-  void _initializeSkillControllers() {
+  void _initializeSkillControllers() { //根據Profile.manager.skills內有的資訊，先重新建立好"原本花了幾個TextField以及內容"
     skillControllers = Profile.manager.skills.map((skill) => TextEditingController(text: skill)).toList();
     howManySkillTextField = skillControllers.length;
   }
 
-  Widget SkillsInput(int index) {
+  Widget SkillsInput(int index) { //SkillsInput，利用index去區分誰是誰
     return Center(
       child:
       Container(
@@ -70,7 +71,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
 
   void initState() {
     super.initState();
-    _initializeSkillControllers();
+    _initializeSkillControllers();//初始化SkillControllers資訊與textfield
   }
 
   @override
@@ -284,16 +285,16 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(
+                            SizedBox(//利用這個小到不行的sizedbox維護版面，因為當下面沒有SkillsInput的話，上面的字會跑版
                               width: MediaQuery.of(context).size.width*0.75,
                               height: 1,
                             ),
-                            for (int i = 0; i < howManySkillTextField; i++) SkillsInput(i),
+                            for (int i = 0; i < howManySkillTextField; i++) SkillsInput(i),//根據index區分哪個textfield是哪個
                           ],
                         ),
                         ]
                     ),
-                    Row(
+                    Row(//這裡的話會控制skill要不要新增新的textfield去記錄新的技能，
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children:[
                           Container(
@@ -355,7 +356,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                           ),
                         ]
                     ),
-                    if(!isKeyboardVisible)const SizedBox(height: 100,)
+                    if(!isKeyboardVisible)const SizedBox(height: 100,) //避免下面預留的空間穿幫
                     
                   ],
                 ),
