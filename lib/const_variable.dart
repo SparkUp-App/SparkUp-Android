@@ -8,7 +8,7 @@ const List<String> religionList = ['Agnostic', 'Atheist', 'Buddhist', 'Catholic'
 const List<String> sexualityList = ['Straight', 'Gay', 'Lesbian', 'Bisexual','Asexual', 'Pansexual', 'Queer', 'Questioning', 'Not listed', 'Prefer not to say'];
 const List<String> ethnicityList = ['Black/African Descent', 'East Asian', 'South Asian', 'Southeast Asian', 'Hispanic/Latino', 'Middle Eastern/North African', 'Native American/Indigenous', 'Pacific Islander','White/Caucasian', 'Multiracial', 'Other', 'Prefer not to say'];
 const List<String> dietList = ['Omnivore', 'Vegetarian', 'Vegan', 'Pescatarian', 'Ketogenic', 'Paleo','Other', 'Prefer not to say'];
-const List<String> eventType = ['Competiton', 'Roommate', 'Sport', 'Study', 'Social', 'Travel', 'Meal','Speech','Parade', 'Exhibition'];
+const List<String> eventType = ['Competition', 'Roommate', 'Sport', 'Study', 'Social', 'Travel', 'Meal','Speech','Parade', 'Exhibition'];
 List<String> smokeList = Smoke.values.map((element)=>element.label).toList();
 List<String> drinkingList = Drinking.values.map((element) => element.label).toList();
 List<String> marijuanaList = Marijuana.values.map((element)=>element.label).toList();

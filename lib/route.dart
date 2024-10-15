@@ -6,6 +6,8 @@ import "package:spark_up/screen/register_page.dart";
 import "package:spark_up/screen/home_page.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_basicInfo.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_eventType.dart";
+import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
+
 class RouteMap{
   //Regist Path for page
   static const loginPage = "/loginPage";
@@ -15,7 +17,7 @@ class RouteMap{
   static const eventTypeProfilePage = "/eventTypeProfilePage";
   static const detailProfilePage = "/detailProfilePage";
   static const eventDetailePage = "/eventDetailPage";
-
+  static const editProfile = "/profile_page";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage : (context) => const LoginPage(),
@@ -28,5 +30,6 @@ class RouteMap{
       int postId = ModalRoute.of(context)!.settings.arguments as int;
       return EventDetailPage(postId: postId);
     },
+    editProfile:(context) => const EditProfilePage(),
   };
 }

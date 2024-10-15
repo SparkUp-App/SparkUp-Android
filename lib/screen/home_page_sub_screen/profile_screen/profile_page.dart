@@ -296,7 +296,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      hintText: "xxxx-xx-xx",
+                      hintText: "yyyy-mm-dd",
                       hintStyle: TextStyle(color: Colors.black26),
                       icon: Icon(Icons.edit_calendar)),
                 ),
