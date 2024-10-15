@@ -4,6 +4,7 @@ import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:spark_up/common_widget/profile_DropDown.dart';
+import 'package:spark_up/common_widget/profile_MultiTextField.dart';
 
 //這裡有的資料除了自己這一頁以外，還有夾帶上一頁basicInfo的資訊
 class DetailedProfilePage extends StatefulWidget {
@@ -19,15 +20,20 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
 
 
   List<TextEditingController> skillControllers = []; //因為skills這個區塊，textfield是彈性成長，所以我用一個List記住他
-  int howManySkillTextField = 1;//並利用一個int去記到底有多長(有助於下面Widget SkillsInput()中到底在更新那一個TextField)
+  List<TextEditingController> personalitiesControllers = []; //因為skills這個區塊，textfield是彈性成長，所以我用一個List記住他
 
   void _updateSkills() { //如果有更新資訊的話，同步到Profile.manager.skills
     Profile.manager.skills = skillControllers.map((controller) => controller.text.trim()).where((skill) => skill.isNotEmpty).toList();
   }  
-
   void _initializeSkillControllers() { //根據Profile.manager.skills內有的資訊，先重新建立好"原本花了幾個TextField以及內容"
     skillControllers = Profile.manager.skills.map((skill) => TextEditingController(text: skill)).toList();
-    howManySkillTextField = skillControllers.length;
+  }
+
+  void _updatePersonalities() { //如果有更新資訊的話，同步到Profile.manager.skills
+    Profile.manager.personalities = personalitiesControllers.map((controller) => controller.text.trim()).where((personalities) => personalities.isNotEmpty).toList();
+  }  
+  void _initializePersonalitiesControllers() { //根據Profile.manager.skills內有的資訊，先重新建立好"原本花了幾個TextField以及內容"
+    personalitiesControllers = Profile.manager.personalities.map((personalities) => TextEditingController(text: personalities)).toList();
   }
 
   Widget SkillsInput(int index) { //SkillsInput，利用index去區分誰是誰
@@ -36,7 +42,9 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
       Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         width: MediaQuery.of(context).size.width * 0.75,
-        child: TextFormField(
+        child: Stack(
+          children:[
+            TextFormField(
           controller: skillControllers[index],
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.safety_check),
@@ -64,14 +72,87 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
             _updateSkills();
           },
         ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              skillControllers[index].clear();
+              skillControllers.removeAt(index);
+              setState(() {
+                _updateSkills();
+              });
+            },
+            color: Colors.black26,
+          ),
+        )
+        ],
       ),
+      )
 
     );
   }
 
+  Widget PersonalitiesInput(int index) { //SkillsInput，利用index去區分誰是誰
+    return Center(
+      child:
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Stack(
+          children:[
+            TextFormField(
+          controller: personalitiesControllers[index],
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.safety_check),
+            prefixIconColor: Colors.black26,
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black12),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0xFFE9765B)),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black12),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            hintText: "Skill",
+            hintStyle: const TextStyle(
+              color: Colors.black26,
+            ),
+          ),
+          onChanged: (value) {
+            _updatePersonalities();
+          },
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              personalitiesControllers[index].clear();
+              personalitiesControllers.removeAt(index);
+              setState(() {
+                _updatePersonalities();
+              });
+            },
+            color: Colors.black26,
+          ),
+        )
+        ],
+      ),
+      )
+
+    );
+  }
   void initState() {
     super.initState();
     _initializeSkillControllers();//初始化SkillControllers資訊與textfield
+    _initializePersonalitiesControllers();//初始化SkillControllers資訊與textfield
   }
 
   @override
@@ -271,90 +352,27 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                         });
                       },
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:[
-                          Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Skills",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFFE9765B),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(//利用這個小到不行的sizedbox維護版面，因為當下面沒有SkillsInput的話，上面的字會跑版
-                              width: MediaQuery.of(context).size.width*0.75,
-                              height: 1,
-                            ),
-                            for (int i = 0; i < howManySkillTextField; i++) SkillsInput(i),//根據index區分哪個textfield是哪個
-                          ],
-                        ),
-                        ]
+                    ProfileMultiInput(
+                      label: 'Personalities',
+                      hintLabel: 'Enter personality',
+                      icon: Icons.person,
+                      values: Profile.manager.personalities,
+                      onChanged: (newValues) {
+                        setState(() {
+                          Profile.manager.personalities = newValues;
+                        });
+                      },
                     ),
-                    Row(//這裡的話會控制skill要不要新增新的textfield去記錄新的技能，
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children:[
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.35,
-                            child:ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  howManySkillTextField++;
-                                  skillControllers.add(TextEditingController());
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFFE9765B),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.35,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (howManySkillTextField > 0) { 
-                                    howManySkillTextField--;
-                                    skillControllers.removeLast();
-                                    _updateSkills();
-                                  }
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black26,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0), 
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.remove,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ]
+                    ProfileMultiInput(
+                      label: 'Skills',
+                      hintLabel: 'Enter skill',
+                      icon: Icons.work,
+                      values: Profile.manager.skills,
+                      onChanged: (newValues) {
+                        setState(() {
+                          Profile.manager.skills = newValues;
+                        });
+                      },
                     ),
                     if(!isKeyboardVisible)const SizedBox(height: 100,) //避免下面預留的空間穿幫
                     
@@ -414,7 +432,8 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                           height: 47,
                           child:ElevatedButton(
                             onPressed: () =>{
-                              print(Profile.manager.skills), // 可能彥廷要幫我確認這樣ok不ok
+                              print(Profile.manager.skills),
+                              print(Profile.manager.personalities), // 可能彥廷要幫我確認這樣ok不ok
                               Navigator.pushNamed(context, RouteMap.eventTypeProfilePage),
                             },
                             style: ElevatedButton.styleFrom(
