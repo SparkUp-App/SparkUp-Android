@@ -7,6 +7,7 @@ import 'package:toasty_box/toast_service.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart'; // 建立 common_widget
 import 'package:spark_up/common_widget/profile_DatePicker.dart'; // 建立 common_widget
 import 'package:spark_up/common_widget/profile_DropDown.dart'; // 建立 common_widget
+import 'package:spark_up/common_widget/profile_TagSelector.dart'; 
 import "package:spark_up/route.dart";
 
 class BasicProfilePage extends StatefulWidget {
@@ -18,6 +19,20 @@ class BasicProfilePage extends StatefulWidget {
 
 class _BasicProfilePageState extends State<BasicProfilePage> {
   bool _isKeyboardVisible = false;
+  List<String> _availableLanguageTags = List<String>.from(languageType);
+  List<String> _selectedLanguageTags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeLanguageTags();
+  }
+
+  void _initializeLanguageTags() {
+    // 假設 Profile.manager.language 存儲了用戶的興趣標籤
+    _selectedLanguageTags = List<String>.from(Profile.manager.languages ?? []);
+    _availableLanguageTags.removeWhere((tag) => _selectedLanguageTags.contains(tag));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +139,18 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                       },
                       isRequired: true,
                     ),
+                     ProfileTagSelect(
+                      label: 'Language',
+                      selectedTags: _selectedLanguageTags,
+                      availableTags: _availableLanguageTags,
+                      onChanged: (updatedTags) {
+                        setState(() {
+                          _selectedLanguageTags = updatedTags;
+                          _availableLanguageTags = List<String>.from(eventType)..removeWhere((tag) => _selectedLanguageTags.contains(tag));
+                          Profile.manager.languages = _selectedLanguageTags;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 100), // 預留一些空間以避免被按鈕遮住
                   ],
                 ),
@@ -135,32 +162,45 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Center(
-                    child: SizedBox(
-                      width: 220,
-                      height: 47,
-                      child: ElevatedButton(
-                        onPressed: () => _navigateToDetailedProfile(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF16743),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                  height: 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: const Border(top: BorderSide(color: Colors.black12)),
+                      color:Colors.white.withOpacity(0.9),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 250,
+                          height: 47,
+                          child:ElevatedButton(
+                            onPressed: () =>{
+                              Navigator.pushNamed(context, RouteMap.detailProfilePage),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF16743),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Continue',
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        child: const Text(
-                          'Continue',
-                          style: TextStyle(
-                            fontFamily: 'IowanOldStyle',
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
               ),
+
             ],
           ),
         ),
@@ -186,7 +226,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
           message: "Please fill in correct phone number");
       return;
     }
-
+    print(_selectedLanguageTags);
     Navigator.pushNamed(context, RouteMap.detailProfilePage);
   }
 }
