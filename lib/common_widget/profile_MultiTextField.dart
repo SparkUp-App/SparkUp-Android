@@ -47,47 +47,50 @@ class _ProfileMultiInputState extends State<ProfileMultiInput> {
     widget.onChanged(newValues);
   }
 
-  Widget _buildInputTextField(int index) {
+    Widget _buildInputTextField(int index) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       width: MediaQuery.of(context).size.width * 0.75,
-      child: Stack(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(
-            controller: controllers[index],
-            decoration: InputDecoration(
-              prefixIcon: Icon(widget.icon),
-              prefixIconColor: Colors.black26,
-              filled: true,
-              fillColor: Colors.white,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black12),
-                borderRadius: BorderRadius.circular(10.0),
+          Expanded(
+            child: TextFormField(
+              controller: controllers[index],
+              decoration: InputDecoration(
+                prefixIcon: Icon(widget.icon),
+                prefixIconColor: Colors.black26,
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: widget.hintLabel,
+                hintStyle: const TextStyle(
+                  color: Colors.black26,
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black12),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              hintText: widget.hintLabel,
-              hintStyle: const TextStyle(
-                color: Colors.black26,
-              ),
+              onChanged: (value) {
+                _updateValues();
+              },
             ),
-            onChanged: (value) {
-              _updateValues();
-            },
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () => _removeInput(index),
-              color: Colors.black26,
-            ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () => _removeInput(index),
+            color: Colors.black26,
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            splashRadius: 24,
           ),
         ],
       ),
