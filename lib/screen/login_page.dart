@@ -215,17 +215,6 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              const Center(
-                                child: Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                        fontFamily: 'IowanOldStyle',
-                                        color: Color(0xFFF16743),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              )
                             ],
                           )
                       ),
