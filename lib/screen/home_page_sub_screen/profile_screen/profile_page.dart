@@ -357,7 +357,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return MaterialApp(
+      theme:  ThemeData(
+        fontFamily: 'IowanOldStyle',
+      ),
+      home:
+      SafeArea(
+        child:
+      Stack(children: [
       Scaffold(
         body: ListView(
           padding: const EdgeInsets.all(16.0),
@@ -436,7 +443,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         const Center(child: CircularProgressIndicator())
       ]
-    ]);
+    ])));
   }
 
   void _saveProfile() async {
