@@ -211,7 +211,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileTextfield(
                       label: 'Bio',
                       hintLabel: 'Enter Bio',
-                      textFieldIcon: Icons.location_city,
+                      textFieldIcon:'assets/icons/circle_user.svg',
                       value: Profile.manager.bio,
                       onChanged: (newValue) {
                         setState(() {
@@ -223,7 +223,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileTextfield(
                       label: 'Current Location',
                       hintLabel: 'Enter current location',
-                      textFieldIcon: Icons.location_city,
+                      textFieldIcon: 'assets/icons/city.svg',
                       value: Profile.manager.currentLocation,
                       onChanged: (newValue) {
                         setState(() {
@@ -234,7 +234,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileTextfield(
                       label: 'Hometown',
                       hintLabel: 'Enter Hometown',
-                      textFieldIcon: Icons.home,
+                      textFieldIcon: 'assets/icons/hometown.svg',
                       value: Profile.manager.hoemTown,
                       onChanged: (newValue) {
                         setState(() {
@@ -245,7 +245,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileTextfield(
                       label: 'College',
                       hintLabel: 'Enter College',
-                      textFieldIcon: Icons.school,
+                      textFieldIcon: 'assets/icons/education.svg',
                       value: Profile.manager.college,
                       onChanged: (newValue) {
                         setState(() {
@@ -256,7 +256,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileTextfield(
                       label: 'Job Title',
                       hintLabel: 'Enter Job Title',
-                      textFieldIcon: Icons.home,
+                      textFieldIcon: 'assets/icons/home.svg',
                       value: Profile.manager.jobTitle,
                       onChanged: (newValue) {
                         setState(() {
@@ -267,7 +267,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Education',
                       value: Profile.manager.educationLevel,
-                      dropdownIcon: Icons.school,
+                      dropdownIcon: 'assets/icons/school.svg',
                       options: educationLevelList,
                       onChanged: (newValue) {
                         setState(() {
@@ -278,7 +278,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'MBTI',
                       value: Profile.manager.mbti,
-                      dropdownIcon: Icons.person_add_outlined,
+                      dropdownIcon: 'assets/icons/smile.svg',
                       options: mbtiList,
                       onChanged: (newValue) {
                         setState(() {
@@ -287,9 +287,9 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                       },
                     ),
                     profileDropdown(
-                      label: 'Constellation',
+                      label: 'Zodiac Sign',
                       value: Profile.manager.constellation,
-                      dropdownIcon: Icons.star_outline,
+                      dropdownIcon: 'assets/icons/czodiac_sign.svg',
                       options: constellationList,
                       onChanged: (newValue) {
                         setState(() {
@@ -300,7 +300,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Blood Type',
                       value: Profile.manager.bloodType,
-                      dropdownIcon: Icons.water_drop_outlined,
+                      dropdownIcon: 'assets/icons/blood.svg',
                       options: bloodTypeList,
                       onChanged: (newValue) {
                         setState(() {
@@ -311,7 +311,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Religion',
                       value: Profile.manager.religion,
-                      dropdownIcon: Icons.public_outlined,
+                      dropdownIcon: 'assets/icons/religion.svg',
                       options: religionList,
                       onChanged: (newValue) {
                         setState(() {
@@ -322,7 +322,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Sexuality',
                       value: Profile.manager.sexuality,
-                      dropdownIcon: Icons.favorite_outline,
+                      dropdownIcon: 'assets/icons/sexuality.svg',
                       options: sexualityList,
                       onChanged: (newValue) {
                         setState(() {
@@ -333,7 +333,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: "Ethnicity",
                       value: Profile.manager.ethnicity,
-                      dropdownIcon: Icons.group_outlined,
+                      dropdownIcon: 'assets/icons/users.svg',
                       options: ethnicityList,
                       onChanged: (newValue) {
                         setState(() {
@@ -344,7 +344,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Diet',
                       value: Profile.manager.diet,
-                      dropdownIcon: Icons.restaurant_menu_outlined,
+                      dropdownIcon: 'assets/icons/eat.svg',
                       options: dietList,
                       onChanged: (newValue) {
                         setState(() {
@@ -355,7 +355,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     ProfileMultiInput(
                       label: 'Personalities',
                       hintLabel: 'Enter personality',
-                      icon: Icons.person,
+                      icon: 'assets/icons/person.svg',
                       values: Profile.manager.personalities,
                       onChanged: (newValues) {
                         setState(() {
@@ -366,7 +366,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     ProfileMultiInput(
                       label: 'Skills',
                       hintLabel: 'Enter skill',
-                      icon: Icons.work,
+                      icon: 'assets/icons/skill.svg',
                       values: Profile.manager.skills,
                       onChanged: (newValues) {
                         setState(() {

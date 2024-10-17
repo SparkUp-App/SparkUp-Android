@@ -256,7 +256,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Continue',
+                                  'Finish!',
                                   style: TextStyle(
                                     fontFamily: 'IowanOldStyle',
                                     color: Colors.white,

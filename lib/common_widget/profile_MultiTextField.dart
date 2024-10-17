@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileMultiInput extends StatefulWidget {
   const ProfileMultiInput({
@@ -12,7 +13,7 @@ class ProfileMultiInput extends StatefulWidget {
 
   final String label;
   final String hintLabel;
-  final IconData icon;
+  final String icon;
   final List<String> values;
   final Function(List<String>) onChanged;
 
@@ -57,7 +58,18 @@ class _ProfileMultiInputState extends State<ProfileMultiInput> {
           TextFormField(
             controller: controllers[index],
             decoration: InputDecoration(
-              prefixIcon: Icon(widget.icon),
+              prefixIcon:Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SvgPicture.asset(
+                      widget.icon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black26,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
               prefixIconColor: Colors.black26,
               filled: true,
               fillColor: Colors.white,

@@ -42,7 +42,6 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
             ),
           ],
         ),
-
       ],
     );
   }
@@ -178,7 +177,7 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -212,7 +211,6 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                     onPressed: () {
                       Navigator.pushNamed(context, RouteMap.editProfile);
                     },
-
                   ),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class profieldDatepicker extends StatefulWidget {
   const profieldDatepicker({//要求:key，標籤，他所對應的值，此文字框的icon，回調函數，是否為必填
@@ -12,7 +13,7 @@ class profieldDatepicker extends StatefulWidget {
 
   final String label;
   final String value;
-  final IconData datepickerIcon;
+  final String datepickerIcon;
   final Function(String?) onChanged;
   final bool isRequired;
 
@@ -81,7 +82,18 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
                         borderSide: BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon: Icon(widget.datepickerIcon),
+                      prefixIcon: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SvgPicture.asset(
+                      widget.datepickerIcon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black26,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                       prefixIconColor: Colors.black26,
                       hintText: "yyyy-mm-dd",
                       hintStyle: const TextStyle(

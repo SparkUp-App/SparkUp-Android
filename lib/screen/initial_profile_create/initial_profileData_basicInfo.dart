@@ -94,7 +94,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     profileTextfield(
                       label: 'Phone',
                       hintLabel: 'Enter phone number',
-                      textFieldIcon: Icons.phone,
+                      textFieldIcon: 'assets/icons/phone.svg',
                       value: Profile.manager.phone,
                       onChanged: (newValue) {
                         setState(() {
@@ -106,7 +106,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     profileTextfield(
                       label: 'Nickname',
                       hintLabel: 'Enter nickname',
-                      textFieldIcon: Icons.person,
+                      textFieldIcon: 'assets/icons/user.svg',
                       value: Profile.manager.nickname,
                       onChanged: (newValue) {
                         setState(() {
@@ -118,7 +118,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     profieldDatepicker(
                       label: 'Date of Birth',
                       value: Profile.manager.dob,
-                      datepickerIcon: Icons.calendar_month_rounded,
+                      datepickerIcon: 'assets/icons/calendar.svg',
                       onChanged: (newValue) {
                         setState(() {
                           Profile.manager.dob = newValue ?? "";
@@ -129,7 +129,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                     profileDropdown(
                       label: 'Gender',
                       value: Profile.manager.gneder.label,
-                      dropdownIcon: Icons.ac_unit,
+                      dropdownIcon: 'assets/icons/gender.svg',
                       options: genderList,
                       onChanged: (newValue) {
                         setState(() {

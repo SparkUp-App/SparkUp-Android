@@ -4,6 +4,7 @@ import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
 import 'package:spark_up/route.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -18,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   var confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
-  Widget loginTextField(IconData textFieldIcon, String label, String hintText,
+  Widget loginTextField(String textFieldIcon, String label, String hintText,
       TextEditingController controller,
       {bool isObscured = false}) {
     return Padding(
@@ -59,7 +60,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: Icon(textFieldIcon),
+                prefixIcon: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SvgPicture.asset(
+                      textFieldIcon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black26,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                 prefixIconColor: Colors.black26,
                 hintText: hintText,
                 hintStyle: const TextStyle(
@@ -109,12 +121,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 100,
                       ), //確定他是否可以scroll
-                      loginTextField(Icons.email, 'Email', 'Email Address',
+                      loginTextField('assets/icons/email.svg', 'Email', 'Email Address',
                           emailController),
-                      loginTextField(Icons.lock, 'Password', 'Password',
+                      loginTextField('assets/icons/password.svg', 'Password', 'Password',
                           passwordController,
                           isObscured: true),
-                      loginTextField(Icons.lock, 'Confirm Password',
+                      loginTextField('assets/icons/password.svg', 'Confirm Password',
                           'Confirm Password', confirmPasswordController,
                           isObscured: true),
                       const SizedBox(height: 70),
