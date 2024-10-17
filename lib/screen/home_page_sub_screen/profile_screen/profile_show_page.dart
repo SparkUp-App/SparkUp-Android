@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 
@@ -19,15 +20,20 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
       children: [
         Text(
           label,
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: Colors.white),
         ),
         Text(
           count,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 24, 
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ],
     );
   }
+
   @override
   void initState() {
     super.initState();
@@ -37,24 +43,25 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(Profile.manager.nickname),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
-        ),
-        body: Column(
-            children:[
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF16743),
-                ),
-                height: 250,
-                child: Row(//個人資訊:一個超大Row，分兩塊，一塊給基本資料顯示，一塊給"假頭貼"跟edit按鈕
+      appBar: AppBar(
+        title: Text(Profile.manager.nickname),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView( //他"整體"是要能夠滑動的，所以加一個singleScroll
+        child: Column(
+          children: [
+            Container( //個人資訊頁面是有背景顏色的，所以將其包住
+              decoration: BoxDecoration(
+                color: Color(0xFFF7AF8B),
+              ),
+              height: 250,//固定高度為250
+              child: Row( 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(//根據擁有的空間去做
-                    flex: 2,//做一個2:1
+                  Expanded( //設定他占整個row 2份比例(2:1)，包含參加過的活動數與評價，以及個人介紹(Bio，現階段還未連結Profile.manager)
+                    flex: 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -63,8 +70,10 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10,),
-                              Row(
+                              SizedBox(height: 20),
+                              Container(
+                                height: 60,
+                                child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildStatColumn('Participated', '30'),
@@ -72,41 +81,54 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                                   _buildStatColumn('Rating', '4.8'),
                                 ],
                               ),
-                              SizedBox(height: 10,),
-                              Container( //不用textfield，直接用一個container顯示就好，爽
-                                height: 120,
+                              ),
+                              
+                              Container(
+                                height: 125,
                                 width: MediaQuery.of(context).size.width * 0.75,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black12, width: 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child:
-                                Text(
-                                  'Passionate about creating user-friendly and efficient mobile applications.',
-                                  style: TextStyle(height: 1.4),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    Profile.manager.bio,
+                                    style: TextStyle(
+                                      color: Colors.white
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 16),
+                              
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Expanded(
+                  Expanded(//這裡放一個"假頭貼"跟一個edit按鈕
                     flex: 1,
                     child: Column(
                       children: [
-                        SizedBox(height: 20,),
-                        CircleAvatar(
-                          radius: 50,
+                        SizedBox(height: 20),
+                        Center(
+                          child: CircleAvatar(
+                            radius: 50,
+                          ),
                         ),
                         SizedBox(height: 16),
                         Container(
-                          width: 110,
+                          width: 130,
+                          height: 30,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF16743),
+                            ),
                             onPressed: () => Navigator.pushNamed(context, RouteMap.editProfile),
-                            child: Text("Edit"),
+                            child: Text(
+                              "Edit Profile",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+
                           ),
                         ),
                         SizedBox(height: 16),
@@ -115,27 +137,29 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                   ),
                 ],
               ),
-              ),
-              TabBar(
+            ),
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(icon: Icon(Icons.grid_on, color: Colors.black)),
+                Tab(icon: Icon(Icons.list, color: Colors.black)),
+              ],
+              indicatorColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+            ),
+            SizedBox(
+              height: 500, // 给定一个固定高度，或者根据需要调整
+              child: TabBarView(
                 controller: _tabController,
-                tabs: [
-                  Tab(icon: Icon(Icons.grid_on, color: Colors.black)),
-                  Tab(icon: Icon(Icons.list, color: Colors.black)),
+                children: [
+                  _buildTabContent('Grid View Content'),
+                  _buildTabContent('List View Content'),
                 ],
-                indicatorColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTabContent('Grid View Content'),
-                    _buildTabContent('List View Content'),
-                  ],
-                ),
-              ),
-            ]
-        )
+            ),
+          ],
+        ),
+      ),
     );
   }
 

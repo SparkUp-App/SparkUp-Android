@@ -362,10 +362,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         fontFamily: 'IowanOldStyle',
       ),
       home:
-      SafeArea(
-        child:
       Stack(children: [
       Scaffold(
+        appBar: AppBar(
+          title: Text('Edit Profile'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
@@ -443,7 +447,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         const Center(child: CircularProgressIndicator())
       ]
-    ])));
+    ]));
   }
 
   void _saveProfile() async {
