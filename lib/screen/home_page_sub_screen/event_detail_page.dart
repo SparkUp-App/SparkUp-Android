@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/base_post.dart';
+import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -22,16 +26,34 @@ class _EventDetailPageState extends State<EventDetailPage>
   bool sendingLike = false;
   bool sendingBookMark = false;
   bool sendingMessage = false;
+  bool gettingComment = false;
+  bool noMoreComment = false;
+
   late BasePost postData;
   late TabController tabController;
-  TextEditingController textEditingController = TextEditingController();
 
+  List<Comment> commentList = [];
+  ScrollController scrollController = ScrollController();
+  TextEditingController textEditingController = TextEditingController();
+  int page = 2, perPage = 20;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
     initDataGet(context);
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        getComment();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   Future initDataGet(context) async {
@@ -39,7 +61,8 @@ class _EventDetailPageState extends State<EventDetailPage>
       initialing = true;
     });
 
-    final response = await Network.manager.sendRequest(
+    //Init Post Data Get
+    var response = await Network.manager.sendRequest(
       method: RequestMethod.post,
       path: PostPath.view,
       data: {"user_id": Network.manager.userId, "post_id": widget.postId},
@@ -55,6 +78,28 @@ class _EventDetailPageState extends State<EventDetailPage>
             content: "${response["data"]["message"]}",
           ),
         );
+      }
+    }
+
+    //Init Post Comment Data Get
+    response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: CommentPath.list, data: {
+      "user_id": Network.manager.userId,
+      "post_id": postData.postId,
+      "page": 1,
+      "per_page": perPage
+    });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        for (var data in response["data"]["comments"]) {
+          commentList.add(Comment.initfromData(data));
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["mesage"]}"));
       }
     }
 
@@ -127,6 +172,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (textEditingController.text == "") return;
 
     sendingMessage = true;
+    setState(() {});
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -139,9 +185,11 @@ class _EventDetailPageState extends State<EventDetailPage>
 
     if (context.mounted) {
       if (response["status"] == "success") {
-        //TODO : Comment Data Refresh Or Add
 
+        commentList.add(Comment.initfromData(response["data"]["comment"]));
         textEditingController.clear();
+        setState(() {});
+
       } else {
         showDialog(
             context: context,
@@ -151,6 +199,39 @@ class _EventDetailPageState extends State<EventDetailPage>
     }
 
     sendingMessage = false;
+    setState(() {});
+  }
+
+  void getComment() async {
+    if (gettingComment) return;
+    gettingComment = true;
+    setState(() {});
+
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: CommentPath.list, data: {
+      "user_id": Network.manager.userId,
+      "post_id": postData.postId,
+      "page": page,
+      "per_page": perPage
+    });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        if (response["data"]["comments"].isEmpty) {
+          noMoreComment = true;
+        } else {
+          for (var data in response["comments"]) {
+            commentList.add(Comment.initfromData(data));
+          }
+          page++;
+        }
+      } else {
+        //TODO: Get Comment Failed Process
+      }
+    }
+
+    gettingComment = false;
+    setState(() {});
   }
 
   @override
@@ -387,43 +468,20 @@ class _EventDetailPageState extends State<EventDetailPage>
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(10.0),
-                  height: 200.0,
-                  width: 500.0,
-                ),
-                Container(
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(10.0),
-                  height: 200.0,
-                  width: 500.0,
-                ),
-                Container(
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(10.0),
-                  height: 200.0,
-                  width: 500.0,
-                ),
-                Container(
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(10.0),
-                  height: 200.0,
-                  width: 500.0,
-                ),
-                Container(
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(10.0),
-                  height: 200.0,
-                  width: 500.0,
-                ),
+            child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              for (int index = commentList.length - 1; index >= 0; index--) ...[
+                CommentBlock(comment: commentList[index])
               ],
-            ),
-          )
-        ),
+              if (noMoreComment)
+                const Center(child: Text("No More Comment"))
+              else if (gettingComment)
+                const CircularProgressIndicator()
+            ],
+          ),
+        )),
         Divider(
           thickness: 1,
           color: Colors.grey,
@@ -462,6 +520,135 @@ class _EventDetailPageState extends State<EventDetailPage>
           ],
         )
       ],
+    );
+  }
+}
+
+class CommentBlock extends StatefulWidget {
+  const CommentBlock({super.key, required this.comment});
+
+  final Comment comment;
+
+  @override
+  State<CommentBlock> createState() => _CommentBlockState();
+}
+
+class _CommentBlockState extends State<CommentBlock> {
+  late String timeAfter;
+  bool sendingLike = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Duration differTime =
+        DateTime.now().difference(widget.comment.lastUpdateDate);
+    int monthsDiff =
+        (DateTime.now().year - widget.comment.lastUpdateDate.year) * 12 +
+            DateTime.now().month -
+            widget.comment.lastUpdateDate.month;
+    if (differTime.inSeconds < 60) {
+      timeAfter = "${differTime.inSeconds} seconds ago";
+    } else if (differTime.inMinutes < 60) {
+      timeAfter = "${differTime.inMinutes} minutes ago";
+    } else if (differTime.inHours < 60) {
+      timeAfter = "${differTime.inHours} hours ago";
+    } else if (differTime.inDays < 7) {
+      timeAfter = "${differTime.inDays} days ago";
+    } else if (differTime.inDays < 30) {
+      timeAfter = "${(differTime.inDays / 7).floor()} weeks ago";
+    } else if (monthsDiff < 12) {
+      timeAfter = "$monthsDiff months ago";
+    } else {
+      timeAfter = "${(monthsDiff / 12).floor()} years ago";
+    }
+  }
+
+  void pressLikedProcess() async {
+    if (sendingLike) return;
+    sendingLike = true;
+
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: CommentPath.like, data: {
+      "user_id": Network.manager.userId,
+      "comment_id": widget.comment.commentsId,
+      "retrieve": widget.comment.liked
+    });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        setState(() {
+          widget.comment.liked = !widget.comment.liked;
+        });
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["message"]}"));
+      }
+    }
+
+    sendingLike = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+      child: widget.comment.deleted
+          ? Row(
+              children: [
+                Expanded(
+                    child: Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                top: BorderSide(color: Colors.grey),
+                                right: BorderSide(color: Colors.grey),
+                                bottom: BorderSide(color: Colors.grey),
+                                left: BorderSide(color: Colors.grey))),
+                        child: const Center(
+                          child: Text(
+                            "Comment Had Beend Deleted",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )))
+              ],
+            )
+          : Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: const Icon(Icons.circle),
+                ),
+                Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.all(5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.comment.userNickName,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w900),
+                            ),
+                            Text(widget.comment.content),
+                            Text(
+                              "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                              style: TextStyle(color: Colors.grey),
+                            )
+                          ],
+                        ))),
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: IconButton(
+                    onPressed: ()=>pressLikedProcess(),
+                    icon: Icon(widget.comment.liked
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                  ),
+                )
+              ],
+            ),
     );
   }
 }
