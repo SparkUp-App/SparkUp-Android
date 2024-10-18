@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:spark_up/common_widget/system_message.dart';
+import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -20,6 +21,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     with SingleTickerProviderStateMixin {
   bool initialing = false;
   bool sendingLike = false;
+  bool sendingBookMark = false;
   late BasePost postData;
   late TabController tabController;
 
@@ -59,26 +61,41 @@ class _EventDetailPageState extends State<EventDetailPage>
     });
   }
 
-  void pressLikedProcess() async{
-    if(sendingLike) return;
+  void pressLikedProcess() async {
+    if (sendingLike) return;
 
     sendingLike = true;
-    
-    final response = await Network.manager.sendRequest(method: RequestMethod.post, path: PostPath.like, data: {"user_id" : Network.manager.userId, "post_id":postData.postId, "retrieve" : postData.liked});
 
-    if(context.mounted){
-      if(response["status"] == "success"){
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: PostPath.like, data: {
+      "user_id": Network.manager.userId,
+      "post_id": postData.postId,
+      "retrieve": postData.liked
+    });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
         setState(() {
           postData.liked = !postData.liked!;
-        });  
-      }
-      else{
-        showDialog(context: context, builder: (context) => SystemMessage(content: "${response["data"]["message"]}"));
+        });
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["message"]}"));
       }
     }
 
     sendingLike = false;
   }
+
+  void pressBookMarkedProcess() async {
+    if (sendingBookMark) return;
+    sendingBookMark = true;
+    sendingBookMark = false;
+  }
+
+  void pressAplyProcess() {}
 
   @override
   Widget build(BuildContext context) {
@@ -176,12 +193,104 @@ class _EventDetailPageState extends State<EventDetailPage>
               },
               body: TabBarView(
                 controller: tabController,
-                children: const [
-                  Center(child: Text("Page in Programming")),
+                children: [
+                  detailContent(),
                   Center(child: Text("Page in programming")),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget detailContent() {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+              ],
+            ),
+          ),
+        )),
+        const Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+                child: Container(
+              margin: const EdgeInsets.all(10.0),
+              child: InkWell(
+                onTap: () => pressBookMarkedProcess(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 245, 174, 128),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        (postData.bookmarked!
+                            ? Icons.bookmark
+                            : Icons.bookmark_border),
+                        color: Colors.white,
+                      ),
+                      const Text(
+                        "Bookmark",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )),
+            Expanded(
+                child: Container(
+              margin: const EdgeInsets.all(10.0),
+              child: InkWell(
+                onTap: () => pressAplyProcess(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 245, 174, 128),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        (Icons.check),
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Apply",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )),
+          ],
+        )
+      ],
     );
   }
 }
