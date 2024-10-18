@@ -39,6 +39,8 @@ dependencies:
   toasty_box: ^1.0.4
   flutter_tags: ^1.0.0-nullsafety.1
   flutter_svg: ^2.0.10+1
+  easy_stepper: ^0.8.5+1
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

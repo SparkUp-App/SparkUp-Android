@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/data/base_post.dart';
 
-List<Step> createTeamAndLocationSteps(int currentStep) {
+List<Step> createSportSteps(int currentStep, BasePost basePost) {
   return [
     Step(
-      title: const SizedBox.shrink(), // No title,
+      title: const SizedBox.shrink(),
       content: Column(
-        children: const [
+        children: [
           TextField(
-            decoration: InputDecoration(labelText: 'Enter team names'),
-          ),
-          TextField(
-            decoration: InputDecoration(labelText: 'Enter location'),
+            decoration: InputDecoration(labelText: 'Enter home team name'),
+            onChanged: (value) {
+              basePost.location = value;
+            },
+            controller: TextEditingController(text: basePost.location),
           ),
         ],
       ),
       isActive: currentStep >= 2,
     ),
     Step(
-      title: const SizedBox.shrink(), // No title,
+      title: const SizedBox.shrink(),
       content: Column(
-        children: const [
-          TextField(
-            decoration: InputDecoration(labelText: 'Enter referee names'),
-          ),
+        children: [
+          
         ],
       ),
       isActive: currentStep >= 3,

@@ -6,6 +6,7 @@ import "package:spark_up/network/path/post_path.dart";
 import "package:toasty_box/toast_enums.dart";
 import "package:toasty_box/toasty_box.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_detailFill.dart";
+
 class sparkPageEventTypeDecide extends StatefulWidget {
   const sparkPageEventTypeDecide({super.key});
   @override
