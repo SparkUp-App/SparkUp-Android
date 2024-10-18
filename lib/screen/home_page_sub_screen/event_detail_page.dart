@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -16,6 +19,7 @@ class EventDetailPage extends StatefulWidget {
 class _EventDetailPageState extends State<EventDetailPage>
     with SingleTickerProviderStateMixin {
   bool initialing = false;
+  bool sendingLike = false;
   late BasePost postData;
   late TabController tabController;
 
@@ -55,6 +59,27 @@ class _EventDetailPageState extends State<EventDetailPage>
     });
   }
 
+  void pressLikedProcess() async{
+    if(sendingLike) return;
+
+    sendingLike = true;
+    
+    final response = await Network.manager.sendRequest(method: RequestMethod.post, path: PostPath.like, data: {"user_id" : Network.manager.userId, "post_id":postData.postId, "retrieve" : postData.liked});
+
+    if(context.mounted){
+      if(response["status"] == "success"){
+        setState(() {
+          postData.liked = !postData.liked!;
+        });  
+      }
+      else{
+        showDialog(context: context, builder: (context) => SystemMessage(content: "${response["data"]["message"]}"));
+      }
+    }
+
+    sendingLike = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,9 +101,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                     ),
                     actions: [
                       IconButton(
-                        onPressed: () => setState(() {
-                          postData.liked = !postData.liked!;
-                        }),
+                        onPressed: () => pressLikedProcess(),
                         icon: Icon(
                           postData.liked!
                               ? Icons.favorite
