@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
+import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 
 class EventDetailPage extends StatefulWidget {
@@ -20,8 +21,11 @@ class _EventDetailPageState extends State<EventDetailPage>
   bool initialing = false;
   bool sendingLike = false;
   bool sendingBookMark = false;
+  bool sendingMessage = false;
   late BasePost postData;
   late TabController tabController;
+  TextEditingController textEditingController = TextEditingController();
+
 
   @override
   void initState() {
@@ -117,6 +121,37 @@ class _EventDetailPageState extends State<EventDetailPage>
   }
 
   void pressAplyProcess() {}
+
+  void sendingProcess() async {
+    if (sendingMessage) return;
+    if (textEditingController.text == "") return;
+
+    sendingMessage = true;
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: CommentPath.create,
+        data: {
+          "user_id": Network.manager.userId,
+          "post_id": postData.postId,
+          "content": textEditingController.text
+        });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        //TODO : Comment Data Refresh Or Add
+
+        textEditingController.clear();
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["message"]}"));
+      }
+    }
+
+    sendingMessage = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +251,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                 controller: tabController,
                 children: [
                   detailContent(),
-                  Center(child: Text("Page in programming")),
+                  commentContent(),
                 ],
               ),
             ),
@@ -342,6 +377,88 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ),
             ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget commentContent() {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(10.0),
+                  height: 200.0,
+                  width: 500.0,
+                ),
+                Container(
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(10.0),
+                  height: 200.0,
+                  width: 500.0,
+                ),
+                Container(
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(10.0),
+                  height: 200.0,
+                  width: 500.0,
+                ),
+                Container(
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(10.0),
+                  height: 200.0,
+                  width: 500.0,
+                ),
+                Container(
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(10.0),
+                  height: 200.0,
+                  width: 500.0,
+                ),
+              ],
+            ),
+          )
+        ),
+        Divider(
+          thickness: 1,
+          color: Colors.grey,
+        ),
+        Row(
+          children: [
+            Expanded(
+                child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: TextField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  hintText: "Write a comment...",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.deepOrange,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.grey)),
+                ),
+                cursorColor: Colors.deepOrange,
+              ),
+            )),
+            if (sendingMessage)
+              const CircularProgressIndicator()
+            else
+              IconButton(
+                onPressed: () => sendingProcess(),
+                icon: Icon(Icons.send),
+                color: Colors.deepOrange,
+              )
           ],
         )
       ],
