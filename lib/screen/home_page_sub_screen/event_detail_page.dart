@@ -1,9 +1,7 @@
-import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:spark_up/common_widget/system_message.dart';
-import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -92,6 +90,29 @@ class _EventDetailPageState extends State<EventDetailPage>
   void pressBookMarkedProcess() async {
     if (sendingBookMark) return;
     sendingBookMark = true;
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: PostPath.bookmark,
+        data: {
+          "user_id": Network.manager.userId,
+          "post_id": postData.postId,
+          "retrieve": postData.bookmarked
+        });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        setState(() {
+          postData.bookmarked = !postData.bookmarked!;
+        });
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["message"]}"));
+      }
+    }
+
     sendingBookMark = false;
   }
 
@@ -210,13 +231,48 @@ class _EventDetailPageState extends State<EventDetailPage>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
-                Container(color: Colors.grey, height: 200.0, width: 500.0, margin: EdgeInsets.symmetric(vertical: 10.0),),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 200.0,
+                  width: 500.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                ),
               ],
             ),
           ),
@@ -226,20 +282,19 @@ class _EventDetailPageState extends State<EventDetailPage>
           thickness: 1,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-                child: Container(
-              margin: const EdgeInsets.all(10.0),
-              child: InkWell(
-                onTap: () => pressBookMarkedProcess(),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 10.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 245, 174, 128),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10.0),
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: ElevatedButton(
+                  onPressed: () => pressBookMarkedProcess(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.all(10.0),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -258,19 +313,18 @@ class _EventDetailPageState extends State<EventDetailPage>
                   ),
                 ),
               ),
-            )),
+            ),
             Expanded(
-                child: Container(
-              margin: const EdgeInsets.all(10.0),
-              child: InkWell(
-                onTap: () => pressAplyProcess(),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 10.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 245, 174, 128),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10.0),
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: ElevatedButton(
+                  onPressed: () => pressAplyProcess(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.all(10.0),
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -287,7 +341,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                   ),
                 ),
               ),
-            )),
+            ),
           ],
         )
       ],
