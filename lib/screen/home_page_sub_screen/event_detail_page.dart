@@ -42,10 +42,14 @@ class _EventDetailPageState extends State<EventDetailPage>
     super.initState();
     tabController = TabController(length: 2, vsync: this);
     initDataGet(context);
-    scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        getComment();
+    tabController.addListener(() {
+      if (tabController.index == 1) {
+        scrollController.addListener(() {
+          if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent) {
+            getComment();
+          }
+        });
       }
     });
   }
@@ -53,6 +57,7 @@ class _EventDetailPageState extends State<EventDetailPage>
   @override
   void dispose() {
     scrollController.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
@@ -185,11 +190,10 @@ class _EventDetailPageState extends State<EventDetailPage>
 
     if (context.mounted) {
       if (response["status"] == "success") {
-
         commentList.add(Comment.initfromData(response["data"]["comment"]));
         textEditingController.clear();
+        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         setState(() {});
-
       } else {
         showDialog(
             context: context,
@@ -240,6 +244,7 @@ class _EventDetailPageState extends State<EventDetailPage>
       body: initialing
           ? const Center(child: CircularProgressIndicator())
           : NestedScrollView(
+              controller: scrollController,
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
@@ -469,7 +474,6 @@ class _EventDetailPageState extends State<EventDetailPage>
       children: [
         Expanded(
             child: SingleChildScrollView(
-          controller: scrollController,
           child: Column(
             children: [
               for (int index = commentList.length - 1; index >= 0; index--) ...[
@@ -641,7 +645,7 @@ class _CommentBlockState extends State<CommentBlock> {
                 Container(
                   margin: const EdgeInsets.all(5.0),
                   child: IconButton(
-                    onPressed: ()=>pressLikedProcess(),
+                    onPressed: () => pressLikedProcess(),
                     icon: Icon(widget.comment.liked
                         ? Icons.favorite
                         : Icons.favorite_border),
