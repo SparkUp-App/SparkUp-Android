@@ -80,6 +80,8 @@ class BasePost extends HttpData {
       posterNickname: data["nickname"],
       likes: data["likes"],
       liked: data["liked"],
+      bookmarks: data["bookmarks"],
+      bookmarked: data["bookmarked"],
       comments: data["comments"],
       applicants: data["applicants"]
     );
