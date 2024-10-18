@@ -192,7 +192,7 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         commentList.add(Comment.initfromData(response["data"]["comment"]));
         textEditingController.clear();
-        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.decelerate);
         setState(() {});
       } else {
         showDialog(
@@ -208,6 +208,7 @@ class _EventDetailPageState extends State<EventDetailPage>
 
   void getComment() async {
     if (gettingComment) return;
+    if (noMoreComment) return;
     gettingComment = true;
     setState(() {});
 
@@ -224,7 +225,7 @@ class _EventDetailPageState extends State<EventDetailPage>
         if (response["data"]["comments"].isEmpty) {
           noMoreComment = true;
         } else {
-          for (var data in response["comments"]) {
+          for (var data in response["data"]["comments"]) {
             commentList.add(Comment.initfromData(data));
           }
           page++;
