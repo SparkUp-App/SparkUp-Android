@@ -192,7 +192,8 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         commentList.add(Comment.initfromData(response["data"]["comment"]));
         textEditingController.clear();
-        scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.decelerate);
+        scrollController.animateTo(0,
+            duration: Duration(seconds: 1), curve: Curves.decelerate);
         setState(() {});
       } else {
         showDialog(
@@ -226,7 +227,7 @@ class _EventDetailPageState extends State<EventDetailPage>
           noMoreComment = true;
         } else {
           for (var data in response["data"]["comments"]) {
-            commentList.add(Comment.initfromData(data));
+            commentList.insert(0, Comment.initfromData(data));
           }
           page++;
         }
@@ -541,6 +542,7 @@ class CommentBlock extends StatefulWidget {
 class _CommentBlockState extends State<CommentBlock> {
   late String timeAfter;
   bool sendingLike = false;
+  bool deleting = false;
 
   @override
   void initState() {
@@ -594,6 +596,30 @@ class _CommentBlockState extends State<CommentBlock> {
     }
 
     sendingLike = false;
+  }
+
+  void pressDeleteProcess() async {
+    if (deleting) return;
+    deleting = true;
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: CommentPath.delete,
+        data: {
+          "user_id": Network.manager.userId,
+          "comment_id": widget.comment.commentsId
+        });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        widget.comment.deleted = true;
+        setState(() {});
+      } else{
+        showDialog(context: context, builder: (context)=>SystemMessage(content: "${response["data"]["message"]}"));
+      }
+    }
+
+    deleting = false;
   }
 
   @override
@@ -651,7 +677,15 @@ class _CommentBlockState extends State<CommentBlock> {
                         ? Icons.favorite
                         : Icons.favorite_border),
                   ),
-                )
+                ),
+                if (widget.comment.userId == Network.manager.userId)
+                  Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: IconButton(
+                      onPressed: () => pressDeleteProcess(),
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ),
               ],
             ),
     );
