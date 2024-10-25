@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/network/network.dart';
+import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 
 class ProfileShowPage extends StatefulWidget {
-  const ProfileShowPage({super.key});
+  const ProfileShowPage({super.key, required this.userId, required this.editable});
+
+  final int userId;
+  final bool editable;
 
   @override
   State<ProfileShowPage> createState() => _ProfileShowPageState();
 }
 
-class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderStateMixin {
+class _ProfileShowPageState extends State<ProfileShowPage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  late Profile profile;
+  late double rating;
+  late int participated;
 
   @override
   void initState() {
@@ -106,20 +115,25 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                                     Expanded(
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: Profile.manager.interestTypes.length,
+                                        itemCount: Profile
+                                            .manager.interestTypes.length,
                                         itemBuilder: (context, index) {
-                                          final tag = Profile.manager.interestTypes[index];
+                                          final tag = Profile
+                                              .manager.interestTypes[index];
                                           return Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 2),
                                             child: Chip(
                                               label: Text(
                                                 '#$tag',
                                                 style: TextStyle(fontSize: 10),
                                               ),
                                               backgroundColor: Colors.grey[200],
-                                              padding: EdgeInsets.symmetric(horizontal: 2),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 2),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
                                             ),
                                           );
@@ -157,7 +171,8 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF16743),
                     ),
-                    onPressed: () => Navigator.pushNamed(context, RouteMap.editProfile),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, RouteMap.editProfile),
                     child: Text(
                       "Edit Profile",
                       style: TextStyle(
@@ -177,100 +192,127 @@ class _ProfileShowPageState extends State<ProfileShowPage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(57.0),
-        child: Container(
-          color: Color(0xFFF7AF8B),
-          child: Column(
-            children: [
-              AppBar(
-                automaticallyImplyLeading: false,
-                title: Text(
-                  Profile.manager.nickname,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+    return FutureBuilder(
+        future: Network.manager
+            .sendRequest(method: RequestMethod.get, path: UserPath.view),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("${snapshot.error}"),
+            );
+          } else if (snapshot.hasData) {
+            if(snapshot.data == null){
+              return const Center(child: Text("Doesn't Get Data"));
+            }
+
+            //Data Initial
+            profile = Profile.initfromData(snapshot.data!["data"]["profile"]);
+            rating = snapshot.data!["data"]["rating"];
+            participated = snapshot.data!["data"]["participated"];
+
+            return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(57.0),
+                child: Container(
+                  color: Color(0xFFF7AF8B),
+                  child: Column(
+                    children: [
+                      AppBar(
+                        automaticallyImplyLeading: false,
+                        title: Text(
+                          profile.nickname,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, RouteMap.editProfile);
+                            },
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 1,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
-                backgroundColor: Colors.transparent,
-                foregroundColor: Colors.black,
-                elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, RouteMap.editProfile);
-                    },
+              ),
+              body: DefaultTabController(
+                length: 2,
+                child: NestedScrollView(
+                  headerSliverBuilder: (context, _) {
+                    return [
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            profileHeaderWidget(context),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                  body: Column(
+                    children: <Widget>[
+                      Material(
+                        color: Colors.white,
+                        child: TabBar(
+                          controller: _tabController,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.grey[400],
+                          indicatorWeight: 1,
+                          indicatorColor: Colors.black,
+                          tabs: [
+                            Tab(
+                              icon: Icon(
+                                Icons.grid_on_sharp,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Tab(
+                              icon: Icon(
+                                Icons.grid_on_sharp,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            _buildTabContent('Grid'),
+                            _buildTabContent('IGTV'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Container(
-                height: 1,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: DefaultTabController(
-        length: 2,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, _) {
-            return [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    profileHeaderWidget(context),
-                  ],
                 ),
               ),
-            ];
-          },
-          body: Column(
-            children: <Widget>[
-              Material(
-                color: Colors.white,
-                child: TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey[400],
-                  indicatorWeight: 1,
-                  indicatorColor: Colors.black,
-                  tabs: [
-                    Tab(
-                      icon: Icon(
-                        Icons.grid_on_sharp,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Tab(
-                      icon: Icon(
-                        Icons.grid_on_sharp,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTabContent('Grid'),
-                    _buildTabContent('IGTV'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          } else {
+            return const Center(
+              child: Text("Error"),
+            );
+          }
+        });
   }
 
   Widget _buildTabContent(String text) {
