@@ -86,9 +86,9 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildStatColumn('Participated', '30', Icons.flag),
+                            _buildStatColumn('Participated', participated.toString(), Icons.flag),
                             const SizedBox(width: 16),
-                            _buildStatColumn('Rating', '4.8', Icons.star),
+                            _buildStatColumn('Rating', rating.toStringAsFixed(1), Icons.star),
                           ],
                         ),
                       ),
@@ -98,7 +98,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            Profile.manager.bio,
+                            profile.bio,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -199,7 +199,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Network.manager
-            .sendRequest(method: RequestMethod.get, path: UserPath.view),
+            .sendRequest(method: RequestMethod.get, path: UserPath.view, pathMid: ["${Network.manager.userId}"]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -208,7 +208,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               child: Text("${snapshot.error}"),
             );
           } else if (snapshot.hasData) {
-            if (snapshot.data == null) {
+            if (snapshot.data!["data"] == null) {
               return const Center(child: Text("Doesn't Get Data"));
             }
 
