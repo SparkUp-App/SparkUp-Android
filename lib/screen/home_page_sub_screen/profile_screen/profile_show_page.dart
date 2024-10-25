@@ -3,6 +3,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
+import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
 
 class ProfileShowPage extends StatefulWidget {
   const ProfileShowPage(
@@ -291,7 +292,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             ),
                             Tab(
                               icon: Icon(
-                                Icons.grid_on_sharp,
+                                Icons.person,
                                 color: Colors.black,
                               ),
                             ),
@@ -303,7 +304,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           controller: _tabController,
                           children: [
                             _buildTabContent('Grid'),
-                            _buildTabContent('IGTV'),
+                            ProfileTab(profile: profile),
                           ],
                         ),
                       ),
@@ -337,3 +338,4 @@ class _ProfileShowPageState extends State<ProfileShowPage>
     super.dispose();
   }
 }
+
