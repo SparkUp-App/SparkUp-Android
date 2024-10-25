@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class profileDropdown extends StatefulWidget {
   const profileDropdown({//要求:key，標籤，他所對應的值，此文字框的icon，選項(const xxxList)，回調函數，是否為必填
@@ -13,7 +14,7 @@ class profileDropdown extends StatefulWidget {
 
   final String label;
   final String? value;
-  final IconData dropdownIcon;
+  final String dropdownIcon;
   final List<String> options;
   final Function(String?) onChanged;
   final bool isRequired;
@@ -41,7 +42,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2.0),
-              width: MediaQuery.of(context).size.width * 0.80,
+              width: MediaQuery.of(context).size.width * 0.75,
               child: DropdownButtonFormField<String>(
                 value: widget.value,
                 isExpanded: true,
@@ -49,7 +50,7 @@ class _ProfileDropdownState extends State<profileDropdown> {
                   filled: true, 
                   fillColor: Colors.white, 
                   enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -57,11 +58,22 @@ class _ProfileDropdownState extends State<profileDropdown> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  prefixIcon: Icon(widget.dropdownIcon),
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SvgPicture.asset(
+                      widget.dropdownIcon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black26,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                   prefixIconColor: Colors.black26,
                 ),
                 hint: const Text('Select Here', style: TextStyle(color: Colors.black26)),

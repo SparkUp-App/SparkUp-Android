@@ -47,7 +47,7 @@ class _SparkPageState extends State<SparkPage> {
                   isRequired: true,
                   label: "Type",
                   value: null,
-                  dropdownIcon: Icons.view_timeline,
+                  dropdownIcon: 'assets/icons/calendar.svg',
                   options: eventType,
                   onChanged: (newValue) {
                     setState(() {
@@ -62,7 +62,7 @@ class _SparkPageState extends State<SparkPage> {
                   isRequired: true,
                   label: "Title",
                   hintLabel: "Enter Title Here",
-                  textFieldIcon: Icons.title,
+                  textFieldIcon: 'assets/icons/phone.svg',
                   value: basePost.title,
                   onChanged: (newValue) {
                     setState(() {
@@ -77,7 +77,7 @@ class _SparkPageState extends State<SparkPage> {
                   isRequired: true,
                   label: "Content",
                   hintLabel: "Enter Content Here",
-                  textFieldIcon: Icons.edit_note,
+                  textFieldIcon: 'assets/icons/phone.svg',
                   value: basePost.content,
                   onChanged: (newValue) {
                     setState(() {
@@ -152,7 +152,7 @@ class _SparkPageState extends State<SparkPage> {
                     isRequired: true,
                     label: "Location",
                     hintLabel: "Enter Location Here",
-                    textFieldIcon: Icons.location_on,
+                    textFieldIcon: 'assets/icons/city.svg',
                     value: basePost.location,
                     onChanged: (newValue) {
                       setState(() {

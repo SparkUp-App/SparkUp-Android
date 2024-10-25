@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-class profileTextfield extends StatefulWidget {
-  const profileTextfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填(預設false)，要開幾格空間給他(預設1)
+
+class attributeTextfield extends StatefulWidget {
+  const attributeTextfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填(預設false)，要開幾格空間給他(預設1)
     super.key,
     required this.label,
+    required this.attributeKey,
     required this.hintLabel,
     required this.textFieldIcon,
     required this.value,
@@ -13,6 +15,7 @@ class profileTextfield extends StatefulWidget {
   });
 
   final String label;
+  final String attributeKey;
   final String hintLabel;
   final String value;
   final String textFieldIcon;
@@ -20,10 +23,10 @@ class profileTextfield extends StatefulWidget {
   final bool isRequired;
   final int maxLine;
   @override
-  State<profileTextfield> createState() => _profile_TextfieldState();
+  State<attributeTextfield> createState() => _profile_TextfieldState();
 }
 
-class _profile_TextfieldState extends State<profileTextfield> {
+class _profile_TextfieldState extends State<attributeTextfield> {
   late TextEditingController textController;
 
   @override

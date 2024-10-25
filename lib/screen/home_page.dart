@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
-import "package:spark_up/screen/home_page_sub_screen/profile_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
+import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return CenterTest();
       case 3:
-        return EditProfilePage();
+        return ProfileShowPage();
       default:
         return CenterTest();
     }
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SparkPage(),
+                builder: (context) => sparkPageEventTypeDecide(),
               ));
             },
             child: Icon(Icons.add, size: 30),

@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/system_message.dart';
-import 'package:spark_up/data/profile.dart';
-import 'package:spark_up/network/network.dart';
-import 'package:spark_up/network/path/profile_path.dart';
-import "package:spark_up/route.dart";
+import "package:spark_up/const_variable.dart";
+import "package:spark_up/data/base_post.dart";
+import "package:spark_up/network/network.dart";
+import "package:spark_up/network/path/post_path.dart";
+import "package:toasty_box/toast_enums.dart";
+import "package:toasty_box/toasty_box.dart";
+import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_detailFill.dart";
 
-class EventTypeProfilePage extends StatefulWidget {
-  const EventTypeProfilePage({super.key});
-
+class sparkPageEventTypeDecide extends StatefulWidget {
+  const sparkPageEventTypeDecide({super.key});
   @override
-  State<EventTypeProfilePage> createState() => _EventTypeProfilePageState();
+  State<sparkPageEventTypeDecide> createState() => _sparkPageEventTypeDecideState();
 }
 
-class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
-  bool selectOneAlert = false;
-  bool isLoading = false;
+class _sparkPageEventTypeDecideState extends State<sparkPageEventTypeDecide> {
 
-  Widget eventTypeContainer(String eventName, String imagePath) {
-    bool isSelected = Profile.manager.interestTypes.contains(eventName);
+Widget eventTypeContainer(String eventName, String imagePath) {
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (isSelected) {
-            Profile.manager.interestTypes.remove(eventName);
-          } else {
-            selectOneAlert = false;
-            Profile.manager.interestTypes.add(eventName);
-          }
-        });
+       onTap: () {
+        // 使用 Navigator 導航到下一頁，並傳遞選擇的事件類型
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NextPage(selectedEventType: eventName),
+          ),
+        );
       },
       child: Container(
         //包圖片用
@@ -48,17 +45,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: isSelected
-                    ? Colors.white.withOpacity(0.8)
-                    : Colors.black.withOpacity(0.3),
               ),
             ),
-            if (isSelected) //是否選擇，如果有，顯示Icon
-              const Icon(
-                Icons.check,
-                color: Color(0xFFF16743),
-                size: 80,
-              ),
             Align(
               //對其當前Container的底部中央
               alignment: Alignment.bottomCenter,
@@ -68,9 +56,9 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                   eventName,
                   style: TextStyle(
                     fontFamily: 'IowanOldStyle',
-                    color: isSelected ? const Color(0xFFF16743) : Colors.white,
                     fontSize: eventName.length >= 8 ? 18 : 24,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -81,6 +69,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +99,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Choose the type you are interested in",
+                            "Please Select your Event Type",
                             style: TextStyle(
                               fontFamily: 'IowanOldStyle',
                               color: Colors.white,
@@ -119,7 +109,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            "(Select one or more topics)",
+                            "that you want to SparkUp!",
                             style: TextStyle(
                               fontFamily: 'IowanOldStyle',
                               color: Colors.white,
@@ -193,131 +183,15 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 120,
-                    ),
                   ],
                 )),
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 100, // 設置背景的高度
-                child: Container(
-                  color: Colors.white.withOpacity(0.95), // 淺白色背景
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (selectOneAlert)
-                          const Center(
-                            child: Text(
-                              "*At least select one type",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontFamily: "IowanOldStyle"),
-                            ),
-                          ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              height: 47,
-                              child: ElevatedButton(
-                                onPressed: () => Navigator.pushNamed(
-                                    context, RouteMap.detailProfilePage),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFF16743),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Back',
-                                  style: TextStyle(
-                                    fontFamily: 'IowanOldStyle',
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 150,
-                              height: 47,
-                              child: ElevatedButton(
-                                onPressed: () => _navigateToNextProfile(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFF16743),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Finish!',
-                                  style: TextStyle(
-                                    fontFamily: 'IowanOldStyle',
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ]),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        if (isLoading) ...[
-          Opacity(
-            opacity: 0.8,
-            child: Container(
-              color: Colors.black,
+            ],
             ),
           ),
-          const Center(child: CircularProgressIndicator())
-        ]
-      ]),
+        ),
+      ],
+      ),
     );
-  }
-
-  void _navigateToNextProfile() async {
-    // Select at least one type judge
-    if (Profile.manager.interestTypes.isEmpty) {
-      setState(() {
-        selectOneAlert = true;
-      });
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    dynamic response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: ProfilePath.update,
-        pathMid: ["${Network.manager.userId}"],
-        data: Profile.manager.toMap);
-
-    setState(() {
-      isLoading = false;
-    });
-
-    if (response["status"] == "success" && context.mounted) {
-      Navigator.pushReplacementNamed(context, RouteMap.homePage);
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => SystemMessage(
-              content:
-                  "Profile Update Failed (Error: ${response["data"]["message"]})"));
-    }
   }
 }

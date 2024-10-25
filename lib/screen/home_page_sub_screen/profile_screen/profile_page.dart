@@ -59,69 +59,69 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Widget _buildTagSelector(String label, String key, List<String> selectedTags,
-      List<String> availableTags) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+ Widget _buildTagSelector(String label, String key, List<String> selectedTags, List<String> availableTags) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        Expanded(
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color(0xFFF16743), width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
               children: [
-                Wrap(
-                  //更彈性的Row
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: selectedTags
-                      .map((tag) => Chip(
-                            label: Text('#$tag'),
-                            onDeleted: () {
-                              setState(() {
-                                selectedTags.remove(tag);
-                                availableTags.add(tag);
-                                _profileData[key] = selectedTags;
-                              });
-                            },
-                            deleteIconColor: Colors.grey,
-                            backgroundColor: Colors.grey[200],
-                          ))
-                      .toList(),
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: selectedTags.length,
+                    itemBuilder: (context, index) {
+                      final tag = selectedTags[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Chip(
+                          label: Text('#$tag'),
+                          onDeleted: () {
+                            setState(() {
+                              selectedTags.remove(tag);
+                              availableTags.add(tag);
+                              _profileData[key] = selectedTags;
+                            });
+                          },
+                          deleteIconColor: Colors.grey,
+                          backgroundColor: Colors.grey[200],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                const SizedBox(height: 8),
-                InkWell(
-                  onTap: () => _showTagSelectionDialog(
-                      label, key, selectedTags, availableTags),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      '+',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
+                IconButton(
+                  icon: const Icon(Icons.add, color: Color(0xFFF16743)),
+                  onPressed: () => _showTagSelectionDialog(
+                    label,
+                    key,
+                    selectedTags,
+                    availableTags,
                   ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   void _showTagSelectionDialog(String label, String key,
       List<String> selectedTags, List<String> availableTags) {
@@ -296,7 +296,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       border: OutlineInputBorder(),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      hintText: "xxxx-xx-xx",
+                      hintText: "yyyy-mm-dd",
                       hintStyle: TextStyle(color: Colors.black26),
                       icon: Icon(Icons.edit_calendar)),
                 ),
@@ -357,8 +357,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return MaterialApp(
+      theme:  ThemeData(
+        fontFamily: 'IowanOldStyle',
+      ),
+      home:
+      Stack(children: [
       Scaffold(
+        appBar: AppBar(
+          title: Text('Edit Profile'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
@@ -436,7 +447,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         const Center(child: CircularProgressIndicator())
       ]
-    ]);
+    ]));
   }
 
   void _saveProfile() async {

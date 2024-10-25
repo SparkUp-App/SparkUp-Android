@@ -5,6 +5,7 @@ import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
   bool isLoading = false;
 
-  Widget loginTextField(IconData textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
+  Widget loginTextField(String textFieldIcon,String label,String hintText,TextEditingController controller,{isObscured=false}) {
     return  Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
       child: Column(
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true, 
                 fillColor: Colors.white, 
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -54,10 +55,21 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: Icon(textFieldIcon),
+                prefixIcon: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SvgPicture.asset(
+                      textFieldIcon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black26,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                 prefixIconColor: Colors.black26,
                 hintText: hintText,
                 hintStyle: const TextStyle(
@@ -105,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(
                                 height: 40,
                               ),
-                              loginTextField(Icons.email,'Email','Email Address',emailController),
-                              loginTextField(Icons.lock,'Password','Password',passwordController,isObscured: true),
+                              loginTextField('assets/icons/email.svg','Email','Email Address',emailController),
+                              loginTextField('assets/icons/password.svg','Password','Password',passwordController,isObscured: true),
                               const SizedBox(
                                 height: 30,
                               ),
@@ -215,17 +227,6 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              const Center(
-                                child: Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                        fontFamily: 'IowanOldStyle',
-                                        color: Color(0xFFF16743),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              )
                             ],
                           )
                       ),

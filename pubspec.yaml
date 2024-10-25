@@ -38,6 +38,11 @@ dependencies:
   http: ^1.0.0
   toasty_box: ^1.0.4
   flutter_tags: ^1.0.0-nullsafety.1
+  flutter_svg: ^2.0.10+1
+  easy_stepper: ^0.8.5+1
+  flutter_datetime_picker: ^1.5.1
+  flutter_spinbox: ^0.13.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +67,7 @@ flutter:
   assets:
     - assets/
     - assets/event/
+    - assets/icons/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
