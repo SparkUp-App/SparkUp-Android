@@ -5,7 +5,8 @@ import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 
 class ProfileShowPage extends StatefulWidget {
-  const ProfileShowPage({super.key, required this.userId, required this.editable});
+  const ProfileShowPage(
+      {super.key, required this.userId, required this.editable});
 
   final int userId;
   final bool editable;
@@ -34,7 +35,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
@@ -48,7 +49,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             ),
             Text(
               count,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -62,7 +63,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
 
   Widget profileHeaderWidget(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xFFF7AF8B),
       ),
       height: 250,
@@ -75,30 +76,30 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 10),
-                      Container(
+                      const SizedBox(height: 10),
+                      SizedBox(
                         height: 70,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildStatColumn('Participated', '30', Icons.flag),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             _buildStatColumn('Rating', '4.8', Icons.star),
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 95,
                         width: MediaQuery.of(context).size.width * 0.75,
                         child: Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Text(
                             Profile.manager.bio,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
@@ -108,7 +109,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Container(
+                              child: SizedBox(
                                 height: 40,
                                 child: Row(
                                   children: [
@@ -126,11 +127,13 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                                             child: Chip(
                                               label: Text(
                                                 '#$tag',
-                                                style: TextStyle(fontSize: 10),
+                                                style: const TextStyle(
+                                                    fontSize: 10),
                                               ),
                                               backgroundColor: Colors.grey[200],
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 2),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
@@ -157,31 +160,33 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             flex: 1,
             child: Column(
               children: [
-                SizedBox(height: 20),
-                Center(
+                const SizedBox(height: 20),
+                const Center(
                   child: CircleAvatar(
                     radius: 50,
                   ),
                 ),
-                SizedBox(height: 16),
-                Container(
-                  width: 130,
-                  height: 25,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF16743),
-                    ),
-                    onPressed: () =>
-                        Navigator.pushNamed(context, RouteMap.editProfile),
-                    child: Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        color: Colors.white,
+                const SizedBox(height: 16),
+                if (widget.editable) ...[
+                  SizedBox(
+                    width: 130,
+                    height: 25,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF16743),
+                      ),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, RouteMap.editProfile),
+                      child: const Text(
+                        "Edit Profile",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 16),
+                ],
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -203,7 +208,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               child: Text("${snapshot.error}"),
             );
           } else if (snapshot.hasData) {
-            if(snapshot.data == null){
+            if (snapshot.data == null) {
               return const Center(child: Text("Doesn't Get Data"));
             }
 
@@ -214,16 +219,16 @@ class _ProfileShowPageState extends State<ProfileShowPage>
 
             return Scaffold(
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(57.0),
+                preferredSize: const Size.fromHeight(57.0),
                 child: Container(
-                  color: Color(0xFFF7AF8B),
+                  color: const Color(0xFFF7AF8B),
                   child: Column(
                     children: [
                       AppBar(
                         automaticallyImplyLeading: false,
                         title: Text(
                           profile.nickname,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -234,7 +239,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         elevation: 0,
                         actions: [
                           IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.settings,
                               color: Colors.white,
                             ),
@@ -277,7 +282,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           unselectedLabelColor: Colors.grey[400],
                           indicatorWeight: 1,
                           indicatorColor: Colors.black,
-                          tabs: [
+                          tabs: const [
                             Tab(
                               icon: Icon(
                                 Icons.grid_on_sharp,
