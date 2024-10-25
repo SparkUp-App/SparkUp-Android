@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenSize, BuildContext context, Function setState) {
   return [
@@ -23,32 +25,21 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
           ),
           profileTextfield(
-            label: "Content",
-            hintLabel: "Enter Content Here",
-            textFieldIcon: 'assets/icons/phone.svg',
-            value: basePost.content,
-            onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
-          ),
-          profileTextfield(
-            label: "Content",
-            hintLabel: "Enter Content Here",
-            textFieldIcon: 'assets/icons/phone.svg',
-            value: basePost.content,
-            onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
-          ),
-          profileTextfield(
-            label: "Content",
-            hintLabel: "Enter Content Here",
-            textFieldIcon: 'assets/icons/phone.svg',
-            value: basePost.content,
-            onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
-          ),
-          profileTextfield(
             label: "Location",
             hintLabel: "Enter Location Here",
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.location,
             onChanged: (newValue) => setState(() => basePost.location = newValue ?? ""),
+          ),
+          intCounterBox(
+            label: "Number of people",
+            isRequired: true,
+            minValue: 1,
+            maxValue: 100,
+            initialValue: 4,
+            onChanged: (newValue) {
+              basePost.numberOfPeopleRequired = newValue.toInt();
+            },
           ),
           // 修改這裡的日期時間選擇器邏輯
           _buildDatePicker(

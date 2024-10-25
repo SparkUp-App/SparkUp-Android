@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -11,6 +12,7 @@ import 'package:spark_up/common_widget/profile_DropDown.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class NextPage extends StatefulWidget {
   final String selectedEventType;
@@ -26,6 +28,7 @@ class _NextPageState extends State<NextPage> {
   late List<Step> steps;
   BasePost basePost = BasePost.initfromDefaule(Network.manager.userId!);
   late double _screenSize;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -74,20 +77,32 @@ class _NextPageState extends State<NextPage> {
   }
 
 
-  List<Step> getSteps(String eventType) {
-    List<Step> steps = [];
-    steps.addAll(createBaseInfoStep(_currentStep, basePost, _screenSize, context, setState));//第一頁資訊
+List<Step> getSteps(String eventType) {
+  List<Step> steps = [];
 
-    switch (eventType) { //開始根據當前type給他不同的頁面
-      case 'Sport':
-        steps.addAll(createSportSteps(_currentStep, basePost));
-        break;
-      default:
-        steps.add(_buildDefaultStep());
-        break;
-    }
-    return steps;
+  steps.addAll(createBaseInfoStep(_currentStep, basePost, _screenSize, context, setState)); // First page info
+
+  switch (eventType) { // Add specific steps based on the event type
+    case 'Sport':
+      steps.addAll(createSportSteps(_currentStep, basePost));
+      break;
+    default:
+      steps.add(_buildDefaultStep());
+      break;
   }
+
+  // Modify step states to show checkmark icon on completed steps
+  for (int i = 0; i < steps.length; i++) {
+    steps[i] = Step(
+      title: steps[i].title,
+      content: steps[i].content,
+      isActive: _currentStep >= i,
+      state: _currentStep > i ? StepState.complete : StepState.indexed,
+    );
+  }
+
+  return steps;
+}
 
   Widget _buildNavigationButtons() { //導航用的按鈕
     return Container(
@@ -196,5 +211,61 @@ class _NextPageState extends State<NextPage> {
       ),
       isActive: _currentStep >= 2,
     );
+  }
+  
+  void createEvent() async {
+    if (basePost.type.isEmpty ||
+        basePost.title.isEmpty ||
+        basePost.content.isEmpty ||
+        basePost.location.isEmpty) {
+      ToastService.showErrorToast(
+        context,
+        length: ToastLength.medium,
+        expandedHeight: 100,
+        message: "Please fill in all required fields.",
+      );
+      return;
+    } else if (basePost.numberOfPeopleRequired.isNegative ||
+        basePost.numberOfPeopleRequired == 0) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message:
+              "Please fill the correct interger of number of people requried.");
+      return;
+    } else if (basePost.eventStartDate.isAfter(basePost.eventEndDate)) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Event start time most before Event end time");
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: PostPath.create,
+        data: basePost.toMap);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response["status"] == "success" && context.mounted) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Event Create Successful");
+      Navigator.pop(context);
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => SystemMessage(
+              content:
+                  "Event Create Failed (Error: ${response["data"]["message"]})"));
+    }
   }
 }
