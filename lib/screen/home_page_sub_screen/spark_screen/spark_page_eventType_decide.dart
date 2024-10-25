@@ -14,12 +14,35 @@ class sparkPageEventTypeDecide extends StatefulWidget {
 }
 
 class _sparkPageEventTypeDecideState extends State<sparkPageEventTypeDecide> {
+  final List<Map<String, String>> eventTypes = [
+    {"name": "Competition", "path": 'assets/event/competition.jpg'},
+    {"name": "Roommate", "path": 'assets/event/roommates.jpg'},
+    {"name": "Sport", "path": 'assets/event/sports.jpg'},
+    {"name": "Study", "path": 'assets/event/study.jpg'},
+    {"name": "Social", "path": 'assets/event/social.jpg'},
+    {"name": "Travel", "path": 'assets/event/travel.jpg'},
+    {"name": "Meal", "path": 'assets/event/meal.jpg'},
+    {"name": "Speech", "path": 'assets/event/speech.jpg'},
+    {"name": "Parade", "path": 'assets/event/parade.jpg'},
+    {"name": "Exhibition", "path": 'assets/event/exhibition.jpg'},
+  ];
 
-Widget eventTypeContainer(String eventName, String imagePath) {
+  @override
+  void initState() {
+    super.initState();
+    _precacheImages();
+  }
 
+  // 預緩存所有圖片
+  Future<void> _precacheImages() async {
+    for (var event in eventTypes) {
+      await precacheImage(AssetImage(event["path"]!), context);
+    }
+  }
+
+  Widget eventTypeContainer(String eventName, String imagePath) {
     return GestureDetector(
-       onTap: () {
-        // 使用 Navigator 導航到下一頁，並傳遞選擇的事件類型
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -28,27 +51,44 @@ Widget eventTypeContainer(String eventName, String imagePath) {
         );
       },
       child: Container(
-        //包圖片用
         width: 140,
         height: 140,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: AssetImage(imagePath), //圖片確定是正方形，直接cover
-            fit: BoxFit.cover,
-          ),
+          // 添加預設背景色
+          color: Colors.grey[200],
         ),
         child: Stack(
-          //在當前的Container中，再疊一層用來顯示選擇與否的顯示法
-          alignment: Alignment.center, //對其當前Container的中央(下面Icon吃的到)
+          alignment: Alignment.center,
           children: [
+            // 使用 ClipRRect 來保持圓角
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                imagePath,
+                width: 140,
+                height: 140,
+                fit: BoxFit.cover,
+                // 添加框架緩存
+                cacheWidth: 140 * 2,
+                cacheHeight: 140 * 2,
+              ),
+            ),
+            // 添加漸層遮罩讓文字更容易閱讀
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.5),
+                  ],
+                ),
               ),
             ),
             Align(
-              //對其當前Container的底部中央
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 2.0),
@@ -59,6 +99,14 @@ Widget eventTypeContainer(String eventName, String imagePath) {
                     fontSize: eventName.length >= 8 ? 18 : 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    // 添加文字陰影增加可讀性
+                    shadows: [
+                      Shadow(
+                        blurRadius: 3.0,
+                        color: Colors.black.withOpacity(0.5),
+                        offset: const Offset(1, 1),
+                      ),
+                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -69,8 +117,6 @@ Widget eventTypeContainer(String eventName, String imagePath) {
       ),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {

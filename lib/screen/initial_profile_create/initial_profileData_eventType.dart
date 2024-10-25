@@ -14,8 +14,33 @@ class EventTypeProfilePage extends StatefulWidget {
 
 class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
   bool selectOneAlert = false;
-  bool isLoading = false;
 
+  bool isLoading = false;
+  final List<Map<String, String>> eventTypes = [
+    {"name": "Competition", "path": 'assets/event/competition.jpg'},
+    {"name": "Roommate", "path": 'assets/event/roommates.jpg'},
+    {"name": "Sport", "path": 'assets/event/sports.jpg'},
+    {"name": "Study", "path": 'assets/event/study.jpg'},
+    {"name": "Social", "path": 'assets/event/social.jpg'},
+    {"name": "Travel", "path": 'assets/event/travel.jpg'},
+    {"name": "Meal", "path": 'assets/event/meal.jpg'},
+    {"name": "Speech", "path": 'assets/event/speech.jpg'},
+    {"name": "Parade", "path": 'assets/event/parade.jpg'},
+    {"name": "Exhibition", "path": 'assets/event/exhibition.jpg'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _precacheImages();
+  }
+
+  // 預緩存所有圖片
+  Future<void> _precacheImages() async {
+    for (var event in eventTypes) {
+      await precacheImage(AssetImage(event["path"]!), context);
+    }
+  }
   Widget eventTypeContainer(String eventName, String imagePath) {
     bool isSelected = Profile.manager.interestTypes.contains(eventName);
 
@@ -31,20 +56,26 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
         });
       },
       child: Container(
-        //包圖片用
         width: 140,
         height: 140,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: AssetImage(imagePath), //圖片確定是正方形，直接cover
-            fit: BoxFit.cover,
-          ),
+          color: Colors.grey[200], // 添加預設背景色
         ),
         child: Stack(
-          //在當前的Container中，再疊一層用來顯示選擇與否的顯示法
-          alignment: Alignment.center, //對其當前Container的中央(下面Icon吃的到)
+          alignment: Alignment.center,
           children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                imagePath,
+                width: 140,
+                height: 140,
+                fit: BoxFit.cover,
+                cacheWidth: 140 * 2, 
+                cacheHeight: 140 * 2,
+              ),
+            ),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -53,14 +84,13 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                     : Colors.black.withOpacity(0.3),
               ),
             ),
-            if (isSelected) //是否選擇，如果有，顯示Icon
+            if (isSelected)
               const Icon(
                 Icons.check,
                 color: Color(0xFFF16743),
                 size: 80,
               ),
             Align(
-              //對其當前Container的底部中央
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 2.0),
