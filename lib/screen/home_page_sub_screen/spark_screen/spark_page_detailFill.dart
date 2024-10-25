@@ -4,11 +4,13 @@ import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
-import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_templete/spark_page_forAll_templete.dart';
-import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_templete/spark_page_sport_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:spark_up/common_widget/profile_DatePicker.dart';
 import 'package:spark_up/common_widget/profile_DropDown.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_study_templete.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -34,6 +36,7 @@ class _NextPageState extends State<NextPage> {
   void initState() {
     super.initState();
     basePost.type = widget.selectedEventType;
+    basePost.numberOfPeopleRequired = 4;
   }
 
   @override
@@ -76,20 +79,25 @@ class _NextPageState extends State<NextPage> {
     );
   }
 
-
+//建立活動流程的主幹，之後10種templete要導到10種可能
 List<Step> getSteps(String eventType) {
   List<Step> steps = [];
 
-  steps.addAll(createBaseInfoStep(_currentStep, basePost, _screenSize, context, setState)); // First page info
+  steps.addAll(createBaseInfoStep(_currentStep, basePost, _screenSize, context, setState)); // 所以人都需要的基本第一頁
 
-  switch (eventType) { // Add specific steps based on the event type
-    case 'Sport':
-      steps.addAll(createSportSteps(_currentStep, basePost));
+  switch (eventType) { 
+    case 'Sport'://運動標籤就加運動的templete
+      steps.addAll(createSportSteps(_currentStep, basePost,setState));
+      break;
+    case 'Study'://讀書標籤就加讀書的templete
+      steps.addAll(createStudySteps(_currentStep, basePost,setState));
       break;
     default:
       steps.add(_buildDefaultStep());
       break;
   }
+
+  steps.add(previewStep(basePost));
 
   // Modify step states to show checkmark icon on completed steps
   for (int i = 0; i < steps.length; i++) {
@@ -133,6 +141,7 @@ List<Step> getSteps(String eventType) {
             print('eventEndDate: ${basePost.eventEndDate}');
             print('numberOfPeopleRequired: ${basePost.numberOfPeopleRequired}');
             print('location: ${basePost.location}');
+            print('attributes: ${basePost.attributes}');
             print('postId: ${basePost.postId}');
             print('posterNickname: ${basePost.posterNickname}');
             print('likes: ${basePost.likes}');

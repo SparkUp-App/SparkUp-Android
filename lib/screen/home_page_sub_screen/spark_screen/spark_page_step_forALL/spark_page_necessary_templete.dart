@@ -16,6 +16,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
+            isRequired: true,
           ),
           profileTextfield(
             label: "Content",
@@ -23,6 +24,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.content,
             onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
+            isRequired: true,
           ),
           profileTextfield(
             label: "Location",
@@ -30,6 +32,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.location,
             onChanged: (newValue) => setState(() => basePost.location = newValue ?? ""),
+            isRequired: true,
           ),
           intCounterBox(
             label: "Number of people",
