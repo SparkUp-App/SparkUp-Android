@@ -64,7 +64,7 @@ class BasePost extends HttpData {
 
   factory BasePost.initfromData(Map data) {
     return BasePost(
-      userId: data["user_id"],
+      userId: data["user_id"] ?? 0,
       type: data["type"],
       title: data["title"],
       content: data["content"],
@@ -72,14 +72,16 @@ class BasePost extends HttpData {
       eventEndDate: DateTime.parse(data["event_end_date"]).toLocal(),
       numberOfPeopleRequired: data["number_of_people_required"],
       location: data["location"],
-      skills: data["skills"] ?? [],
-      personalities: data["personalities"] ?? [],
-      languages: data["languages"] ?? [],
-      attributes: data["attributes"] ?? {},
+      skills: List<String>.from(data["skills"]),
+      personalities: List<String>.from(data["personalities"]),
+      languages: List<String>.from(data["languages"]),
+      attributes: data["attributes"].cast<String, dynamic>(),
       postId: data["id"],
       posterNickname: data["nickname"],
       likes: data["likes"],
       liked: data["liked"],
+      bookmarks: data["bookmarks"],
+      bookmarked: data["bookmarked"],
       comments: data["comments"],
       applicants: data["applicants"]
     );
