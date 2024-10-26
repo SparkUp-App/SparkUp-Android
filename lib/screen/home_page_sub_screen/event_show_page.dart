@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
-import 'package:spark_up/route.dart';
 
 class EventShowPage extends StatefulWidget {
   const EventShowPage({super.key});
@@ -11,7 +11,8 @@ class EventShowPage extends StatefulWidget {
   State<EventShowPage> createState() => _EventShowPageState();
 }
 
-class _EventShowPageState extends State<EventShowPage> {
+class _EventShowPageState extends State<EventShowPage>{
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -19,7 +20,7 @@ class _EventShowPageState extends State<EventShowPage> {
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: Text(
+            title: const Text(
               "SparkUp!",
               style: TextStyle(
                 color: Colors.white,
@@ -34,16 +35,16 @@ class _EventShowPageState extends State<EventShowPage> {
               indicatorColor: Colors.white,
               indicatorWeight: 3,
               indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(text: "熱門"),
+              tabs: const [
+                Tab(text: "Hot Event"),
                 Tab(text: "For You"),
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
               HotContent(),
-              FollowedContent(),
+              ForYouContent(),
             ],
           ),
         ));
@@ -57,16 +58,18 @@ class HotContent extends StatefulWidget {
   State<HotContent> createState() => _HotContentState();
 }
 
-class _HotContentState extends State<HotContent> {
+class _HotContentState extends State<HotContent> with AutomaticKeepAliveClientMixin {
   List<ListReceivePost> receivedPostList = [];
   final scrollController = ScrollController();
   bool isLoading = false;
   bool noMoreData = false;
   int page = 1, perPage = 20;
+  late int pages;
 
   Future refresh() async {
     if (isLoading) return;
     isLoading = true;
+    setState(() {});
 
     receivedPostList.clear();
     page = 1;
@@ -99,8 +102,9 @@ class _HotContentState extends State<HotContent> {
   }
 
   Future getPost() async {
-    if (isLoading) return;
+    if (isLoading || noMoreData) return;
     isLoading = true;
+    setState(() {});
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -109,23 +113,22 @@ class _HotContentState extends State<HotContent> {
         data: {"page": page, "per_page": perPage});
 
     if (response["status"] == "success") {
-      if (response["data"]["posts"].length == 0) {
-        noMoreData = true;
-      } else {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
       }
-    } else {
-      //TODO Request Failed Process
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     }
 
     isLoading = false;
     setState(() {});
     return;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -150,56 +153,47 @@ class _HotContentState extends State<HotContent> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
         child: receivedPostList.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: refresh,
-                child: ListView.builder(
-                    controller: scrollController,
-                    itemCount: receivedPostList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < receivedPostList.length) {
-                        return Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 10.0),
-                            child: Center(
-                                child: postCard(
-                                    context, receivedPostList[index])));
-                      } else {
-                        return noMoreData
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child: Center(
-                                  child: Text("No More Data"),
-                                ),
-                              )
-                            : const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()));
-                      }
-                    })));
+                child: ListView(
+                  controller: scrollController,
+                  children: [
+                    for (var element in receivedPostList) ...[
+                      eventCard(element, context)
+                    ],
+                    if (isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    if (noMoreData) const Center(child: Text("No More Data"))
+                  ],
+                )));
   }
 }
 
-class FollowedContent extends StatefulWidget {
-  const FollowedContent({super.key});
+class ForYouContent extends StatefulWidget {
+  const ForYouContent({super.key});
 
   @override
-  State<FollowedContent> createState() => _FollowedContentState();
+  State<ForYouContent> createState() => _ForYouContentState();
 }
 
-class _FollowedContentState extends State<FollowedContent> {
+class _ForYouContentState extends State<ForYouContent> with AutomaticKeepAliveClientMixin {
   List<ListReceivePost> receivedPostList = [];
   final scrollController = ScrollController();
   bool isLoading = false;
   bool noMoreData = false;
   int page = 1, perPage = 20;
+  late int pages;
 
   Future refresh() async {
     if (isLoading) return;
     isLoading = true;
+    setState(() {});
 
     receivedPostList.clear();
     page = 1;
@@ -232,8 +226,9 @@ class _FollowedContentState extends State<FollowedContent> {
   }
 
   Future getPost() async {
-    if (isLoading) return;
+    if (isLoading || noMoreData) return;
     isLoading = true;
+    setState(() {});
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -242,23 +237,22 @@ class _FollowedContentState extends State<FollowedContent> {
         data: {"page": page, "per_page": perPage, "sort": 0});
 
     if (response["status"] == "success") {
-      if (response["data"]["posts"].length == 0) {
-        noMoreData = true;
-      } else {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
       }
-    } else {
-      //TODO Request Failed Process
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     }
 
     isLoading = false;
     setState(() {});
     return;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -283,123 +277,23 @@ class _FollowedContentState extends State<FollowedContent> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
         child: receivedPostList.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: refresh,
-                child: ListView.builder(
-                    controller: scrollController,
-                    itemCount: receivedPostList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < receivedPostList.length) {
-                        return Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 10.0),
-                            child: Center(
-                                child: postCard(
-                                    context, receivedPostList[index])));
-                      } else {
-                        return noMoreData
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child: Center(
-                                  child: Text("No More Data"),
-                                ),
-                              )
-                            : const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()));
-                      }
-                    })));
+                child: ListView(
+                  controller: scrollController,
+                  children: [
+                    for(var element in receivedPostList)...[
+                      eventCard(element, context)
+                    ],
+                    if(isLoading)
+                    const Center(child: CircularProgressIndicator(),),
+                    if(noMoreData)
+                    const Center(child: Text("No More Data"),),
+                  ],
+                )));
   }
-}
-
-Widget postCard(BuildContext context, ListReceivePost receivedPost) {
-  return Center(
-      child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, RouteMap.eventDetailePage, arguments: receivedPost.postId);
-          },
-          child: Card(
-            child: Container(
-              margin:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.view_timeline,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          receivedPost.type,
-                          style: const TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                      child: Text(
-                    "Poseter: ${receivedPost.posterNickname}",
-                    style: const TextStyle(color: Colors.black),
-                  )),
-                  Container(
-                      child: Row(
-                    children: [
-                      const Icon(
-                        Icons.timelapse,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                          "Event Start Date: ${receivedPost.eventStartDate.toIso8601String().split("T")[0]} ${receivedPost.eventStartDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventStartDate.minute.toString().padLeft(2, "0")}")
-                    ],
-                  )),
-                  Container(
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.timelapse,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                            "Event End Date: ${receivedPost.eventEndDate.toIso8601String().split("T")[0]} ${receivedPost.eventEndDate.hour.toString().padLeft(2, "0")}:${receivedPost.eventEndDate.minute.toString().padLeft(2, "0")}")
-                      ],
-                    ),
-                  ),
-                  Container(
-                      child: Text(
-                    "Event Title: ${receivedPost.title}",
-                    style: const TextStyle(color: Colors.black),
-                  )),
-                  Container(
-                      child: Row(
-                    children: [
-                      const Icon(
-                        Icons.favorite,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "${receivedPost.likes}",
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      const Icon(
-                        Icons.chat_bubble,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "${receivedPost.comments}",
-                        style: const TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ))
-                ],
-              ),
-            ),
-          )));
 }
