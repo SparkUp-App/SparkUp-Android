@@ -10,6 +10,7 @@ import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
+import 'package:intl/intl.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
@@ -355,47 +356,153 @@ class _EventDetailPageState extends State<EventDetailPage>
             child: Column(
               children: [
                 Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Container(
-                  color: Colors.grey,
-                  height: 200.0,
-                  width: 500.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                ),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Date and time
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.blue[700], size: 20),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${DateFormat('M/d HH:mm').format(postData.eventStartDate)} - ${DateFormat('M/d HH:mm').format(postData.eventEndDate)}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  SizedBox(height: 16),
+                  
+                  // People required
+                  Row(
+                    children: [
+                      Icon(Icons.group, color: Colors.green[700], size: 20),
+                      SizedBox(width: 12),
+                      Text(
+                        "${postData.numberOfPeopleRequired} people required",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  SizedBox(height: 16),
+                  
+                  // Location
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: Colors.red[700], size: 20),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          postData.location,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            // Attributes section
+            if (postData.attributes.isNotEmpty) ...[
+              SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      "Additional Information",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  for (int i = 0; i < postData.attributes.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                "${postData.attributes.keys.elementAt(i)}",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              "${postData.attributes.values.elementAt(i)}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[800],
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              )
+            ],
               ],
             ),
           ),
