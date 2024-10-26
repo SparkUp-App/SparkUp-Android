@@ -13,13 +13,16 @@ class HoldEventTab extends StatefulWidget {
   State<HoldEventTab> createState() => _HoldEventTadState();
 }
 
-class _HoldEventTadState extends State<HoldEventTab> {
+class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClientMixin{
   late List<ListReceivePost> postList = [];
   int page = 1;
   int perPage = 20;
   late int pages;
   bool isEnd = false;
   bool isLoading = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -57,6 +60,7 @@ class _HoldEventTadState extends State<HoldEventTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       color: const Color(0xFFF7F2EF),
       child: NotificationListener<ScrollNotification>(
