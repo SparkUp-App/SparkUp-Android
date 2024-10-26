@@ -69,7 +69,7 @@ class _HoldEventTadState extends State<HoldEventTab> {
         },
         child: ListView(
           children: [
-            for (var element in postList) ...[eventCard(element)],
+            for (var element in postList) ...[eventCard(element, context)],
             if (isLoading)
               const Center(
                 child: CircularProgressIndicator(),
