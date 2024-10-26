@@ -4,16 +4,16 @@ import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 
-class HoldEventTad extends StatefulWidget {
-  const HoldEventTad({super.key, required this.userId});
+class HoldEventTab extends StatefulWidget {
+  const HoldEventTab({super.key, required this.userId});
 
   final int userId;
 
   @override
-  State<HoldEventTad> createState() => _HoldEventTadState();
+  State<HoldEventTab> createState() => _HoldEventTadState();
 }
 
-class _HoldEventTadState extends State<HoldEventTad> {
+class _HoldEventTadState extends State<HoldEventTab> {
   late List<ListReceivePost> postList = [];
   int page = 1;
   int perPage = 20;
