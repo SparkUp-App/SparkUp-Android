@@ -4,6 +4,7 @@ import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
+import 'package:spark_up/route.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -50,7 +51,16 @@ class _NextPageState extends State<NextPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selected Event: ${widget.selectedEventType}'),
+        title: Text(
+          '${widget.selectedEventType}',
+          style: TextStyle(
+            color: Colors.white, // 設定文字顏色為白色
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Color(0xFFE9765B),
+        centerTitle: true, // 讓標題置中
+        automaticallyImplyLeading: false,
       ),
       body: Theme(
         data: ThemeData(
@@ -131,7 +141,7 @@ List<Step> getSteps(String eventType) {
           onPressed: _currentStep > 0 ? _goToPreviousStep : null,
           child: Text('上一步'),
         ),
-        ElevatedButton(
+        /*ElevatedButton(
           onPressed: () {
             print('userId: ${basePost.userId}');
             print('type: ${basePost.type}');
@@ -152,17 +162,17 @@ List<Step> getSteps(String eventType) {
             print('applicants: ${basePost.applicants}');
           },
           child: Text('testing'),
+        ),*/
+        ElevatedButton(
+          onPressed: _currentStep < steps.length - 1 ? _goToNextStep : createEvent,
+          child: Text(_currentStep < steps.length - 1 ? '下一步' : '發送'),
         ),
-          ElevatedButton(
-            onPressed: _currentStep < steps.length - 1 ? _goToNextStep : null,
-            child: Text('下一步'),
-          ),
         ],
       ),
     );
   }
 
-  void _goToPreviousStep() {//導航用的邏輯
+  void _goToPreviousStep() { //導航用的邏輯
     if (_currentStep > 0) {
       setState(() {
         _currentStep -= 1;
@@ -268,7 +278,8 @@ List<Step> getSteps(String eventType) {
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");
-      Navigator.pop(context);
+      
+      Navigator.pushReplacementNamed(context, RouteMap.homePage);
     } else {
       showDialog(
           context: context,

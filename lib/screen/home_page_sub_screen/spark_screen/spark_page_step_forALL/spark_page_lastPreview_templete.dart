@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:intl/intl.dart';
 
 Step previewStep(BasePost basePost) {
   return Step(
     title: const SizedBox.shrink(),
-    content: Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+    content: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -37,9 +38,7 @@ Step previewStep(BasePost basePost) {
                 ],
               ),
             ),
-            
             SizedBox(height: 16),
-            
             Text(
               basePost.title,
               style: TextStyle(
@@ -51,7 +50,6 @@ Step previewStep(BasePost basePost) {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            
             SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -131,33 +129,73 @@ Step previewStep(BasePost basePost) {
               Text(
                 "Additional Information",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,
                 ),
               ),
               SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: basePost.attributes.entries.map((entry) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.blue[100]!),
-                    ),
-                    child: Text(
-                      "${entry.key}: ${entry.value}",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue[700],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (int i = 0; i < basePost.attributes.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                "${basePost.attributes.keys.elementAt(i)}",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              "${basePost.attributes.values.elementAt(i)}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[800],
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
+                ],
+              )
             ],
           ],
         ),
