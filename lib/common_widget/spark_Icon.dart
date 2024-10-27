@@ -10,7 +10,7 @@ class SparkIcon extends StatelessWidget {
     super.key,
     required this.icon,
     this.size = 24,
-    this.color,
+    this.color = Colors.white,
   });
 
   @override
