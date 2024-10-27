@@ -88,9 +88,11 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildStatColumn('Participated', participated.toString(), Icons.flag),
+                            _buildStatColumn('Participated',
+                                participated.toString(), Icons.flag),
                             const SizedBox(width: 16),
-                            _buildStatColumn('Rating', rating.toStringAsFixed(1), Icons.star),
+                            _buildStatColumn('Rating',
+                                rating.toStringAsFixed(1), Icons.star),
                           ],
                         ),
                       ),
@@ -200,8 +202,10 @@ class _ProfileShowPageState extends State<ProfileShowPage>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Network.manager
-            .sendRequest(method: RequestMethod.get, path: UserPath.view, pathMid: ["${Network.manager.userId}"]),
+        future: Network.manager.sendRequest(
+            method: RequestMethod.get,
+            path: UserPath.view,
+            pathMid: ["${Network.manager.userId}"]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -282,20 +286,32 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           controller: _tabController,
                           labelColor: Colors.black,
                           unselectedLabelColor: Colors.grey[400],
-                          indicatorWeight: 1,
-                          indicatorColor: Colors.black,
+                          indicatorWeight: 2,
+                          indicatorColor: const Color(0xFFF7AF8B),
+                          labelStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          unselectedLabelStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          dividerColor: Colors.transparent,
+                          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                            (Set<WidgetState> states) {
+                              if (states.contains(WidgetState.pressed)) {
+                                return Colors.grey.withOpacity(0.1);
+                              }
+                              return null;
+                            },
+                          ),
                           tabs: const [
                             Tab(
-                              icon: Icon(
-                                Icons.grid_on_sharp,
-                                color: Colors.black,
-                              ),
+                              text: "Event",
                             ),
                             Tab(
-                              icon: Icon(
-                                Icons.person,
-                                color: Colors.black,
-                              ),
+                              text: "Profile",
                             ),
                           ],
                         ),
@@ -339,4 +355,3 @@ class _ProfileShowPageState extends State<ProfileShowPage>
     super.dispose();
   }
 }
-
