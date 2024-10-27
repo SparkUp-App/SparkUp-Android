@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_detail_page.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart";
 import "package:spark_up/screen/login_page.dart";
+import "package:spark_up/screen/logout_page.dart";
 import "package:spark_up/screen/register_page.dart";
 import "package:spark_up/screen/home_page.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_basicInfo.dart";
@@ -20,6 +21,7 @@ class RouteMap{
   static const eventDetailePage = "/eventDetailPage";
   static const editProfile = "/profile_page";
   static const sparkUpEventTypeSelect = "/sparkPageEventTypeDecide";
+  static const logoutPage = "/logoutPage";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage : (context) => const LoginPage(),
@@ -34,5 +36,6 @@ class RouteMap{
     },
     sparkUpEventTypeSelect:(context) => const sparkPageEventTypeDecide(),
     editProfile:(context) => const EditProfilePage(),
+    logoutPage: (context) => const LogoutPage(),
   };
 }

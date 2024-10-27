@@ -5,6 +5,7 @@ import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
+import 'package:spark_up/screen/logout_page.dart';
 
 class ProfileShowPage extends StatefulWidget {
   const ProfileShowPage(
@@ -250,8 +251,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(
-                                  context, RouteMap.editProfile);
+                              Navigator.of(context).pushNamed(RouteMap.logoutPage);
                             },
                           ),
                         ],
