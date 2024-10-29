@@ -11,43 +11,116 @@ class EventShowPage extends StatefulWidget {
   State<EventShowPage> createState() => _EventShowPageState();
 }
 
-class _EventShowPageState extends State<EventShowPage>{
+class _EventShowPageState extends State<EventShowPage>
+    with SingleTickerProviderStateMixin {
+  final TextEditingController _searchController = TextEditingController();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: const Text(
-              "SparkUp!",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: Colors.redAccent,
-            elevation: 2,
-            bottom: TabBar(
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white.withOpacity(0.7),
-              indicatorColor: Colors.white,
-              indicatorWeight: 3,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: const [
-                Tab(text: "Hot Event"),
-                Tab(text: "For You"),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Center(
+          child: Text(
+            "SparkUp",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          body: const TabBarView(
+        ),
+        backgroundColor: const Color(0xFFF7AF8B),
+        elevation: 2,
+        bottom: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+          child: Column(
             children: [
-              HotContent(),
-              ForYouContent(),
+              Container(
+                height: 40.0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: IconButton(
+                      onPressed: () {
+                        
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        color: Color(0xFF827C79),
+                      ),
+                    ),
+                    hintText: 'Search',
+                    hintStyle: const TextStyle(
+                      color: Color(0xFF827C79),
+                      fontSize: 14.0,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 12.0),
+                    suffixIcon: SizedBox(
+                      width: 20.0,
+                      height: 20.0,
+                      child: IconButton(
+                        onPressed: () {
+                          // Perform search logic here
+                          print('Searching for: ${_searchController.text}');
+                        },
+                        icon: Icon(
+                          Icons.menu,
+                          color: const Color(0xFF827C79),
+                          size: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              TabBar(
+                controller: _tabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white.withOpacity(0.7),
+                indicatorColor: Colors.white,
+                indicatorWeight: 3,
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: const [
+                  Tab(text: 'Hot Event'),
+                  Tab(text: 'For You'),
+                ],
+              ),
             ],
           ),
-        ));
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          HotContent(),
+          ForYouContent(),
+        ],
+      ),
+    );
   }
 }
 
@@ -58,7 +131,8 @@ class HotContent extends StatefulWidget {
   State<HotContent> createState() => _HotContentState();
 }
 
-class _HotContentState extends State<HotContent> with AutomaticKeepAliveClientMixin {
+class _HotContentState extends State<HotContent>
+    with AutomaticKeepAliveClientMixin {
   List<ListReceivePost> receivedPostList = [];
   final scrollController = ScrollController();
   bool isLoading = false;
@@ -182,7 +256,8 @@ class ForYouContent extends StatefulWidget {
   State<ForYouContent> createState() => _ForYouContentState();
 }
 
-class _ForYouContentState extends State<ForYouContent> with AutomaticKeepAliveClientMixin {
+class _ForYouContentState extends State<ForYouContent>
+    with AutomaticKeepAliveClientMixin {
   List<ListReceivePost> receivedPostList = [];
   final scrollController = ScrollController();
   bool isLoading = false;
@@ -286,13 +361,17 @@ class _ForYouContentState extends State<ForYouContent> with AutomaticKeepAliveCl
                 child: ListView(
                   controller: scrollController,
                   children: [
-                    for(var element in receivedPostList)...[
+                    for (var element in receivedPostList) ...[
                       eventCard(element, context)
                     ],
-                    if(isLoading)
-                    const Center(child: CircularProgressIndicator(),),
-                    if(noMoreData)
-                    const Center(child: Text("No More Data"),),
+                    if (isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    if (noMoreData)
+                      const Center(
+                        child: Text("No More Data"),
+                      ),
                   ],
                 )));
   }
