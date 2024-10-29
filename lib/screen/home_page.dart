@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dart";
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return EventShowPage();
       case 1:
-        return CenterTest();
+        return BookmarkPage();
       case 2:
         return CenterTest();
       case 3:
