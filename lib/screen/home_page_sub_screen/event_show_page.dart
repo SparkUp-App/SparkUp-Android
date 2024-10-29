@@ -15,7 +15,7 @@ class _EventShowPageState extends State<EventShowPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
-  late List<String> selectType = [];
+  late ValueNotifier<List<String>> selectTypeNotifier;
   late String searchKeyWord;
   bool filterMode = false;
 
@@ -23,6 +23,7 @@ class _EventShowPageState extends State<EventShowPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    selectTypeNotifier = ValueNotifier<List<String>>([]);
   }
 
   @override
@@ -49,7 +50,7 @@ class _EventShowPageState extends State<EventShowPage>
           elevation: 2,
           bottom: PreferredSize(
             preferredSize:
-                Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+                Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -101,10 +102,14 @@ class _EventShowPageState extends State<EventShowPage>
                     ),
                   ),
                 ),
-                if (filterMode)
-                  const SizedBox(
-                    height: 50.0,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ListenWrapWidget(
+                        selectTypeNotifier: selectTypeNotifier),
                   ),
+                ),
                 if (!filterMode)
                   TabBar(
                     controller: _tabController,
@@ -122,15 +127,23 @@ class _EventShowPageState extends State<EventShowPage>
             ),
           ),
         ),
-        body: (filterMode
-            ? const FilterPage()
-            : TabBarView(
-                controller: _tabController,
-                children: const [
-                  HotContent(),
-                  ForYouContent(),
-                ],
-              )));
+        body: Stack(
+          children: [
+            TabBarView(
+              controller: _tabController,
+              children: const [
+                HotContent(),
+                ForYouContent(),
+              ],
+            ),
+            if (filterMode)
+              Positioned.fill(
+                child: FilterPage(
+                  selectTypeNotifier: selectTypeNotifier,
+                ),
+              ),
+          ],
+        ));
   }
 }
 
@@ -388,8 +401,9 @@ class _ForYouContentState extends State<ForYouContent>
 }
 
 class FilterPage extends StatefulWidget {
-  const FilterPage({super.key});
+  FilterPage({super.key, required this.selectTypeNotifier});
 
+  late ValueNotifier<List<String>> selectTypeNotifier;
   @override
   State<FilterPage> createState() => _FilterPageState();
 }
@@ -407,25 +421,19 @@ class _FilterPageState extends State<FilterPage> {
     {"name": "Parade", "path": 'assets/event/parade.jpg'},
     {"name": "Exhibition", "path": 'assets/event/exhibition.jpg'},
   ];
-  late List<String> selectedType;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedType = [];
-  }
-
 
   Widget eventTypeContainer(String eventName, String imagePath) {
-    bool isSelected = selectedType.contains(eventName);
+    bool isSelected = widget.selectTypeNotifier.value.contains(eventName);
 
     return GestureDetector(
       onTap: () {
         setState(() {
           if (isSelected) {
-            selectedType.remove(eventName);
+            widget.selectTypeNotifier.value =
+                List.from(widget.selectTypeNotifier.value)..remove(eventName);
           } else {
-            selectedType.add(eventName);
+            widget.selectTypeNotifier.value =
+                List.from(widget.selectTypeNotifier.value)..add(eventName);
           }
         });
       },
@@ -488,125 +496,182 @@ class _FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-            color: const Color(0xFFF7AF8B).withOpacity(0.3),
-            child: Stack(children: [
+    return ValueListenableBuilder<List<String>>(
+      valueListenable: widget.selectTypeNotifier,
+      builder: (context, selectType, child) {
+        return Container(
+          color: const Color.fromARGB(255, 255, 225, 209).withOpacity(0.5),
+          child: Stack(
+            children: [
               Scaffold(
                 backgroundColor: Colors.transparent,
                 body: SafeArea(
-                  //會自動偵測，避免超過看的到的地方
-                  child: Stack(children: [
-                    SingleChildScrollView(
-                      //一次load好比ListView慢load好
-                      child: SizedBox(
-                          child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                eventTypeContainer("Competition",
-                                    'assets/event/competition.jpg'),
-                                const SizedBox(height: 20),
-                                eventTypeContainer(
-                                    "Roommate", 'assets/event/roommates.jpg'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                eventTypeContainer(
-                                    "Sport", 'assets/event/sports.jpg'),
-                                const SizedBox(height: 20),
-                                eventTypeContainer(
-                                    "Study", 'assets/event/study.jpg'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                eventTypeContainer(
-                                    "Social", 'assets/event/social.jpg'),
-                                const SizedBox(height: 20),
-                                eventTypeContainer(
-                                    "Travel", 'assets/event/travel.jpg'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                eventTypeContainer(
-                                    "Meal", 'assets/event/meal.jpg'),
-                                const SizedBox(height: 20),
-                                eventTypeContainer(
-                                    "Speech", 'assets/event/speech.jpg'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                eventTypeContainer(
-                                    "Parade", 'assets/event/parade.jpg'),
-                                const SizedBox(height: 20),
-                                eventTypeContainer("Exhibition",
-                                    'assets/event/exhibition.jpg'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 120,
-                          ),
-                        ],
-                      )),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 100, // 設置背景的高度
-                      child: Container(
-                        margin: const EdgeInsets.all(20.0),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
                         child: SizedBox(
-                          width: 150,
-                          height: 47,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF7AF8B),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    eventTypeContainer("Competition",
+                                        'assets/event/competition.jpg'),
+                                    const SizedBox(height: 20),
+                                    eventTypeContainer("Roommate",
+                                        'assets/event/roommates.jpg'),
+                                  ],
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Search',
-                              style: TextStyle(
-                                fontFamily: 'IowanOldStyle',
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    eventTypeContainer(
+                                        "Sport", 'assets/event/sports.jpg'),
+                                    const SizedBox(height: 20),
+                                    eventTypeContainer(
+                                        "Study", 'assets/event/study.jpg'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    eventTypeContainer(
+                                        "Social", 'assets/event/social.jpg'),
+                                    const SizedBox(height: 20),
+                                    eventTypeContainer(
+                                        "Travel", 'assets/event/travel.jpg'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    eventTypeContainer(
+                                        "Meal", 'assets/event/meal.jpg'),
+                                    const SizedBox(height: 20),
+                                    eventTypeContainer(
+                                        "Speech", 'assets/event/speech.jpg'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    eventTypeContainer(
+                                        "Parade", 'assets/event/parade.jpg'),
+                                    const SizedBox(height: 20),
+                                    eventTypeContainer("Exhibition",
+                                        'assets/event/exhibition.jpg'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 120),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 100,
+                        child: Container(
+                          margin: const EdgeInsets.all(20.0),
+                          child: SizedBox(
+                            width: 150,
+                            height: 47,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF7AF8B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: const Text(
+                                'Search',
+                                style: TextStyle(
+                                  fontFamily: 'IowanOldStyle',
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
               ),
-            ]),
-          );
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ListenWrapWidget extends StatefulWidget {
+  final ValueNotifier<List<String>> selectTypeNotifier;
+
+  const ListenWrapWidget({super.key, required this.selectTypeNotifier});
+
+  @override
+  _ListenWrapWidgeState createState() => _ListenWrapWidgeState();
+}
+
+class _ListenWrapWidgeState extends State<ListenWrapWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<String>>(
+      valueListenable: widget.selectTypeNotifier,
+      builder: (context, selectType, child) {
+        return SizedBox(
+          height: selectType.isNotEmpty ? 50.0 : 25.0,
+          child: Wrap(
+            spacing: 8.0,
+            children: selectType.map((type) {
+              return Chip(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    side: const BorderSide(color: Colors.transparent)
+                    ),
+                backgroundColor: const Color.fromARGB(78, 173, 173, 173),
+                deleteIcon: const Icon(Icons.close, color: Color(0xFFADADAD), size: 12.0,),
+                label: Text(
+                  type,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onDeleted: () {
+                  setState(() {
+                    widget.selectTypeNotifier.value = List.from(selectType)
+                      ..remove(type);
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
   }
 }
