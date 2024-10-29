@@ -6,66 +6,65 @@ import "dart:convert";
 
 import "package:spark_up/network/httpprotocol.dart";
 
-class Network{
+class Network {
   static const baseUrl = "sparkup-9db24d093e0f.herokuapp.com";
   static Network manager = Network();
   int? userId;
 
-  Future<Map> sendRequest(
-    {
-      required RequestMethod method, 
-      required HttpPath path,
-      Map<dynamic,dynamic>? data,
-      List<String> pathMid = const[],
-    }
-  ) async {
+  Future<Map> sendRequest({
+    required RequestMethod method,
+    required HttpPath path,
+    Map<dynamic, dynamic>? data,
+    List<String> pathMid = const [],
+  }) async {
     //Http requst base info
     var finalPath = path.getPath;
-    for(int i = 0; i < pathMid.length; i++){
+    for (int i = 0; i < pathMid.length; i++) {
       finalPath = finalPath.replaceFirst("%$i", pathMid[i]);
     }
 
     final url = Uri.https(baseUrl, finalPath);
-    final headers = {"Content-Type" : "application/json"};
+    final headers = {"Content-Type": "application/json"};
     final body = jsonEncode(data);
-    
 
     dynamic response;
-    
 
     //Get request
-    try{
-      switch (method){
+    try {
+      switch (method) {
         case RequestMethod.get:
           response = await http.get(url, headers: headers);
         case RequestMethod.post:
           response = await http.post(url, headers: headers, body: body);
+        case RequestMethod.delete:
+          response = await http.delete(url, headers: headers, body: body);
       }
-    } on TimeoutException catch(e){
+    } on TimeoutException catch (e) {
       debugPrint("TimeoutException: $e");
-      return {"status":"error", "data" : {"message" : "Timeout Error"}};
-    } on SocketException catch(e){
+      return {"status": "error", "data": {"message": "Timeout Error"}};
+    } on SocketException catch (e) {
       debugPrint("SocketException: $e");
-      return {"status" : "error", "data" :{"message" : "Socket Error"}};
-    } on Error catch(e){
+      return {"status": "error", "data": {"message": "Socket Error"}};
+    } on Error catch (e) {
       debugPrint("Error: $e");
-      return {"status" : "error", "data" : {"message" : "Error"}};
+      return {"status": "error", "data": {"message": "Error"}};
     }
 
-    if(response.statusCode == 201 || response.statusCode == 200){
+    if (response.statusCode == 201 || response.statusCode == 200) {
       debugPrint("Response Status Code: ${response.statusCode}");
-      return {"status" : "success", "data" : jsonDecode(response.body)};
+      return {"status": "success", "data": jsonDecode(response.body)};
     } else {
       debugPrint("Response Status Code: ${response.statusCode}");
-      return {"status" : "faild", "data" : jsonDecode(response.body)};}
-    
+      return {"status": "faild", "data": jsonDecode(response.body)};
+    }
   }
 
   void saveUserId(int id) => userId = id;
   void removeUserId() => userId = null;
 }
 
-enum RequestMethod{
+enum RequestMethod {
   get,
-  post;
+  post,
+  delete;
 }

@@ -1,13 +1,10 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:http/http.dart';
+import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
-import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/data/comment.dart';
+import 'package:spark_up/data/post_view.dart';
 import 'package:spark_up/network/network.dart';
+import 'package:spark_up/network/path/applicant_path.dart';
 import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:intl/intl.dart';
@@ -26,11 +23,12 @@ class _EventDetailPageState extends State<EventDetailPage>
   bool initialing = false;
   bool sendingLike = false;
   bool sendingBookMark = false;
+  bool sendingApplicant = false;
   bool sendingMessage = false;
   bool gettingComment = false;
   bool noMoreComment = false;
 
-  late BasePost postData;
+  late PostView postData;
   late TabController tabController;
 
   List<Comment> commentList = [];
@@ -76,7 +74,7 @@ class _EventDetailPageState extends State<EventDetailPage>
 
     if (context.mounted) {
       if (response["status"] == "success") {
-        postData = BasePost.initfromData(response["data"]);
+        postData = PostView.initfromData(response["data"]);
       } else {
         showDialog(
           context: context,
@@ -171,7 +169,59 @@ class _EventDetailPageState extends State<EventDetailPage>
     sendingBookMark = false;
   }
 
-  void pressAplyProcess() {}
+  void pressAplyProcess() async {
+    if (sendingApplicant) return;
+    if (postData.applicationStatus == 1 || postData.applicationStatus == 2) return;
+    sendingApplicant = true;
+
+    Map response;
+    bool isCreating = postData.applicationStatus == null;
+    
+    if (isCreating) {
+      debugPrint("Create");
+      response = await Network.manager.sendRequest(
+          method: RequestMethod.post,
+          path: ApplicantPath.create,
+          data: {
+            "user_id": Network.manager.userId,
+            "post_id": postData.postId,
+            "attributes": {}
+          });
+    } else {
+      debugPrint("Delete");
+      response = await Network.manager.sendRequest(
+          method: RequestMethod.delete,
+          path: ApplicantPath.delete,
+          data: {
+            "user_id": Network.manager.userId,
+            "post_id": postData.postId
+          });
+    }
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        showDialog(
+            context: context,
+            builder: (context) => SystemMessage(
+                content: isCreating
+                    ? "Send Application Request Successful"
+                    : "Cancel Application Successful"));
+        
+        // 更新狀態：如果是創建則設為 0，如果是取消則設為 null
+        postData.applicationStatus = isCreating ? 0 : null;
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => SystemMessage(
+                content: isCreating
+                    ? "Send Application Request Failed\n (Please Try Later)"
+                    : "Cancel Application Failed\n (Please Try Later)"));
+      }
+    }
+
+    setState(() {});
+    sendingApplicant = false;
+  }
 
   void sendingProcess() async {
     if (sendingMessage) return;
@@ -299,18 +349,15 @@ class _EventDetailPageState extends State<EventDetailPage>
                             ),
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.favorite,
+                                const SparkIcon(
+                                  icon: SparkIcons.heart,
                                   color: Colors.grey,
                                 ),
                                 Text(
                                   "${postData.likes}",
                                   style: const TextStyle(color: Colors.grey),
                                 ),
-                                const Icon(
-                                  Icons.chat_bubble,
-                                  color: Colors.grey,
-                                ),
+                                const SparkIcon(icon: SparkIcons.comment),
                                 Text(
                                   "${postData.comments}",
                                   style: const TextStyle(color: Colors.grey),
@@ -356,153 +403,155 @@ class _EventDetailPageState extends State<EventDetailPage>
             child: Column(
               children: [
                 Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // Date and time
-                  Row(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.all(16),
+                  child: Column(
                     children: [
-                      Icon(Icons.access_time, color: Colors.blue[700], size: 20),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${DateFormat('M/d HH:mm').format(postData.eventStartDate)} - ${DateFormat('M/d HH:mm').format(postData.eventEndDate)}",
+                      // Date and time
+                      Row(
+                        children: [
+                          Icon(Icons.access_time,
+                              color: Colors.blue[700], size: 20),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${DateFormat('M/d HH:mm').format(postData.eventStartDate)} - ${DateFormat('M/d HH:mm').format(postData.eventEndDate)}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // People required
+                      Row(
+                        children: [
+                          Icon(Icons.group, color: Colors.green[700], size: 20),
+                          SizedBox(width: 12),
+                          Text(
+                            "${postData.numberOfPeopleRequired} people required",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Location
+                      Row(
+                        children: [
+                          Icon(Icons.location_on,
+                              color: Colors.red[700], size: 20),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              postData.location,
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  
-                  SizedBox(height: 16),
-                  
-                  // People required
-                  Row(
+                ),
+
+                // Attributes section
+                if (postData.attributes.isNotEmpty) ...[
+                  SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.group, color: Colors.green[700], size: 20),
-                      SizedBox(width: 12),
-                      Text(
-                        "${postData.numberOfPeopleRequired} people required",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  
-                  SizedBox(height: 16),
-                  
-                  // Location
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.red[700], size: 20),
-                      SizedBox(width: 12),
-                      Expanded(
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
                         child: Text(
-                          postData.location,
+                          "Additional Information",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                             color: Colors.black87,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            // Attributes section
-            if (postData.attributes.isNotEmpty) ...[
-              SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      "Additional Information",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  for (int i = 0; i < postData.attributes.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
+                      for (int i = 0; i < postData.attributes.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.1),
+                                width: 1,
+                              ),
                             ),
-                          ],
-                          border: Border.all(
-                            color: Colors.grey.withOpacity(0.1),
-                            width: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    "${postData.attributes.keys.elementAt(i)}",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.blue,
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "${postData.attributes.values.elementAt(i)}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[800],
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                "${postData.attributes.keys.elementAt(i)}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blue,
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              "${postData.attributes.values.elementAt(i)}",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[800],
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    ],
+                  )
                 ],
-              )
-            ],
               ],
             ),
           ),
@@ -530,14 +579,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        (postData.bookmarked!
+                        (postData.bookmarked
                             ? Icons.bookmark
                             : Icons.bookmark_border),
                         color: Colors.white,
                       ),
-                      const Text(
-                        "Bookmark",
-                        style: TextStyle(color: Colors.white),
+                      Text(
+                        (postData.bookmarked ? "Unbookmark" : "Bookmark"),
+                        style: const TextStyle(color: Colors.white),
                       )
                     ],
                   ),
@@ -556,16 +605,21 @@ class _EventDetailPageState extends State<EventDetailPage>
                         borderRadius: BorderRadius.circular(8.0)),
                     padding: const EdgeInsets.all(10.0),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         (Icons.check),
                         color: Colors.white,
                       ),
                       Text(
-                        "Apply",
-                        style: TextStyle(color: Colors.white),
+                        (switch (postData.applicationStatus) {
+                          0 => 'Cancel Apply',
+                          1 => 'Reject',
+                          2 => 'Approved',
+                          _ => 'Apply'
+                        }),
+                        style: const TextStyle(color: Colors.white),
                       )
                     ],
                   ),
@@ -721,8 +775,11 @@ class _CommentBlockState extends State<CommentBlock> {
       if (response["status"] == "success") {
         widget.comment.deleted = true;
         setState(() {});
-      } else{
-        showDialog(context: context, builder: (context)=>SystemMessage(content: "${response["data"]["message"]}"));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                SystemMessage(content: "${response["data"]["message"]}"));
       }
     }
 
