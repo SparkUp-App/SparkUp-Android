@@ -6,6 +6,8 @@ import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dar
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
+import 'dart:io';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -45,7 +47,63 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        await showDialog(
+          context: context,
+          builder: (context) =>AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // 圓角化外框
+          ),
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error),
+              const SizedBox(width: 8),
+              const Text(
+                '確定要離開?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            '您確定要離開應用程式嗎?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                foregroundColor: Colors.grey,
+              ),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () => exit(0),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('確定'),
+            ),
+          ],
+        ),
+        );
+    },
+      child:Scaffold(
         body: _getPage(_selectedIndex),
         floatingActionButton: SizedBox(
           width: 55,
@@ -91,6 +149,7 @@ class _HomePageState extends State<HomePage> {
           onTap: _onItemTapped,
         ),
       
+    ),
     );
   }
 }

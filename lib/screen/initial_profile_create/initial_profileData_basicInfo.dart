@@ -176,7 +176,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                           height: 47,
                           child:ElevatedButton(
                             onPressed: () =>{
-                              Navigator.pushNamed(context, RouteMap.detailProfilePage),
+                              _navigateToDetailedProfile()
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF16743),
