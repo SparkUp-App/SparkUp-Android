@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -34,116 +35,171 @@ class _EventShowPageState extends State<EventShowPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Center(
-            child: Text(
-              "SparkUp",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          backgroundColor: const Color(0xFFF7AF8B),
-          elevation: 2,
-          bottom: PreferredSize(
-            preferredSize:
-                Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  height: 40.0,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      prefixIcon: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.search,
-                          color: Color(0xFF827C79),
-                        ),
-                      ),
-                      hintText: 'Search',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFF827C79),
-                        fontSize: 14.0,
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 12.0),
-                      suffixIcon: SizedBox(
-                        width: 20.0,
-                        height: 20.0,
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              filterMode = !filterMode;
-                            });
-                          },
-                          icon: Icon(
-                            (filterMode ? Icons.cancel_outlined : Icons.menu),
-                            color: const Color(0xFF827C79),
-                            size: 20.0,
-                          ),
-                        ),
-                      ),
+    return ValueListenableBuilder<List<String>>(
+        valueListenable: selectTypeNotifier,
+        builder: (context, selectType, child) {
+          return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title: const Center(
+                  child: Text(
+                    "SparkUp",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ListenWrapWidget(
-                        selectTypeNotifier: selectTypeNotifier),
-                  ),
-                ),
-                if (!filterMode)
-                  TabBar(
-                    controller: _tabController,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white.withOpacity(0.7),
-                    indicatorColor: Colors.white,
-                    indicatorWeight: 3,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    tabs: const [
-                      Tab(text: 'Hot Event'),
-                      Tab(text: 'For You'),
+                backgroundColor: const Color(0xFFF7AF8B),
+                elevation: 2,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(
+                      selectTypeNotifier.value.isEmpty ? 90 : 130),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        height: 40.0,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.search,
+                                color: Color(0xFF827C79),
+                              ),
+                            ),
+                            hintText: 'Search',
+                            hintStyle: const TextStyle(
+                              color: Color(0xFF827C79),
+                              fontSize: 14.0,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                            suffixIcon: SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    filterMode = !filterMode;
+                                  });
+                                },
+                                icon: Icon(
+                                  (filterMode
+                                      ? Icons.cancel_outlined
+                                      : Icons.menu),
+                                  color: const Color(0xFF827C79),
+                                  size: 20.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 5.0),
+                            child: Container(
+                              height: selectTypeNotifier.value.isNotEmpty
+                                  ? null
+                                  : 0,
+                              child: Wrap(
+                                spacing: 6.0,
+                                runSpacing: 6.0,
+                                children: selectTypeNotifier.value.map((type) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFADADAD).withOpacity(0.6),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0.0, 0.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            type,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            width: 35,
+                                            child: IconButton(
+                                              iconSize: 10,
+                                              onPressed: () => setState(() {
+                                                selectTypeNotifier.value =
+                                                    List.from(selectTypeNotifier
+                                                        .value)
+                                                      ..remove(type);
+                                              }),
+                                              icon: const Icon(Icons.close,
+                                                  color: Colors.black38),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (!filterMode)
+                        TabBar(
+                          controller: _tabController,
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.white.withOpacity(0.7),
+                          indicatorColor: Colors.white,
+                          indicatorWeight: 3,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          tabs: const [
+                            Tab(text: 'Hot Event'),
+                            Tab(text: 'For You'),
+                          ],
+                        ),
                     ],
                   ),
-              ],
-            ),
-          ),
-        ),
-        body: Stack(
-          children: [
-            TabBarView(
-              controller: _tabController,
-              children: const [
-                HotContent(),
-                ForYouContent(),
-              ],
-            ),
-            if (filterMode)
-              Positioned.fill(
-                child: FilterPage(
-                  selectTypeNotifier: selectTypeNotifier,
                 ),
               ),
-          ],
-        ));
+              body: Stack(
+                children: [
+                  TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      HotContent(),
+                      ForYouContent(),
+                    ],
+                  ),
+                  if (filterMode)
+                    Positioned.fill(
+                      child: FilterPage(
+                        selectTypeNotifier: selectTypeNotifier,
+                      ),
+                    ),
+                ],
+              ));
+        });
   }
 }
 
@@ -623,52 +679,6 @@ class _FilterPageState extends State<FilterPage> {
                 ),
               ),
             ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ListenWrapWidget extends StatefulWidget {
-  final ValueNotifier<List<String>> selectTypeNotifier;
-
-  const ListenWrapWidget({super.key, required this.selectTypeNotifier});
-
-  @override
-  _ListenWrapWidgeState createState() => _ListenWrapWidgeState();
-}
-
-class _ListenWrapWidgeState extends State<ListenWrapWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<String>>(
-      valueListenable: widget.selectTypeNotifier,
-      builder: (context, selectType, child) {
-        return SizedBox(
-          height: selectType.isNotEmpty ? 50.0 : 25.0,
-          child: Wrap(
-            spacing: 8.0,
-            children: selectType.map((type) {
-              return Chip(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: const BorderSide(color: Colors.transparent)
-                    ),
-                backgroundColor: const Color.fromARGB(78, 173, 173, 173),
-                deleteIcon: const Icon(Icons.close, color: Color(0xFFADADAD), size: 12.0,),
-                label: Text(
-                  type,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                onDeleted: () {
-                  setState(() {
-                    widget.selectTypeNotifier.value = List.from(selectType)
-                      ..remove(type);
-                  });
-                },
-              );
-            }).toList(),
           ),
         );
       },
