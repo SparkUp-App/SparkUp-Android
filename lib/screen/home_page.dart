@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return EventShowPage();
+        return EventShowPage(key: UniqueKey());
       case 1:
-        return BookmarkPage();
+        return const BookmarkPage();
       case 2:
         return CenterTest();
       case 3:
