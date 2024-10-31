@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -17,20 +16,55 @@ class _EventShowPageState extends State<EventShowPage>
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
   late ValueNotifier<List<String>> selectTypeNotifier;
-  late String searchKeyWord;
+  late ValueNotifier<String> searchKeyWord;
   bool filterMode = false;
+  late ValueNotifier<bool> searchNeededNotifier;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     selectTypeNotifier = ValueNotifier<List<String>>([]);
+    searchKeyWord = ValueNotifier<String>("");
+    searchNeededNotifier = ValueNotifier<bool>(false);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void cancelMenuPressed() {
+    if (filterMode) {
+      searchKeyWord.value = "";
+      _searchController.clear();
+      selectTypeNotifier.value = [];
+      setState(() {
+        filterMode = false;
+        searchNeededNotifier.value = !searchNeededNotifier.value;
+      });
+    } else {
+      setState(() {
+        filterMode = true;
+      });
+    }
+  }
+
+  void searchIconPressed() {
+    searchKeyWord.value = _searchController.text.trim();
+    setState(() {
+      if (filterMode) filterMode = false;
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+    });
+  }
+
+  void searchButtonPressed() {
+    searchKeyWord.value = _searchController.text.trim();
+    setState(() {
+      filterMode = false;
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+    });
   }
 
   @override
@@ -68,7 +102,7 @@ class _EventShowPageState extends State<EventShowPage>
                           controller: _searchController,
                           decoration: InputDecoration(
                             prefixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: searchIconPressed,
                               icon: const Icon(
                                 Icons.search,
                                 color: Color(0xFF827C79),
@@ -91,11 +125,7 @@ class _EventShowPageState extends State<EventShowPage>
                               width: 20.0,
                               height: 20.0,
                               child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    filterMode = !filterMode;
-                                  });
-                                },
+                                onPressed: cancelMenuPressed,
                                 icon: Icon(
                                   (filterMode
                                       ? Icons.cancel_outlined
@@ -125,7 +155,8 @@ class _EventShowPageState extends State<EventShowPage>
                                 children: selectTypeNotifier.value.map((type) {
                                   return Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0xFFADADAD).withOpacity(0.6),
+                                      color: const Color(0xFFADADAD)
+                                          .withOpacity(0.6),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Padding(
@@ -150,6 +181,11 @@ class _EventShowPageState extends State<EventShowPage>
                                                     List.from(selectTypeNotifier
                                                         .value)
                                                       ..remove(type);
+                                                if (!filterMode) {
+                                                  searchNeededNotifier.value =
+                                                      !searchNeededNotifier
+                                                          .value;
+                                                }
                                               }),
                                               icon: const Icon(Icons.close,
                                                   color: Colors.black38),
@@ -186,17 +222,57 @@ class _EventShowPageState extends State<EventShowPage>
                 children: [
                   TabBarView(
                     controller: _tabController,
-                    children: const [
-                      HotContent(),
-                      ForYouContent(),
+                    children: [
+                      HotContent(
+                        searchNeededNotifier: searchNeededNotifier,
+                        selectType: selectTypeNotifier,
+                        searchKeyWord: searchKeyWord,
+                      ),
+                      ForYouContent(
+                        selectType: selectTypeNotifier.value,
+                        searchKeyWord: searchKeyWord,
+                        searchNeededNotifier: searchNeededNotifier,
+                      )
                     ],
                   ),
-                  if (filterMode)
+                  if (filterMode) ...[
                     Positioned.fill(
                       child: FilterPage(
                         selectTypeNotifier: selectTypeNotifier,
                       ),
                     ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 100,
+                      child: Container(
+                        margin: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          width: 150,
+                          height: 47,
+                          child: ElevatedButton(
+                            onPressed: searchButtonPressed,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFF7AF8B),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Search',
+                              style: TextStyle(
+                                fontFamily: 'IowanOldStyle',
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
                 ],
               ));
         });
@@ -204,7 +280,15 @@ class _EventShowPageState extends State<EventShowPage>
 }
 
 class HotContent extends StatefulWidget {
-  const HotContent({super.key});
+  const HotContent(
+      {super.key,
+      required this.selectType,
+      required this.searchKeyWord,
+      required this.searchNeededNotifier});
+
+  final ValueNotifier<List<String>> selectType;
+  final ValueNotifier<String> searchKeyWord;
+  final ValueNotifier<bool> searchNeededNotifier;
 
   @override
   State<HotContent> createState() => _HotContentState();
@@ -229,11 +313,16 @@ class _HotContentState extends State<HotContent>
     noMoreData = false;
     setState(() {});
 
-    final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: PostPath.list,
-        pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage});
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: PostPath.list, pathMid: [
+      "${Network.manager.userId}"
+    ], data: {
+      "page": page,
+      "per_page": perPage,
+      "type": widget.selectType.value,
+      "keyword":
+          widget.searchKeyWord.value.isEmpty ? null : widget.searchKeyWord.value
+    });
 
     if (response["status"] == "success") {
       if (response["data"]["posts"].length == 0) {
@@ -259,11 +348,16 @@ class _HotContentState extends State<HotContent>
     isLoading = true;
     setState(() {});
 
-    final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: PostPath.list,
-        pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage});
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: PostPath.list, pathMid: [
+      "${Network.manager.userId}"
+    ], data: {
+      "page": page,
+      "per_page": perPage,
+      "type": widget.selectType.value,
+      "keyword":
+          widget.searchKeyWord.value.isEmpty ? null : widget.searchKeyWord.value
+    });
 
     if (response["status"] == "success") {
       List<Map> postList = List<Map>.from(response["data"]["posts"]);
@@ -289,6 +383,9 @@ class _HotContentState extends State<HotContent>
 
     getPost();
 
+    widget.searchNeededNotifier.addListener(() {
+      refresh();
+    });
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -301,6 +398,7 @@ class _HotContentState extends State<HotContent>
   void dispose() {
     super.dispose();
 
+    widget.searchNeededNotifier.dispose();
     scrollController.dispose();
   }
 
@@ -329,7 +427,15 @@ class _HotContentState extends State<HotContent>
 }
 
 class ForYouContent extends StatefulWidget {
-  const ForYouContent({super.key});
+  const ForYouContent(
+      {super.key,
+      required this.selectType,
+      required this.searchKeyWord,
+      required this.searchNeededNotifier});
+
+  final List<String> selectType;
+  final ValueNotifier<String> searchKeyWord;
+  final ValueNotifier<bool> searchNeededNotifier;
 
   @override
   State<ForYouContent> createState() => _ForYouContentState();
@@ -354,11 +460,18 @@ class _ForYouContentState extends State<ForYouContent>
     noMoreData = false;
     setState(() {});
 
-    final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: PostPath.list,
-        pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage, "sort": 0});
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: PostPath.list, pathMid: [
+      "${Network.manager.userId}"
+    ], data: {
+      "page": page,
+      "per_page": perPage,
+      "type": widget.selectType,
+      "keyword": widget.searchKeyWord.value.isEmpty
+          ? null
+          : widget.searchKeyWord.value,
+      "sort": 0
+    });
 
     if (response["status"] == "success") {
       if (response["data"]["posts"].length == 0) {
@@ -384,11 +497,18 @@ class _ForYouContentState extends State<ForYouContent>
     isLoading = true;
     setState(() {});
 
-    final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: PostPath.list,
-        pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage, "sort": 0});
+    final response = await Network.manager
+        .sendRequest(method: RequestMethod.post, path: PostPath.list, pathMid: [
+      "${Network.manager.userId}"
+    ], data: {
+      "page": page,
+      "per_page": perPage,
+      "type": widget.selectType,
+      "keyword": widget.searchKeyWord.value.isEmpty
+          ? null
+          : widget.searchKeyWord.value,
+      "sort": 0
+    });
 
     if (response["status"] == "success") {
       List<Map> postList = List<Map>.from(response["data"]["posts"]);
@@ -414,6 +534,9 @@ class _ForYouContentState extends State<ForYouContent>
 
     getPost();
 
+    widget.searchNeededNotifier.addListener(() {
+      refresh();
+    });
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -426,6 +549,7 @@ class _ForYouContentState extends State<ForYouContent>
   void dispose() {
     super.dispose();
 
+    widget.searchNeededNotifier.dispose();
     scrollController.dispose();
   }
 
@@ -640,37 +764,6 @@ class _FilterPageState extends State<FilterPage> {
                               ),
                               const SizedBox(height: 120),
                             ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 100,
-                        child: Container(
-                          margin: const EdgeInsets.all(20.0),
-                          child: SizedBox(
-                            width: 150,
-                            height: 47,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF7AF8B),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: const Text(
-                                'Search',
-                                style: TextStyle(
-                                  fontFamily: 'IowanOldStyle',
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
                           ),
                         ),
                       ),
