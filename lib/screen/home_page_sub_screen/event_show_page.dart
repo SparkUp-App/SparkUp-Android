@@ -313,8 +313,6 @@ class _HotContentState extends State<HotContent>
   Future refresh() async {
     if (isLoading) return;
     isLoading = true;
-    setState(() {});
-
     receivedPostList.clear();
     page = 1;
     noMoreData = false;
@@ -332,15 +330,13 @@ class _HotContentState extends State<HotContent>
     });
 
     if (response["status"] == "success") {
-      if (response["data"]["posts"].length == 0) {
-        noMoreData = true;
-      } else {
         List<Map> postList = List<Map>.from(response["data"]["posts"]);
         for (var post in postList) {
           receivedPostList.add(ListReceivePost.initfromData(post));
         }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
         page++;
-      }
     } else {
       //TODO Request Failed Process
     }
@@ -413,11 +409,10 @@ class _HotContentState extends State<HotContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child: receivedPostList.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
+        child:RefreshIndicator(
                 onRefresh: refresh,
                 child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     for (var element in receivedPostList) ...[
@@ -481,15 +476,13 @@ class _ForYouContentState extends State<ForYouContent>
     });
 
     if (response["status"] == "success") {
-      if (response["data"]["posts"].length == 0) {
-        noMoreData = true;
-      } else {
         List<Map> postList = List<Map>.from(response["data"]["posts"]);
         for (var post in postList) {
           receivedPostList.add(ListReceivePost.initfromData(post));
         }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
         page++;
-      }
     } else {
       //TODO Request Failed Process
     }
@@ -564,11 +557,10 @@ class _ForYouContentState extends State<ForYouContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child: receivedPostList.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
+        child:RefreshIndicator(
                 onRefresh: refresh,
                 child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   controller: scrollController,
                   children: [
                     for (var element in receivedPostList) ...[
