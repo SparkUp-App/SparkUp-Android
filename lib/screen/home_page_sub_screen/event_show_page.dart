@@ -405,7 +405,7 @@ class _HotContentState extends State<HotContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.dispose();
+    widget.searchNeededNotifier.removeListener((){refresh();});
     scrollController.dispose();
   }
 
@@ -556,7 +556,7 @@ class _ForYouContentState extends State<ForYouContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.dispose();
+    widget.searchNeededNotifier.removeListener((){refresh();});
     scrollController.dispose();
   }
 
