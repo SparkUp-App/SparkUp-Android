@@ -136,6 +136,13 @@ class _EventShowPageState extends State<EventShowPage>
                               ),
                             ),
                           ),
+                          onEditingComplete: () {
+                            FocusScope.of(context).unfocus();
+                            searchIconPressed();
+                          },
+                          onTapOutside:(event) {
+                            FocusScope.of(context).unfocus();
+                          },
                         ),
                       ),
                       SizedBox(
