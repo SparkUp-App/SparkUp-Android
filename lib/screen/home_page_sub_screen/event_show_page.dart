@@ -236,7 +236,7 @@ class _EventShowPageState extends State<EventShowPage>
                         searchKeyWord: searchKeyWord,
                       ),
                       ForYouContent(
-                        selectType: selectTypeNotifier.value,
+                        selectType: selectTypeNotifier,
                         searchKeyWord: searchKeyWord,
                         searchNeededNotifier: searchNeededNotifier,
                       )
@@ -440,7 +440,7 @@ class ForYouContent extends StatefulWidget {
       required this.searchKeyWord,
       required this.searchNeededNotifier});
 
-  final List<String> selectType;
+  final ValueNotifier<List<String>> selectType;
   final ValueNotifier<String> searchKeyWord;
   final ValueNotifier<bool> searchNeededNotifier;
 
@@ -473,7 +473,7 @@ class _ForYouContentState extends State<ForYouContent>
     ], data: {
       "page": page,
       "per_page": perPage,
-      "type": widget.selectType,
+      "type": widget.selectType.value,
       "keyword": widget.searchKeyWord.value.isEmpty
           ? null
           : widget.searchKeyWord.value,
@@ -510,7 +510,7 @@ class _ForYouContentState extends State<ForYouContent>
     ], data: {
       "page": page,
       "per_page": perPage,
-      "type": widget.selectType,
+      "type": widget.selectType.value,
       "keyword": widget.searchKeyWord.value.isEmpty
           ? null
           : widget.searchKeyWord.value,
