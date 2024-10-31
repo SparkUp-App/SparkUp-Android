@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/sparkUp_multiChooseWithOther.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:intl/intl.dart';
 
 List<Step> createSportSteps(int currentStep, BasePost basePost, Function setState) {
   return [
+    Step(
+      title: const SizedBox.shrink(), 
+      content: Column(
+        children: [
+          SparkupSingleChoose(
+            label: '運動項目',
+            availableTags: ['運動項目 1', '運動項目 2', '運動項目 3', '運動項目 4'],
+            onChanged: (selectedSport) {
+              setState(() {
+                basePost.attributes["Selected Sport"] = selectedSport;
+                print(basePost.attributes);
+              });
+            },
+          ),
+        ]
+    )
+    ),
     Step(
       title: const SizedBox.shrink(),
       content: Column(

@@ -198,8 +198,6 @@ List<Step> getSteps(String eventType) {
       case 0: 
         if (basePost.title.isEmpty) {
           return 'Please fill necessary data : Title';
-        } else if (basePost.content.isEmpty) {
-          return 'Please fill necessary data : Content';
         } else if (basePost.location.isEmpty) {
           return 'Please fill necessary data : Location';
         }
@@ -235,7 +233,6 @@ List<Step> getSteps(String eventType) {
   void createEvent() async {
     if (basePost.type.isEmpty ||
         basePost.title.isEmpty ||
-        basePost.content.isEmpty ||
         basePost.location.isEmpty) {
       ToastService.showErrorToast(
         context,

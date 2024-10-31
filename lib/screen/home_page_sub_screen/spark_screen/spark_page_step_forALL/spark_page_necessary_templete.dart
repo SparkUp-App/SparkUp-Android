@@ -10,20 +10,24 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
       title: const SizedBox.shrink(),
       content: Column(
         children: [
+          Center(
+            child: Text(
+            'First, let’s decide some basic information for your activity.',
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xFFE9765B),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          ),
+          
+          SizedBox(height: 16,),
           profileTextfield(
             label: "Title",
             hintLabel: "Enter Title Here",
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
-            isRequired: true,
-          ),
-          profileTextfield(
-            label: "Content",
-            hintLabel: "Enter Content Here",
-            textFieldIcon: 'assets/icons/phone.svg',
-            value: basePost.content,
-            onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
             isRequired: true,
           ),
           profileTextfield(
