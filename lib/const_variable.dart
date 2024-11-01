@@ -10,6 +10,7 @@ const List<String> ethnicityList = ['Black/African Descent', 'East Asian', 'Sout
 const List<String> dietList = ['Omnivore', 'Vegetarian', 'Vegan', 'Pescatarian', 'Ketogenic', 'Paleo','Other', 'Prefer not to say'];
 const List<String> eventType = ['Competition', 'Roommate', 'Sport', 'Study', 'Social', 'Travel', 'Meal','Speech','Parade', 'Exhibition'];
 const List<String> languageType = ['Chinese', 'English','Franch','Spanish','Korean'];
+const List<String> sportType = ['Archery', 'Basketball','Biking','Baseball','Badminton','Climbing','Diving',"Dancing",'Frisbee','Gym','Jogging','Ping Pong','Surfing','Swimming','Skateboarding','Volleyball',];
 List<String> smokeList = Smoke.values.map((element)=>element.label).toList();
 List<String> drinkingList = Drinking.values.map((element) => element.label).toList();
 List<String> marijuanaList = Marijuana.values.map((element)=>element.label).toList();
