@@ -8,7 +8,6 @@ import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:intl/intl.dart';
 
 List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function setState) {
-  List<String> tmp = [];
   return [
     Step(
       title: const SizedBox.shrink(),

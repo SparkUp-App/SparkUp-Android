@@ -125,141 +125,187 @@ Step previewStep(BasePost basePost) {
               ),
               const SizedBox(height: 12),
               if (basePost.attributes.isNotEmpty) ...[
-  Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      for (int i = 0; i < basePost.attributes.length; i++)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-              border: Border.all(
-                color: Colors.grey.withOpacity(0.1),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    "${basePost.attributes.keys.elementAt(i)}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                if (basePost.attributes.values.elementAt(i) is String)
-                  Text(
-                    "${basePost.attributes.values.elementAt(i)}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[800],
-                      height: 1.5,
-                    ),
-                  )
-                else if (basePost.attributes.values.elementAt(i) is List)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (var item in (basePost.attributes.values.elementAt(i) as List))
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < basePost.attributes.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.grey.withOpacity(0.1),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: 6,
-                                height: 6,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[600],
-                                  shape: BoxShape.circle,
+                                  color: Colors.blue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  "${basePost.attributes.keys.elementAt(i)}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue,
+                                    letterSpacing: 0.3,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  item.toString(),  // 將任何類型轉換為字串
+                              const SizedBox(height: 12),
+                              if (basePost.attributes.values.elementAt(i) is String)
+                                Text(
+                                  "${basePost.attributes.values.elementAt(i)}",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey[800],
                                     height: 1.5,
                                   ),
-                                ),
-                              ),
+                                )
+                              else if (basePost.attributes.values.elementAt(i) is List)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (var item in (basePost.attributes.values.elementAt(i) as List))
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[600],
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                item.toString(),  // 將任何類型轉換為字串，避免使用者輸入了純輸入被誤判為int
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey[800],
+                                                  height: 1.5,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                )
+                                else if (basePost.attributes.values.elementAt(i) is Map)
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      for (var entry in (basePost.attributes.values.elementAt(i) as Map).entries)
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 8.0),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 8,
+                                                height: 8,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[600],
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      '${entry.key}: ',  // Display key and value separately
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                        height: 1.5,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${entry.value}',  // Display key and value separately
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[600],
+                                                        height: 1.5,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                    
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  )
                             ],
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                    SizedBox(height: 20),
+                  ],
+                ),
               ],
-            ),
-          ),
-        ),
-      SizedBox(height: 20),
-    ],
-  ),
-],
-            const SizedBox(height: 20),
+            ],
             const Text(
-              "Other Information",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-                border: Border.all(
-                  color: Colors.grey.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                basePost.content.isEmpty? "(The initiator did not mention)": basePost.content,
+                "Other Information",
                 style: TextStyle(
-                  fontSize: 16,
-                  color: basePost.content.isEmpty? Colors.grey[400]:Colors.grey[800],
-                  height: 1.5,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  basePost.content.isEmpty? "(The initiator did not mention)": basePost.content,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: basePost.content.isEmpty? Colors.grey[400]:Colors.grey[800],
+                    height: 1.5,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

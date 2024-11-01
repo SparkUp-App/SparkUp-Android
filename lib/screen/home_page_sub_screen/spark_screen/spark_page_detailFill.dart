@@ -6,6 +6,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_competition_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -106,6 +107,9 @@ List<Step> getSteps(String eventType) {
     case 'Competition'://讀書標籤就加讀書的templete
       steps.addAll(createCompetitionSteps(_currentStep, basePost,setState));
       break;
+    case 'Roommate':
+      steps.addAll(createRoommateSteps(_currentStep, basePost,setState));
+      break;
     default:
       steps.add(_buildDefaultStep());
       break;
@@ -125,7 +129,16 @@ List<Step> getSteps(String eventType) {
 
   return steps;
 }
-
+void updateStepperShow(){
+    for (int i = 0; i < steps.length; i++) {
+    steps[i] = Step(
+      title: steps[i].title,
+      content: steps[i].content,
+      isActive: _currentStep >= i,
+      state: _currentStep > i ? StepState.complete : StepState.indexed,
+    );
+  }
+}
   Widget _buildNavigationButtons() { //導航用的按鈕
     return Container(
       padding: EdgeInsets.all(16.0),
@@ -156,7 +169,7 @@ List<Step> getSteps(String eventType) {
             print('numberOfPeopleRequired: ${basePost.numberOfPeopleRequired}');
             print('location: ${basePost.location}');
             print('attributes: ${basePost.attributes}');
-            print('postId: ${basePost.postId}');
+            print('postId: ${basePost.postId}');steps
             print('posterNickname: ${basePost.posterNickname}');
             print('likes: ${basePost.likes}');
             print('liked: ${basePost.liked}');
@@ -180,7 +193,7 @@ List<Step> getSteps(String eventType) {
     if (_currentStep > 0) {
       setState(() {
         _currentStep -= 1;
-        steps = getSteps(widget.selectedEventType);
+        updateStepperShow();
       });
     }
   }
@@ -190,7 +203,7 @@ List<Step> getSteps(String eventType) {
     if (validationResult == null) {
       setState(() {
         _currentStep += 1;
-        steps = getSteps(widget.selectedEventType);
+        updateStepperShow();
       });
     } else {
       _showValidationError(validationResult);
