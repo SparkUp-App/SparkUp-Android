@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
@@ -20,6 +21,8 @@ class _EventShowPageState extends State<EventShowPage>
   late ValueNotifier<String> searchKeyWord;
   bool filterMode = false;
   late ValueNotifier<bool> searchNeededNotifier;
+  late String currentSearchKeyWord;
+  late List<String> currentSelectType;
 
   @override
   void initState() {
@@ -28,6 +31,8 @@ class _EventShowPageState extends State<EventShowPage>
     selectTypeNotifier = ValueNotifier<List<String>>([]);
     searchKeyWord = ValueNotifier<String>("");
     searchNeededNotifier = ValueNotifier<bool>(false);
+    currentSearchKeyWord = "";
+    currentSelectType = [];
   }
 
   @override
@@ -41,9 +46,14 @@ class _EventShowPageState extends State<EventShowPage>
       searchKeyWord.value = "";
       _searchController.clear();
       selectTypeNotifier.value = [];
+      if (currentSearchKeyWord != searchKeyWord.value ||
+          !listEquals(currentSelectType, selectTypeNotifier.value)) {
+        searchNeededNotifier.value = !searchNeededNotifier.value;
+        currentSearchKeyWord = searchKeyWord.value;
+        currentSelectType = selectTypeNotifier.value;
+      }
       setState(() {
         filterMode = false;
-        searchNeededNotifier.value = !searchNeededNotifier.value;
       });
     } else {
       setState(() {
@@ -54,17 +64,28 @@ class _EventShowPageState extends State<EventShowPage>
 
   void searchIconPressed() {
     searchKeyWord.value = _searchController.text.trim();
+    if (currentSearchKeyWord != searchKeyWord.value ||
+        !listEquals(currentSelectType, selectTypeNotifier.value)) {
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      currentSearchKeyWord = searchKeyWord.value;
+      currentSelectType = selectTypeNotifier.value;
+    }
+
     setState(() {
       if (filterMode) filterMode = false;
-      searchNeededNotifier.value = !searchNeededNotifier.value;
     });
   }
 
   void searchButtonPressed() {
     searchKeyWord.value = _searchController.text.trim();
+    if (currentSearchKeyWord != searchKeyWord.value ||
+        !listEquals(currentSelectType, selectTypeNotifier.value)) {
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      currentSearchKeyWord = searchKeyWord.value;
+      currentSelectType = selectTypeNotifier.value;
+    }
     setState(() {
       filterMode = false;
-      searchNeededNotifier.value = !searchNeededNotifier.value;
     });
   }
 
@@ -146,14 +167,14 @@ class _EventShowPageState extends State<EventShowPage>
                               ),
                             ),
                           ),
-                          onTap: ()=>setState(() {
+                          onTap: () => setState(() {
                             filterMode = true;
                           }),
                           onEditingComplete: () {
                             FocusScope.of(context).unfocus();
                             searchIconPressed();
                           },
-                          onTapOutside:(event) {
+                          onTapOutside: (event) {
                             FocusScope.of(context).unfocus();
                           },
                         ),
@@ -202,6 +223,8 @@ class _EventShowPageState extends State<EventShowPage>
                                                         .value)
                                                       ..remove(type);
                                                 if (!filterMode) {
+                                                  currentSelectType =
+                                                      selectTypeNotifier.value;
                                                   searchNeededNotifier.value =
                                                       !searchNeededNotifier
                                                           .value;
@@ -343,13 +366,13 @@ class _HotContentState extends State<HotContent>
     });
 
     if (response["status"] == "success") {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        pages = response["data"]["pages"];
-        noMoreData = page >= pages;
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
+      }
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     } else {
       //TODO Request Failed Process
     }
@@ -414,7 +437,9 @@ class _HotContentState extends State<HotContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.removeListener((){refresh();});
+    widget.searchNeededNotifier.removeListener(() {
+      refresh();
+    });
     scrollController.dispose();
   }
 
@@ -422,19 +447,19 @@ class _HotContentState extends State<HotContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child:RefreshIndicator(
-                onRefresh: refresh,
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    for (var element in receivedPostList) ...[
-                      eventCard(element, context)
-                    ],
-                    if (isLoading) eventCardSkeletonList(),
-                    if (noMoreData) const Center(child: Text("沒有更多資料"))
-                  ],
-                )));
+        child: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              children: [
+                for (var element in receivedPostList) ...[
+                  eventCard(element, context)
+                ],
+                if (isLoading) eventCardSkeletonList(),
+                if (noMoreData) const Center(child: Text("No More Data"))
+              ],
+            )));
   }
 }
 
@@ -486,13 +511,13 @@ class _ForYouContentState extends State<ForYouContent>
     });
 
     if (response["status"] == "success") {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        pages = response["data"]["pages"];
-        noMoreData = page >= pages;
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
+      }
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     } else {
       //TODO Request Failed Process
     }
@@ -559,7 +584,9 @@ class _ForYouContentState extends State<ForYouContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.removeListener((){refresh();});
+    widget.searchNeededNotifier.removeListener(() {
+      refresh();
+    });
     scrollController.dispose();
   }
 
@@ -567,22 +594,22 @@ class _ForYouContentState extends State<ForYouContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child:RefreshIndicator(
-                onRefresh: refresh,
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    for (var element in receivedPostList) ...[
-                      eventCard(element, context)
-                    ],
-                    if (isLoading) eventCardSkeletonList(),
-                    if (noMoreData)
-                      const Center(
-                        child: Text("No More Data"),
-                      ),
-                  ],
-                )));
+        child: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              children: [
+                for (var element in receivedPostList) ...[
+                  eventCard(element, context)
+                ],
+                if (isLoading) eventCardSkeletonList(),
+                if (noMoreData)
+                  const Center(
+                    child: Text("No More Data"),
+                  ),
+              ],
+            )));
   }
 }
 
