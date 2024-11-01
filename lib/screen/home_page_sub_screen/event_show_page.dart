@@ -182,6 +182,7 @@ class _EventShowPageState extends State<EventShowPage>
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                           scrollDirection: Axis.horizontal,
                           child: Padding(
                             padding:
