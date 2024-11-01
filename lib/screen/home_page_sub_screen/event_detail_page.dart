@@ -292,107 +292,157 @@ class _EventDetailPageState extends State<EventDetailPage>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: initialing
-          ? const Center(child: CircularProgressIndicator())
-          : NestedScrollView(
-              controller: scrollController,
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    pinned: true,
-                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                    leading: IconButton(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: initialing
+        ? const Center(child: CircularProgressIndicator())
+        : NestedScrollView(
+            controller: scrollController,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                  leading: Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(
                         Icons.arrow_back,
-                        size: 30.0,
+                        size: 24.0,
+                        color: Colors.black,
                       ),
                     ),
-                    actions: [
-                      IconButton(
+                  ),
+                  actions: [
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: IconButton(
                         onPressed: () => pressLikedProcess(),
                         icon: Icon(
                           postData.liked!
                               ? Icons.favorite
                               : Icons.favorite_border,
                           color: const Color.fromARGB(255, 233, 113, 153),
-                          size: 30.0,
+                          size: 24.0,
                         ),
                       ),
-                    ],
-                    expandedHeight: 200.0,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.view_timeline,
-                                  color: Colors.grey,
-                                ),
-                                Text(
-                                  postData.type,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                    ),
+                  ],
+                  expandedHeight: 220.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 40,),
+                          Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width - 80,
                             ),
-                            Text(
+                            child: Text(
                               postData.title,
-                              style: const TextStyle(fontSize: 30.0),
+                              style: const TextStyle(fontSize: 26.0),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                             ),
-                            Row(
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
+                                Row(
+                            children: [
+                              const Icon(
+                                Icons.view_timeline,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                postData.type,
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 10),
+              
                                 const SparkIcon(
                                   icon: SparkIcons.heart,
-                                  color: Colors.grey,
+                                  color: Colors.white,
+                                  size: 15,
                                 ),
+                                const SizedBox(width: 5),
                                 Text(
                                   "${postData.likes}",
-                                  style: const TextStyle(color: Colors.grey),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
                                 ),
-                                const SparkIcon(icon: SparkIcons.comment),
+                                const SizedBox(width: 15),
+                                const SparkIcon(
+                                  icon: SparkIcons.comment,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                                const SizedBox(width: 5),
                                 Text(
                                   "${postData.comments}",
-                                  style: const TextStyle(color: Colors.grey),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    bottom: TabBar(
-                      controller: tabController,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.white.withOpacity(0.7),
-                      indicatorColor: Colors.white,
-                      indicatorWeight: 3,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      tabs: const [
-                        Tab(text: "Detail"),
-                        Tab(text: "Comment"),
-                      ],
-                    ),
                   ),
-                ];
-              },
-              body: TabBarView(
-                controller: tabController,
-                children: [
-                  detailContent(),
-                  commentContent(),
-                ],
-              ),
+                  bottom: TabBar(
+                    controller: tabController,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white.withOpacity(0.7),
+                    indicatorColor: Colors.white,
+                    indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    tabs: const [
+                      Tab(text: "Detail"),
+                      Tab(text: "Comment"),
+                    ],
+                  ),
+                ),
+              ];
+            },
+            body: TabBarView(
+              controller: tabController,
+              children: [
+                detailContent(),
+                commentContent(),
+              ],
             ),
-    );
-  }
+          ),
+  );
+}
 
   Widget detailContent() {
     return Column(
@@ -475,14 +525,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                     ],
                   ),
                 ),
-
-                // Attributes section
-                if (postData.attributes.isNotEmpty) ...[
-                  SizedBox(height: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
+                Padding(
                         padding: EdgeInsets.all(5.0),
                         child: Text(
                           "Additional Information",
@@ -493,6 +536,12 @@ class _EventDetailPageState extends State<EventDetailPage>
                           ),
                         ),
                       ),
+                // Attributes section
+                if (postData.attributes.isNotEmpty) ...[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      
                       for (int i = 0; i < postData.attributes.length; i++)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
@@ -549,9 +598,46 @@ class _EventDetailPageState extends State<EventDetailPage>
                             ),
                           ),
                         ),
+                                          SizedBox(height: 20),
                     ],
                   )
                 ],
+                const SizedBox(height:20),
+            const Text(
+              "Other Information",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.grey.withOpacity(0.1),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                postData.content.isEmpty? "(The initiator did not mention)": postData.content,
+                style: TextStyle(
+                  fontSize: 16,
+                  color:postData.content.isEmpty? Colors.grey[400]:Colors.grey[800],
+                  height: 1.5,
+                ),
+              ),
+            ),
               ],
             ),
           ),

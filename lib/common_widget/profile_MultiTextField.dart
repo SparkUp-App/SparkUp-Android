@@ -25,11 +25,10 @@ class _ProfileMultiInputState extends State<ProfileMultiInput> {
   late List<TextEditingController> controllers;
 
   @override
-  void initState() {
-    super.initState();
-    controllers = widget.values.map((value) => TextEditingController(text: value)).toList();
-
-  }
+void initState() {
+  super.initState();
+  controllers = widget.values.map((value) => TextEditingController(text: value)).toList();
+}
 
   void _addNewInput() {
     setState(() {

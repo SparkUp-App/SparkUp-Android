@@ -4,11 +4,13 @@ class SparkupSingleChoose extends StatefulWidget {
   const SparkupSingleChoose({
     super.key,
     required this.label,
+    required this.hintlabel,
     required this.availableTags,
     required this.onChanged,
   });
 
   final String label;
+  final String hintlabel;
   final List<String> availableTags;
   final Function(String) onChanged;
 
@@ -24,19 +26,19 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('請輸入其他選項'),
+        title: const Text('Please enter other option'),
         content: TextField(
           onChanged: (value) {
             customOption = value;
           },
-          decoration: const InputDecoration(
-            hintText: '請輸入運動項目',
+          decoration: InputDecoration(
+            hintText: 'Other type',
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -48,7 +50,7 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
               }
               Navigator.pop(context);
             },
-            child: const Text('確定'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -60,14 +62,17 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('請選擇${widget.label}'),
+          title: Text('Please choose ${widget.label}'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(widget.availableTags.length + 1, (index) {
                 if (index == widget.availableTags.length) {
                   return ListTile(
-                    title: const Text('其他'),
+                    title: const Text(
+                      'Other that is not on the list',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     onTap: () {
                       Navigator.pop(context);
                       _showOtherInputDialog();
@@ -115,14 +120,15 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
               padding: const EdgeInsets.all(12),
               width: MediaQuery.of(context).size.width * 0.75,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _selectedTag ?? '請選擇${widget.label}',
+                    _selectedTag ?? 'Please choose ${widget.label}',
                     style: TextStyle(
                       color: _selectedTag != null ? Colors.black : Colors.grey,
                     ),
