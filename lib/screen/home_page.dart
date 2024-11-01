@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:spark_up/common_widget/exit_dialog.dart";
+import "package:spark_up/common_widget/spark_Icon.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
@@ -40,7 +41,10 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return CenterTest();
       case 3:
-        return ProfileShowPage(userId:Network.manager.userId!, editable: true,);
+        return ProfileShowPage(
+          userId: Network.manager.userId!,
+          editable: true,
+        );
       default:
         return CenterTest();
     }
@@ -56,8 +60,8 @@ class _HomePageState extends State<HomePage> {
           context: context,
           builder: (context) => const ExitConfirmationDialog(),
         );
-    },
-      child:Scaffold(
+      },
+      child: Scaffold(
         body: _getPage(_selectedIndex),
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 25),
@@ -76,13 +80,23 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: SparkIcon(icon: SparkIcons.homeBorder, color: Colors.grey,),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.home,
+                color: Color(0xFFF77D43),
+              ),
+              label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_rounded),
+              icon: SparkIcon(icon: SparkIcons.bookmark, color: Colors.grey,),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.bookmark,
+                color: Color(0xFFF77D43),
+              ),
               label: 'BookMarks',
             ),
             BottomNavigationBarItem(
@@ -90,21 +104,29 @@ class _HomePageState extends State<HomePage> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.schedule),
+              icon: SparkIcon(icon: SparkIcons.message, color: Colors.grey),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.message,
+                color: Color(0xFFF77D43),
+              ),
               label: 'Messages',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.medical_services_outlined),
+              icon: SparkIcon(icon: SparkIcons.user, color: Colors.grey),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.user,
+                color: Color(0xFFF77D43),
+              ),
               label: 'Profile',
             ),
           ],
-          currentIndex: _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
+          currentIndex:
+              _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
           selectedItemColor: Colors.blue,
           unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
-      
-    ),
+      ),
     );
   }
 }
