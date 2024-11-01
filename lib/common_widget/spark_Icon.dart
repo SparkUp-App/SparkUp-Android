@@ -44,6 +44,7 @@ enum SparkIcons {
   gender('assets/icons/gender.svg'),
   globe('assets/icons/globe.svg'),
   home('assets/icons/home.svg'),
+  homeBorder("assets/icons/home_border.svg"),
   hometown('assets/icons/hometown.svg'),
   language('assets/icons/language.svg'),
   location('assets/icons/location.svg'),
