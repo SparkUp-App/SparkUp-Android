@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
@@ -6,6 +7,8 @@ import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dar
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
+import 'dart:io';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -45,7 +48,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        await showDialog(
+          context: context,
+          builder: (context) => const ExitConfirmationDialog(),
+        );
+    },
+      child:Scaffold(
         body: _getPage(_selectedIndex),
         floatingActionButton: SizedBox(
           width: 55,
@@ -91,6 +103,7 @@ class _HomePageState extends State<HomePage> {
           onTap: _onItemTapped,
         ),
       
+    ),
     );
   }
 }

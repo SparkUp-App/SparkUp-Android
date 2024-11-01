@@ -5,6 +5,7 @@ import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/route.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_competition_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -102,6 +103,9 @@ List<Step> getSteps(String eventType) {
     case 'Study'://讀書標籤就加讀書的templete
       steps.addAll(createStudySteps(_currentStep, basePost,setState));
       break;
+    case 'Competition'://讀書標籤就加讀書的templete
+      steps.addAll(createCompetitionSteps(_currentStep, basePost,setState));
+      break;
     default:
       steps.add(_buildDefaultStep());
       break;
@@ -198,8 +202,6 @@ List<Step> getSteps(String eventType) {
       case 0: 
         if (basePost.title.isEmpty) {
           return 'Please fill necessary data : Title';
-        } else if (basePost.content.isEmpty) {
-          return 'Please fill necessary data : Content';
         } else if (basePost.location.isEmpty) {
           return 'Please fill necessary data : Location';
         }
@@ -235,7 +237,6 @@ List<Step> getSteps(String eventType) {
   void createEvent() async {
     if (basePost.type.isEmpty ||
         basePost.title.isEmpty ||
-        basePost.content.isEmpty ||
         basePost.location.isEmpty) {
       ToastService.showErrorToast(
         context,

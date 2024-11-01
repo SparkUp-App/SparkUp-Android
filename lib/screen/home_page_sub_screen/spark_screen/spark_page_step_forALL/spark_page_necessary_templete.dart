@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
@@ -10,20 +11,15 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
       title: const SizedBox.shrink(),
       content: Column(
         children: [
+          NoteCard(message: "First, let’s decide some basic information for your activity."),
+          
+          SizedBox(height: 16,),
           profileTextfield(
             label: "Title",
             hintLabel: "Enter Title Here",
             textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
-            isRequired: true,
-          ),
-          profileTextfield(
-            label: "Content",
-            hintLabel: "Enter Content Here",
-            textFieldIcon: 'assets/icons/phone.svg',
-            value: basePost.content,
-            onChanged: (newValue) => setState(() => basePost.content = newValue ?? ""),
             isRequired: true,
           ),
           profileTextfield(

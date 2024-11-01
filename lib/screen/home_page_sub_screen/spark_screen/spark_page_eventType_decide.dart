@@ -30,15 +30,15 @@ class _sparkPageEventTypeDecideState extends State<sparkPageEventTypeDecide> {
   @override
   void initState() {
     super.initState();
-    _precacheImages();
+    //_precacheImages();
   }
 
   // 預緩存所有圖片
-  Future<void> _precacheImages() async {
-    for (var event in eventTypes) {
-      await precacheImage(AssetImage(event["path"]!), context);
-    }
-  }
+  // Future<void> _precacheImages() async {
+  //   for (var event in eventTypes) {
+  //     await precacheImage(AssetImage(event["path"]!), context);
+  //   }
+  // }
 
   Widget eventTypeContainer(String eventName, String imagePath) {
     return GestureDetector(
