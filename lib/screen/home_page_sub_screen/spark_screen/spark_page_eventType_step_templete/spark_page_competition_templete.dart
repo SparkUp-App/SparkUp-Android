@@ -78,11 +78,10 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
             label: 'Prize',
             hintLabel: 'Enter Entry Prizes',
             icon: 'assets/icons/user.svg',
-            values: tmp, 
+            values:  basePost.attributes["Prize"] ?? [],
           onChanged:(newValues) {
             setState(() {
-              tmp = newValues;
-              basePost.attributes["Prize"] = tmp;
+              basePost.attributes["Prize"] = newValues;
             });
           },
           )
