@@ -5,7 +5,7 @@ class SparkIcon extends StatelessWidget {
   final SparkIcons icon;
   final double size;
   final Color? color;
-  
+
   const SparkIcon({
     super.key,
     required this.icon,
@@ -16,13 +16,12 @@ class SparkIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      icon.path,
-      width: size,
-      height: size,
-      colorFilter: color != null 
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
-    );
+          icon.path,
+          width: size,
+          height: size,
+          colorFilter:
+              color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        );
   }
 }
 
@@ -33,6 +32,7 @@ enum SparkIcons {
   alcohol('assets/icons/alcohol.svg'),
   blood('assets/icons/blood.svg'),
   bookmark('assets/icons/bookmark.svg'),
+  bookmarkBorder("assets/icons/bookmark_border.svg"),
   calendar('assets/icons/calendar.svg'),
   car('assets/icons/car.svg'),
   circleUser('assets/icons/circle_user.svg'),
@@ -49,6 +49,7 @@ enum SparkIcons {
   language('assets/icons/language.svg'),
   location('assets/icons/location.svg'),
   message('assets/icons/message.svg'),
+  messageBorder("assets/icons/message_border.svg"),
   password('assets/icons/password.svg'),
   peace('assets/icons/peace.svg'),
   person('assets/icons/person.svg'),
@@ -63,6 +64,7 @@ enum SparkIcons {
   smoking('assets/icons/smoking.svg'),
   star('assets/icons/star.svg'),
   user('assets/icons/user.svg'),
+  userBorder("assets/icons/user_border.svg"),
   users('assets/icons/users.svg'),
   work('assets/icons/work.svg'),
   zodiacSign('assets/icons/zodiac_sign.svg');
