@@ -146,6 +146,9 @@ class _EventShowPageState extends State<EventShowPage>
                               ),
                             ),
                           ),
+                          onTap: ()=>setState(() {
+                            filterMode = true;
+                          }),
                           onEditingComplete: () {
                             FocusScope.of(context).unfocus();
                             searchIconPressed();
