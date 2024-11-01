@@ -81,6 +81,7 @@ class _EventShowPageState extends State<EventShowPage>
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontFamily: "Kalam",
                     ),
                   ),
                 ),

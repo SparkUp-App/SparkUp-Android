@@ -64,6 +64,9 @@ flutter:
     - family: IowanOldStyle
       fonts:
         - asset: assets/fonts/IowanOldStyle-Regular.ttf
+    - family: Kalam
+      fonts:
+        - asset: assets/fonts/Kalam-Bold.ttf
   assets:
     - assets/
     - assets/event/
