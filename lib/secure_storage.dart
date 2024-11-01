@@ -8,8 +8,8 @@ class SecureStorage {
     storage.write(key: key.key, value: value);
   }
 
-  static read(StoreKey key) async {
-    storage.read(key: key.key);
+  static Future<String?> read(StoreKey key) async {
+    return storage.read(key: key.key);
   }
 
   static delete(StoreKey key) async{
