@@ -537,71 +537,105 @@ Widget build(BuildContext context) {
                         ),
                       ),
                 // Attributes section
-                if (postData.attributes.isNotEmpty) ...[
+if (postData.attributes.isNotEmpty) ...[
+  Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (int i = 0; i < postData.attributes.length; i++)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+              border: Border.all(
+                color: Colors.grey.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //ElevatedButton(onPressed: ()=>print(postData.attributes), child: Text('A')), for testing 
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "${postData.attributes.keys.elementAt(i)}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                if (postData.attributes.values.elementAt(i) is String)
+                  Text(
+                    "${postData.attributes.values.elementAt(i)}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[800],
+                      height: 1.5,
+                    ),
+                  )
+                else if (postData.attributes.values.elementAt(i) is List)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
-                      for (int i = 0; i < postData.attributes.length; i++)
+                      for (var item in (postData.attributes.values.elementAt(i) as List))
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 2),
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[600],
+                                  shape: BoxShape.circle,
                                 ),
-                              ],
-                              border: Border.all(
-                                color: Colors.grey.withOpacity(0.1),
-                                width: 1,
                               ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    "${postData.attributes.keys.elementAt(i)}",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.blue,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "${postData.attributes.values.elementAt(i)}",
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  item.toString(),  // 將任何類型轉換為字串
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey[800],
                                     height: 1.5,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                                          SizedBox(height: 20),
                     ],
-                  )
-                ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      SizedBox(height: 20),
+    ],
+  ),
+],
                 const SizedBox(height:20),
             const Text(
               "Other Information",
