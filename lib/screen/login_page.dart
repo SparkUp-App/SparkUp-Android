@@ -8,6 +8,7 @@ import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:spark_up/common_widget/exit_dialog.dart";
+import "package:spark_up/secure_storage.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -167,10 +168,12 @@ class _LoginPageState extends State<LoginPage> {
                                       if (context.mounted) {
                                         debugPrint("${response["status"]}");
                                         if (response["status"] == "success") {
+                                          SecureStorage.store(StoreKey.userId, "${response["data"]["user_id"]}");
                                           Network.manager.saveUserId(
                                               response["data"]["user_id"]);
                                           if (response["data"]
                                               ["profile_exists"]) {
+                                            SecureStorage.store(StoreKey.noProfile, "No");
                                             setState(() {
                                               isLoading = true;
                                             });
@@ -198,6 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   context, RouteMap.homePage);
                                             }
                                           } else {
+                                            SecureStorage.store(StoreKey.noProfile, "Yes");
                                             Profile.manager =
                                                 Profile.initfromDefault();
                                             Navigator.pushReplacementNamed(

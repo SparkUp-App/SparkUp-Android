@@ -5,6 +5,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/auth_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spark_up/secure_storage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -178,6 +179,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                               if (context.mounted) {
                                 if (response["status"] == "success") {
+                                  SecureStorage.store(StoreKey.userId, "${response["data"]["user_id"]}");
+                                  SecureStorage.store(StoreKey.noProfile, "Yes");
                                   Network.manager
                                       .saveUserId(response["data"]["user_id"]);
                                   Profile.manager = Profile.initfromDefault();
