@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
@@ -10,16 +11,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          Center(
-            child: Text(
-            'First, let’s decide some basic information for your activity.',
-            style: TextStyle(
-              fontSize: 20,
-              color: Color(0xFFE9765B),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          ),
+          NoteCard(message: "First, let’s decide some basic information for your activity."),
           
           SizedBox(height: 16,),
           profileTextfield(
