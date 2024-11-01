@@ -448,7 +448,7 @@ class _HotContentState extends State<HotContent>
     super.build(context);
     return Container(
         child: RefreshIndicator(
-            onRefresh: refresh,
+            onRefresh: ()async{refresh();},
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               controller: scrollController,
@@ -595,7 +595,7 @@ class _ForYouContentState extends State<ForYouContent>
     super.build(context);
     return Container(
         child: RefreshIndicator(
-            onRefresh: refresh,
+            onRefresh:()async{refresh();},
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               controller: scrollController,
