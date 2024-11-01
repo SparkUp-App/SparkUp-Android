@@ -84,18 +84,28 @@ class _HomePageState extends State<HomePage> {
           showUnselectedLabels: false,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: SparkIcon(icon: SparkIcons.homeBorder, color: Colors.grey,),
+              icon: SparkIcon(
+                icon: SparkIcons.homeBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
               activeIcon: SparkIcon(
                 icon: SparkIcons.home,
                 color: Color(0xFFF77D43),
+                size: 25.0,
               ),
               label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: SparkIcon(icon: SparkIcons.bookmark, color: Colors.grey,),
+              icon: SparkIcon(
+                icon: SparkIcons.bookmarkBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
               activeIcon: SparkIcon(
                 icon: SparkIcons.bookmark,
                 color: Color(0xFFF77D43),
+                size: 25.0,
               ),
               label: 'BookMarks',
             ),
@@ -104,18 +114,28 @@ class _HomePageState extends State<HomePage> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: SparkIcon(icon: SparkIcons.message, color: Colors.grey),
+              icon: SparkIcon(
+                icon: SparkIcons.messageBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
               activeIcon: SparkIcon(
                 icon: SparkIcons.message,
                 color: Color(0xFFF77D43),
+                size: 25.0,
               ),
               label: 'Messages',
             ),
             BottomNavigationBarItem(
-              icon: SparkIcon(icon: SparkIcons.user, color: Colors.grey),
+              icon: SparkIcon(
+                icon: SparkIcons.userBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
               activeIcon: SparkIcon(
                 icon: SparkIcons.user,
                 color: Color(0xFFF77D43),
+                size: 25.0,
               ),
               label: 'Profile',
             ),
