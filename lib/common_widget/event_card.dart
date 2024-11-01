@@ -47,7 +47,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context) {
               ),
             ),
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: 8.0),
 
           // 活動標題
           Text(
@@ -58,7 +58,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context) {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 8.0),
 
           // 加強顯示日期
           Container(
@@ -110,7 +110,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context) {
               ],
             ),
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 12.0),
           
           Padding(
             padding: EdgeInsets.all(3.0),
