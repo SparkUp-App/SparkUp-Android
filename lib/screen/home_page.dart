@@ -3,12 +3,37 @@ import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/spark_Icon.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
-import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
-import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
-import 'dart:io';
+
+class LazyLoadPage extends StatefulWidget {
+  final Widget Function() builder;
+  final bool shouldBuild;
+
+  const LazyLoadPage({
+    super.key,
+    required this.builder,
+    required this.shouldBuild,
+  });
+
+  @override
+  State<LazyLoadPage> createState() => _LazyLoadPageState();
+}
+
+class _LazyLoadPageState extends State<LazyLoadPage> {
+  Widget? _cached;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.shouldBuild) {
+      return Container();
+    }
+
+    _cached ??= widget.builder();
+    return _cached!;
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,34 +45,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
+  final List<bool> _hasVisited = [false, false, false, false];
+
   @override
   void initState() {
     super.initState();
+    _hasVisited[0] = true;
   }
 
   void _onItemTapped(int index) {
-    if (index == 2) return; // Ignore taps on the middle item
-    setState(() {
-      _selectedIndex = index < 2 ? index : index - 1;
-    });
-  }
+    if (index == 2) return;
+    final actualIndex = index < 2 ? index : index - 1;
 
-  Widget _getPage(int index) {
-    switch (index) {
-      case 0:
-        return EventShowPage(key: UniqueKey());
-      case 1:
-        return const BookmarkPage();
-      case 2:
-        return CenterTest();
-      case 3:
-        return ProfileShowPage(
-          userId: Network.manager.userId!,
-          editable: true,
-        );
-      default:
-        return CenterTest();
-    }
+    setState(() {
+      _selectedIndex = actualIndex;
+      _hasVisited[actualIndex] = true;
+    });
   }
 
   @override
@@ -62,7 +75,30 @@ class _HomePageState extends State<HomePage> {
         );
       },
       child: Scaffold(
-        body: _getPage(_selectedIndex),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            LazyLoadPage(
+              shouldBuild: _hasVisited[0],
+              builder: () => const EventShowPage(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[1],
+              builder: () => const BookmarkPage(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[2],
+              builder: () => const CenterTest(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[3],
+              builder: () => ProfileShowPage(
+                userId: Network.manager.userId!,
+                editable: true,
+              ),
+            ),
+          ],
+        ),
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 25),
           width: 55,
@@ -70,11 +106,15 @@ class _HomePageState extends State<HomePage> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => sparkPageEventTypeDecide(),
+                builder: (context) => const sparkPageEventTypeDecide(),
               ));
             },
-            child: Icon(Icons.add, size: 30),
-            elevation: 4.0,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            child: Image.asset(
+              'assets/sparkUpMainIcon.png',
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -161,6 +201,6 @@ class CenterTest extends StatefulWidget {
 class _CenterTestState extends State<CenterTest> {
   @override
   Widget build(BuildContext context) {
-    return Center();
+    return const Center();
   }
 }
