@@ -6,7 +6,9 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_competition_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_meal_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_social_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -109,6 +111,12 @@ List<Step> getSteps(String eventType) {
       break;
     case 'Roommate':
       steps.addAll(createRoommateSteps(_currentStep, basePost,setState));
+      break;
+    case 'Social':
+      steps.addAll(createSocialSteps(_currentStep, basePost,setState));
+      break;
+    case 'Meal':
+      steps.addAll(createMealSteps(_currentStep, basePost,setState));
       break;
     default:
       steps.add(_buildDefaultStep());

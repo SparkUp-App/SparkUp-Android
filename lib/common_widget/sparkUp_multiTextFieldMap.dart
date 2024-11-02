@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileDoubleTextFieldToMakeMap extends StatefulWidget {
-  const ProfileDoubleTextFieldToMakeMap ({
+  const ProfileDoubleTextFieldToMakeMap({
     super.key,
     required this.label,
     required this.firstHintLabel,
     required this.secondHintLabel,
-    required this.icon,
     required this.values,
     required this.onChanged,
   });
@@ -15,15 +14,14 @@ class ProfileDoubleTextFieldToMakeMap extends StatefulWidget {
   final String label;
   final String firstHintLabel;
   final String secondHintLabel;
-  final String icon;
   final Map<String, String> values;
   final Function(Map<String, String>) onChanged;
 
   @override
-  State<ProfileDoubleTextFieldToMakeMap > createState() => _ProfileDoubleTextFieldToMakeMapState();
+  State<ProfileDoubleTextFieldToMakeMap> createState() => _ProfileDoubleTextFieldToMakeMapState();
 }
 
-class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextFieldToMakeMap > {
+class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextFieldToMakeMap> {
   late List<Pair<TextEditingController>> controllerPairs;
 
   @override
@@ -82,42 +80,37 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
     TextEditingController controller,
     String hintText,
     bool showIcon,
+    Color backgroundcolor,
+    Color hinttextcolor,
+    Color textcolor,
   ) {
     return Expanded(
       child: TextFormField(
         controller: controller,
+        style: TextStyle(
+          fontSize: 14,
+          color:textcolor
+        ),
         decoration: InputDecoration(
-          prefixIcon: showIcon
-              ? Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: SvgPicture.asset(
-                    widget.icon,
-                    width: 20,
-                    height: 20,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black26,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                )
-              : null,
           filled: true,
-          fillColor: Colors.white,
+          fillColor: backgroundcolor,
+          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black12),
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFE9765B)),
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black12),
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
           hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Colors.black26,
+          hintStyle: TextStyle(
+            color: hinttextcolor,
+            fontSize: 14, 
           ),
         ),
         onChanged: (value) {
@@ -129,24 +122,41 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
 
   Widget _buildInputRow(int index) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
         children: [
           _buildInputTextField(
             controllerPairs[index].first,
             widget.firstHintLabel,
             true,
+            Color(0xFFE9765B),
+            Colors.white.withOpacity(0.8),
+            Colors.white,
           ),
-          SizedBox(width: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.0),
+            child: Text(
+              ":",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFFE9765B),
+              ),
+            ),
+          ),
           _buildInputTextField(
             controllerPairs[index].second,
             widget.secondHintLabel,
             false,
+            Colors.white,
+            Colors.black26,
+            Colors.black,
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: Icon(Icons.delete, size: 20), 
             onPressed: () => _removeInputPair(index),
             color: Colors.black26,
+            padding: EdgeInsets.all(4), 
           ),
         ],
       ),
@@ -155,37 +165,45 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color(0xFFE9765B),
-            fontWeight: FontWeight.w600,
+    final screenWidth = MediaQuery.of(context).size.width;
+    final containerWidth = screenWidth * 0.75;
+    
+    return Container(
+      width: containerWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 14, 
+              color: Color(0xFFE9765B),
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        for (int i = 0; i < controllerPairs.length; i++) _buildInputRow(i),
-        SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _addNewInputPair,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE9765B),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          SizedBox(height: 4), 
+          for (int i = 0; i < controllerPairs.length; i++) _buildInputRow(i),
+          SizedBox(height: 4), 
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _addNewInputPair,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFE9765B),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), 
               ),
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            ),
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20, 
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

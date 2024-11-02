@@ -167,7 +167,6 @@ Step previewStep(BasePost basePost) {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.blue,
-                                    letterSpacing: 0.3,
                                   ),
                                 ),
                               ),
