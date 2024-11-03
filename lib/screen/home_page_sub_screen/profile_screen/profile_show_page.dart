@@ -69,7 +69,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
       decoration: const BoxDecoration(
         color: Color(0xFFF7AF8B),
       ),
-      height: 250,
+      height: 200,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -98,7 +98,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         ),
                       ),
                       SizedBox(
-                        height: 95,
+                        height: 100,
                         width: MediaQuery.of(context).size.width * 0.75,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
@@ -106,53 +106,6 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             profile.bio,
                             style: const TextStyle(color: Colors.white),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 40,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: Profile
-                                            .manager.interestTypes.length,
-                                        itemBuilder: (context, index) {
-                                          final tag = Profile
-                                              .manager.interestTypes[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            child: Chip(
-                                              label: Text(
-                                                '#$tag',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                              backgroundColor: Colors.grey[200],
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ],
@@ -270,11 +223,42 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   headerSliverBuilder: (context, _) {
                     return [
                       SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            profileHeaderWidget(context),
-                          ],
-                        ),
+                        delegate: SliverChildListDelegate([
+                          profileHeaderWidget(context),
+                          Container(
+                            height: 50,
+                            color: Color(0xFFF7AF8B),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              itemCount: Profile.manager.interestTypes.length,
+                              itemBuilder: (context, index) {
+                                final tag = Profile.manager.interestTypes[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: const Color(0xFFF16743),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '#$tag',
+                                      style: const TextStyle(
+                                        color: Color(0xFFF16743),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ]),
                       ),
                     ];
                   },
