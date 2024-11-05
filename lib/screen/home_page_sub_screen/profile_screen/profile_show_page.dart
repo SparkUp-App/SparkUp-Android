@@ -321,18 +321,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
           }
         });
   }
-
-  Widget _buildTabContent(String text) {
-    return ListView.builder(
-      itemCount: 20,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('$text Item $index'),
-        );
-      },
-    );
-  }
-
+  
   @override
   void dispose() {
     _tabController.dispose();

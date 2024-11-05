@@ -449,13 +449,13 @@ class _EventDetailPageState extends State<EventDetailPage>
                                                 size: 16,
                                               ),
                                               const SizedBox(width: 4),
-                                              /*Text(
-                                                "${postData?.participants ?? 0}",
+                                              Text(
+                                                "${postData.applicants ?? 0}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
                                                 ),
-                                              ),*/
+                                              ),
                                             ],
                                           ),
                                         ],
