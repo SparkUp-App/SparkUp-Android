@@ -6,6 +6,7 @@ import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:spark_up/common_widget/exit_dialog.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -85,7 +86,15 @@ class _LoginPageState extends State<LoginPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        await showDialog(
+          context: context,
+          builder: (context) => const ExitConfirmationDialog(),
+        );
+    }, child:Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFF16743), Colors.white],
@@ -245,6 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                 )
             ]
         )
+    ),
     );
   }
 }
