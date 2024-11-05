@@ -1,68 +1,119 @@
 import 'package:flutter/material.dart';
-import 'package:skeleton_loader/skeleton_loader.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:math';
 
 class EventCardSkeleton extends StatelessWidget {
-  final Random _random = Random();
-  
-  double _getRandomWidth() {
-    return _random.nextDouble() * (140 - 70) + 70;
+  const EventCardSkeleton({Key? key}) : super(key: key);
+
+  String _generateRandomSpaces(int length) {
+    return ' ' * length; // 生成指定長度的空白字符
   }
 
   @override
   Widget build(BuildContext context) {
+    final random = Random();
+    final labelSpaces = _generateRandomSpaces(random.nextInt(15) + 10); // 隨機生成5到15個空白字符
+    final titleSpaces = _generateRandomSpaces(random.nextInt(50) + 40); // 隨機生成10到40個空白字符
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 9.5),
-      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
-        color: Color(0xFFF7AF8B).withOpacity(0.3),
+        color: Colors.grey[300]!,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black12.withOpacity(0.2),
             blurRadius: 12,
-            offset: Offset(0, 6),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container( //tag with random width
-            width: _getRandomWidth(),
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          Container( //title
-            width: double.infinity,
-            height: 28,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(8.0),
+          // 標籤骨架
+          Skeleton.leaf(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFff6b6b),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Text(
+                labelSpaces, // 使用隨機生成的空白字符
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  height: 1.5,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 16.0),
+
+          // 活動標題骨架
+          Skeleton.leaf(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFff6b6b),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                titleSpaces, // 使用隨機生成的空白字符
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+
+          // 底部資訊骨架
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container( //like and comment
-                width: 85,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12.0),
+              // 左側互動數據
+              Skeleton.leaf(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFff6b6b),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: const Text(
+                    "                    ", // 可以保持不變或隨機生成
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      height: 1.5,
+                    ),
+                  ),
                 ),
               ),
-              Container( //date
-                width: 190,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12.0),
+              // 右側日期
+              Skeleton.leaf(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFff6b6b),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: const Text(
+                    "                                                         ", // 可以保持不變或隨機生成
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      height: 1.5,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -73,12 +124,27 @@ class EventCardSkeleton extends StatelessWidget {
   }
 }
 
-Widget eventCardSkeletonList() {
-  return SkeletonLoader(
-    builder: EventCardSkeleton(),
-    items: 8,
-    period: const Duration(seconds: 1),
-    highlightColor: Colors.black26,
-    direction: SkeletonDirection.ltr,
-  );
+class eventCardSkeletonList extends StatelessWidget {
+  const eventCardSkeletonList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      effect: const ShimmerEffect(
+        baseColor: Colors.black12,
+        highlightColor: Colors.white24,
+        duration: Duration(seconds: 1),
+      ),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: 8,
+          itemBuilder: (context, index) {
+            return const EventCardSkeleton();
+          },
+        ),
+      ),
+    );
+  }
 }

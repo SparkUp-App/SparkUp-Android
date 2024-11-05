@@ -9,6 +9,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_meal_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_social_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_speech_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -175,6 +176,9 @@ List<Step> getSteps(String eventType) {
       break;
     case 'Meal':
       steps.addAll(createMealSteps(_currentStep, basePost,setState));
+      break;
+    case 'Speech':
+      steps.addAll(createSpeechSteps(_currentStep, basePost,setState));
       break;
     default:
       steps.add(_buildDefaultStep());

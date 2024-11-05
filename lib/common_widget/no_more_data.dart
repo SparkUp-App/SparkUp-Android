@@ -23,7 +23,7 @@ class NoMoreData extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            "沒有更多資料囉！",
+            "No More Data!",
             style: TextStyle(
               color: Colors.grey,
               fontSize: 11,
