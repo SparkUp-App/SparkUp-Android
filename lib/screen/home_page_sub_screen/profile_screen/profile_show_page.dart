@@ -48,7 +48,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             Icon(
               stateIcon,
               color: Colors.white,
-              size: 40,
+              size: 30,
             ),
             Text(
               count,
@@ -79,32 +79,46 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10),
-                      SizedBox(
+                      Container(
                         height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildStatColumn('Participated',
                                 participated.toString(), Icons.flag),
-                            const SizedBox(width: 16),
+                            Container(
+                              width: 2,
+                              height: 40,
+                              color: Colors.white.withOpacity(0.3),
+                            ),
                             _buildStatColumn('Rating',
                                 rating.toStringAsFixed(1), Icons.star),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 100,
+                      const SizedBox(height: 12),
+                      Container(
+                        height: 80,
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            profile.bio,
-                            style: const TextStyle(color: Colors.white),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          profile.bio,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            height: 1.3,
                           ),
                         ),
                       ),
@@ -119,26 +133,37 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                const Center(
-                  child: CircleAvatar(
-                    radius: 50,
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 3,
+                    ),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 45,
                   ),
                 ),
                 const SizedBox(height: 16),
                 if (widget.editable) ...[
                   SizedBox(
                     width: 130,
-                    height: 25,
+                    height: 32,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF16743),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                       onPressed: () =>
                           Navigator.pushNamed(context, RouteMap.editProfile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFFF16743),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

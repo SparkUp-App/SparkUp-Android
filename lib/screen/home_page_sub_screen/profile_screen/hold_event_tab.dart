@@ -4,7 +4,7 @@ import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
-
+import 'package:spark_up/common_widget/no_more_data.dart';
 class HoldEventTab extends StatefulWidget {
   const HoldEventTab({super.key, required this.userId});
 
@@ -76,10 +76,7 @@ class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClie
           children: [
             for (var element in postList) ...[eventCard(element, context)],
             if (isLoading) eventCardSkeletonList(),
-            if (isEnd)
-              const Center(
-                child: Text("No More Data"),
-              )
+            if (isEnd) NoMoreData(),
           ],
         ),
       ),

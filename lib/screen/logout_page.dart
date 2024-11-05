@@ -8,65 +8,36 @@ class LogoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Return to the previous page
+          },
         ),
-        title: const Text(
-          "Settings",
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: const Text("Settings"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.info, color: Colors.blue),
-                    title: const Text(
-                      "About Us",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      // Handle About Us action
-                    },
-                  ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.book, color: Colors.green),
-                    title: const Text(
-                      "License",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      // Handle License action
-                    },
-                  ),
-                ],
-              ),
+            // Setting options section
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text("About Us"),
+              onTap: () {
+                // Handle About Us action
+              },
             ),
-            const Spacer(),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text("License"),
+              onTap: () {
+                // Handle License action
+              },
+            ),
+            const Spacer(), // Pushes the Logout button to the bottom
+            // Logout button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -75,19 +46,11 @@ class LogoutPage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  backgroundColor: Colors.red.shade600,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  backgroundColor: Colors.red, // Red color for emphasis
                 ),
                 child: const Text(
                   "Logout",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),

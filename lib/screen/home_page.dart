@@ -59,7 +59,8 @@ class _HomePageState extends State<HomePage> {
     },
       child:Scaffold(
         body: _getPage(_selectedIndex),
-        floatingActionButton: SizedBox(
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(top: 25),
           width: 55,
           height: 55,
           child: FloatingActionButton(

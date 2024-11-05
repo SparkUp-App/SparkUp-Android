@@ -3,7 +3,7 @@ import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
-
+import 'package:spark_up/common_widget/no_more_data.dart';
 class BookMarkTag extends StatefulWidget {
   const BookMarkTag({super.key});
 
@@ -87,10 +87,7 @@ class _BookMarkTagState extends State<BookMarkTag>
               const Center(
                 child: CircularProgressIndicator(),
               ),
-            if (isEnd)
-              const Center(
-                child: Text("No More Data"),
-              )
+            if (isEnd) NoMoreData(),
           ],
         ),
         ), 
