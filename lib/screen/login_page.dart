@@ -86,15 +86,7 @@ class _LoginPageState extends State<LoginPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        await showDialog(
-          context: context,
-          builder: (context) => const ExitConfirmationDialog(),
-        );
-    }, child:Container(
+    return Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFF16743), Colors.white],
