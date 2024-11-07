@@ -155,6 +155,7 @@ class _EventShowPageState extends State<EventShowPage>
                                     ),
                               child: TextField(
                                 controller: _searchController,
+                                readOnly: !filterMode,
                                 decoration: InputDecoration(
                                     prefixIcon: IconButton(
                                       onPressed: searchIconPressed,
