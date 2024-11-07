@@ -3,6 +3,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
+import 'package:spark_up/screen/home_page_sub_screen/profile_screen/edit_profile_page.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
 import 'package:spark_up/screen/logout_page.dart';
@@ -158,7 +159,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         ),
                       ),
                       onPressed: () =>
-                          Navigator.pushNamed(context, RouteMap.editProfile),
+                          Navigator.pushNamed(context, RouteMap.editProfile, arguments: profile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
