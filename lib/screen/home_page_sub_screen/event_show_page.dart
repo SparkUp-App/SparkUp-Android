@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card.dart';
@@ -130,8 +132,7 @@ class _EventShowPageState extends State<EventShowPage>
                     (() {
                       if (selectTypeNotifier.value.isEmpty) {
                         return 90.0;
-                      } 
-                      else {
+                      } else {
                         return 130.0;
                       }
                     })(),
@@ -759,101 +760,103 @@ class _FilterPageState extends State<FilterPage> {
     return ValueListenableBuilder<List<String>>(
       valueListenable: widget.selectTypeNotifier,
       builder: (context, selectType, child) {
-        return Container(
-          color: const Color.fromARGB(255, 255, 225, 209).withOpacity(0.5),
-          child: Stack(
-            children: [
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: SafeArea(
-                  child: Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: SizedBox(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer("Competition",
-                                        'assets/event/competition.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer("Roommate",
-                                        'assets/event/roommates.jpg'),
-                                  ],
-                                ),
+        return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+            child: Container(
+              color: const Color.fromARGB(255, 255, 225, 209).withOpacity(0.5),
+              child: Stack(
+                children: [
+                  Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: SafeArea(
+                      child: Stack(
+                        children: [
+                          SingleChildScrollView(
+                            child: SizedBox(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        eventTypeContainer("Competition",
+                                            'assets/event/competition.jpg'),
+                                        const SizedBox(height: 20),
+                                        eventTypeContainer("Roommate",
+                                            'assets/event/roommates.jpg'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        eventTypeContainer(
+                                            "Sport", 'assets/event/sports.jpg'),
+                                        const SizedBox(height: 20),
+                                        eventTypeContainer(
+                                            "Study", 'assets/event/study.jpg'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        eventTypeContainer("Social",
+                                            'assets/event/social.jpg'),
+                                        const SizedBox(height: 20),
+                                        eventTypeContainer("Travel",
+                                            'assets/event/travel.jpg'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        eventTypeContainer(
+                                            "Meal", 'assets/event/meal.jpg'),
+                                        const SizedBox(height: 20),
+                                        eventTypeContainer("Speech",
+                                            'assets/event/speech.jpg'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        eventTypeContainer("Parade",
+                                            'assets/event/parade.jpg'),
+                                        const SizedBox(height: 20),
+                                        eventTypeContainer("Exhibition",
+                                            'assets/event/exhibition.jpg'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 120),
+                                ],
                               ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Sport", 'assets/event/sports.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Study", 'assets/event/study.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Social", 'assets/event/social.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Travel", 'assets/event/travel.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Meal", 'assets/event/meal.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Speech", 'assets/event/speech.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Parade", 'assets/event/parade.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer("Exhibition",
-                                        'assets/event/exhibition.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 120),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
+            ));
       },
     );
   }
