@@ -410,14 +410,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               const Icon(
                                                 Icons.favorite,
                                                 color: Colors.white,
-                                                size: 16,
+                                                size: 18,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 "${postData?.likes ?? 0}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ],
@@ -428,14 +428,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               const Icon(
                                                 Icons.chat_bubble_outline,
                                                 color: Colors.white,
-                                                size: 16,
+                                                size: 18,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 "${postData?.comments ?? 0}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ],
@@ -446,14 +446,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               const Icon(
                                                 Icons.person_outline,
                                                 color: Colors.white,
-                                                size: 16,
+                                                size: 18,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 "${postData.applicants ?? 0}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ],
@@ -761,49 +761,108 @@ class _CommentBlockState extends State<CommentBlock> {
                   )))
         ],
       )
-          : Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: const Icon(Icons.circle),
-          ),
-          Expanded(
-              child: Container(
-                  margin: const EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.comment.userNickName,
-                        style:
-                        const TextStyle(fontWeight: FontWeight.w900),
+          : widget.comment.userId == Network.manager.userId
+              ? Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: const Icon(Icons.circle),
+                    ),
+                    Expanded(
+                        child: Container(
+                            margin: const EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.comment.userNickName,
+                                  style:
+                                  const TextStyle(fontWeight: FontWeight.w900),
+                                ),
+                                Text(widget.comment.content),
+                                Text(
+                                  "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                                  style: TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ))),
+                    Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: IconButton(
+                        onPressed: () => pressLikedProcess(),
+                        icon: Icon(widget.comment.liked
+                            ? Icons.favorite
+                            : Icons.favorite_border),
                       ),
-                      Text(widget.comment.content),
-                      Text(
-                        "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
-                        style: TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ))),
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: IconButton(
-              onPressed: () => pressLikedProcess(),
-              icon: Icon(widget.comment.liked
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-            ),
-          ),
-          if (widget.comment.userId == Network.manager.userId)
-            Container(
-              margin: const EdgeInsets.all(5.0),
-              child: IconButton(
-                onPressed: () => pressDeleteProcess(),
-                icon: const Icon(Icons.delete),
-              ),
-            ),
-        ],
-      ),
+                    ),
+                      Container(
+                        margin: const EdgeInsets.all(5.0),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('刪除評論'),
+                                content: const Text('您確定要刪除此評論嗎？'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('取消'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      pressDeleteProcess();
+                                    },
+                                    child: const Text('確定'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: IconButton(
+                            onPressed: () => pressDeleteProcess(),
+                            icon: const Icon(Icons.delete),
+                          ),
+                        ),
+                      ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: const Icon(Icons.circle),
+                    ),
+                    Expanded(
+                        child: Container(
+                            margin: const EdgeInsets.all(5.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.comment.userNickName,
+                                  style:
+                                  const TextStyle(fontWeight: FontWeight.w900),
+                                ),
+                                Text(widget.comment.content),
+                                Text(
+                                  "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                                  style: TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ))),
+                    Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: IconButton(
+                        onPressed: () => pressLikedProcess(),
+                        icon: Icon(widget.comment.liked
+                            ? Icons.favorite
+                            : Icons.favorite_border),
+                      ),
+                    ),
+                  ],
+                ),
     );
   }
 }
