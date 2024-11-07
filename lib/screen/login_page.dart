@@ -4,10 +4,8 @@ import "package:spark_up/common_widget/system_message.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
-import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
-import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/secure_storage.dart";
 
 class LoginPage extends StatefulWidget {
@@ -52,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true,
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
+                  borderSide: const BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -60,16 +58,16 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
+                  borderSide: const BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: SvgPicture.asset(
                     textFieldIcon,
                     width: 20,
                     height: 20,
-                    colorFilter: ColorFilter.mode(
+                    colorFilter: const ColorFilter.mode(
                       Colors.black26,
                       BlendMode.srcIn,
                     ),

@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:spark_up/common_widget/profile_DatePicker.dart";
 import "package:spark_up/common_widget/profile_DropDown.dart";
 import "package:spark_up/common_widget/profile_Textfield.dart";
 import "package:spark_up/common_widget/system_message.dart";
@@ -539,7 +538,7 @@ class _SparkPageState extends State<SparkPage> {
           expandedHeight: 100,
           message: "Event Create Successful");
       Navigator.pop(context);
-    } else {
+    } else{
       showDialog(
           context: context,
           builder: (context) => SystemMessage(

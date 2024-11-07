@@ -30,7 +30,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
 
   void _initializeLanguageTags() {
     // 假設 Profile.manager.language 存儲了用戶的興趣標籤
-    _selectedLanguageTags = List<String>.from(Profile.manager.languages ?? []);
+    _selectedLanguageTags = List<String>.from(Profile.manager.languages);
     _availableLanguageTags.removeWhere((tag) => _selectedLanguageTags.contains(tag));
   }
 

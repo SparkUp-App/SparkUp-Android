@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
-import 'package:spark_up/network/path/profile_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
 

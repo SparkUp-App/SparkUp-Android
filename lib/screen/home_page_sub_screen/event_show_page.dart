@@ -209,7 +209,7 @@ class _EventShowPageState extends State<EventShowPage>
                               filterMode)
                             Expanded(
                               flex: 2,
-                              child: Container(
+                              child: SizedBox(
                                   height: 40.0,
                                   child: TextButton(
                                       onPressed: cancelTextButton,
@@ -229,7 +229,7 @@ class _EventShowPageState extends State<EventShowPage>
                           child: Padding(
                             padding:
                                 const EdgeInsets.only(top: 8.0, bottom: 5.0),
-                            child: Container(
+                            child: SizedBox(
                               height: selectTypeNotifier.value.isNotEmpty
                                   ? null
                                   : 0,
@@ -255,7 +255,7 @@ class _EventShowPageState extends State<EventShowPage>
                                                 color: Colors.white,
                                                 fontSize: 13),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             height: 40,
                                             width: 35,
                                             child: IconButton(
@@ -489,7 +489,7 @@ class _HotContentState extends State<HotContent>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
+    return SizedBox(
         child: RefreshIndicator(
             onRefresh: () async {
               refresh();
@@ -501,7 +501,7 @@ class _HotContentState extends State<HotContent>
                 for (var element in receivedPostList) ...[
                   eventCard(element, context)
                 ],
-                if (isLoading) eventCardSkeletonList(),
+                if (isLoading) const eventCardSkeletonList(),
                 if (noMoreData) const Center(child: Text("No More Data"))
               ],
             )));
@@ -650,7 +650,7 @@ class _ForYouContentState extends State<ForYouContent>
                 for (var element in receivedPostList) ...[
                   eventCard(element, context)
                 ],
-                if (isLoading) eventCardSkeletonList(),
+                if (isLoading) const eventCardSkeletonList(),
                 if (noMoreData)
                   const Center(
                     child: Text("No More Data"),
