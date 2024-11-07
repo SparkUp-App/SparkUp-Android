@@ -47,6 +47,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<bool> _hasVisited = [false, false, false, false];
 
+  bool _isKeyboardVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +67,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    if (isKeyboardVisible != _isKeyboardVisible) {
+      setState(() {
+        _isKeyboardVisible = isKeyboardVisible;
+      });
+    }
     return PopScope(
         canPop: false,
         onPopInvoked: (didPop) async {
@@ -99,21 +107,24 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          floatingActionButton: Container(
-            margin: const EdgeInsets.only(top: 25),
-            width: 55,
-            height: 55,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const sparkPageEventTypeDecide(),
-                ));
-              },
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
-              child: Image.asset(
-                'assets/sparkUpMainIcon.png',
-                fit: BoxFit.contain,
+          floatingActionButton: Visibility(
+            visible: !_isKeyboardVisible,
+            child: Container(
+              margin: const EdgeInsets.only(top: 25),
+              width: 55,
+              height: 55,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const sparkPageEventTypeDecide(),
+                  ));
+                },
+                backgroundColor: Colors.white,
+                elevation: 0.0,
+                child: Image.asset(
+                  'assets/sparkUpMainIcon.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
@@ -122,7 +133,8 @@ class _HomePageState extends State<HomePage> {
             data: ThemeData(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-            ),child: BottomNavigationBar(
+            ),
+            child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             showSelectedLabels: false,
             showUnselectedLabels: false,
