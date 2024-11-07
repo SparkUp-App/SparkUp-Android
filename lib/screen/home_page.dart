@@ -1,13 +1,39 @@
 import 'package:flutter/material.dart';
 import "package:spark_up/common_widget/exit_dialog.dart";
+import "package:spark_up/common_widget/spark_Icon.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
-import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_page.dart";
-import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
-import 'dart:io';
+
+class LazyLoadPage extends StatefulWidget {
+  final Widget Function() builder;
+  final bool shouldBuild;
+
+  const LazyLoadPage({
+    super.key,
+    required this.builder,
+    required this.shouldBuild,
+  });
+
+  @override
+  State<LazyLoadPage> createState() => _LazyLoadPageState();
+}
+
+class _LazyLoadPageState extends State<LazyLoadPage> {
+  Widget? _cached;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.shouldBuild) {
+      return Container();
+    }
+
+    _cached ??= widget.builder();
+    return _cached!;
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,31 +45,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
+  final List<bool> _hasVisited = [false, false, false, false];
+
   @override
   void initState() {
     super.initState();
+    _hasVisited[0] = true;
   }
 
   void _onItemTapped(int index) {
-    if (index == 2) return; // Ignore taps on the middle item
-    setState(() {
-      _selectedIndex = index < 2 ? index : index - 1;
-    });
-  }
+    if (index == 2) return;
+    final actualIndex = index < 2 ? index : index - 1;
 
-  Widget _getPage(int index) {
-    switch (index) {
-      case 0:
-        return EventShowPage(key: UniqueKey());
-      case 1:
-        return const BookmarkPage();
-      case 2:
-        return CenterTest();
-      case 3:
-        return ProfileShowPage(userId:Network.manager.userId!, editable: true,);
-      default:
-        return CenterTest();
-    }
+    setState(() {
+      _selectedIndex = actualIndex;
+      _hasVisited[actualIndex] = true;
+    });
   }
 
   @override
@@ -56,9 +73,32 @@ class _HomePageState extends State<HomePage> {
           context: context,
           builder: (context) => const ExitConfirmationDialog(),
         );
-    },
-      child:Scaffold(
-        body: _getPage(_selectedIndex),
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            LazyLoadPage(
+              shouldBuild: _hasVisited[0],
+              builder: () => const EventShowPage(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[1],
+              builder: () => const BookmarkPage(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[2],
+              builder: () => const CenterTest(),
+            ),
+            LazyLoadPage(
+              shouldBuild: _hasVisited[3],
+              builder: () => ProfileShowPage(
+                userId: Network.manager.userId!,
+                editable: true,
+              ),
+            ),
+          ],
+        ),
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 25),
           width: 55,
@@ -66,23 +106,47 @@ class _HomePageState extends State<HomePage> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => sparkPageEventTypeDecide(),
+                builder: (context) => const sparkPageEventTypeDecide(),
               ));
             },
-            child: Icon(Icons.add, size: 30),
-            elevation: 4.0,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            child: Image.asset(
+              'assets/sparkUpMainIcon.png',
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: SparkIcon(
+                icon: SparkIcons.homeBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.home,
+                color: Color(0xFFF77D43),
+                size: 25.0,
+              ),
+              label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_rounded),
+              icon: SparkIcon(
+                icon: SparkIcons.bookmarkBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.bookmark,
+                color: Color(0xFFF77D43),
+                size: 25.0,
+              ),
               label: 'BookMarks',
             ),
             BottomNavigationBarItem(
@@ -90,21 +154,39 @@ class _HomePageState extends State<HomePage> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.schedule),
+              icon: SparkIcon(
+                icon: SparkIcons.messageBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.message,
+                color: Color(0xFFF77D43),
+                size: 25.0,
+              ),
               label: 'Messages',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.medical_services_outlined),
+              icon: SparkIcon(
+                icon: SparkIcons.userBorder,
+                color: Color(0xFF827C79),
+                size: 25.0,
+              ),
+              activeIcon: SparkIcon(
+                icon: SparkIcons.user,
+                color: Color(0xFFF77D43),
+                size: 25.0,
+              ),
               label: 'Profile',
             ),
           ],
-          currentIndex: _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
+          currentIndex:
+              _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
           selectedItemColor: Colors.blue,
           unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
-      
-    ),
+      ),
     );
   }
 }
@@ -119,6 +201,6 @@ class CenterTest extends StatefulWidget {
 class _CenterTestState extends State<CenterTest> {
   @override
   Widget build(BuildContext context) {
-    return Center();
+    return const Center();
   }
 }

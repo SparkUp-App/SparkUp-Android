@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
+import 'package:spark_up/network/path/profile_path.dart';
 import 'package:spark_up/route.dart';
+import 'package:spark_up/secure_storage.dart';
 
-void main() {
-  Network();
+String? userId;
+String? noProfile;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  List<String?> result = await Future.wait([
+    SecureStorage.read(StoreKey.userId),
+    SecureStorage.read(StoreKey.noProfile)
+  ]);
+  userId = result[0];
+  noProfile = result[1];
+
+  if (userId != null) Network.manager.userId = int.parse(userId!);
+  if (noProfile == "No") {
+    final data = await Network.manager.sendRequest(
+        method: RequestMethod.get, path: ProfilePath.view, pathMid: [userId!]);
+    if (data["status"] == "success") {
+      Profile.manager = Profile.initfromData(data["data"]);
+    }
+  } else if(noProfile == "Yes"){
+    Profile.manager = Profile.initfromDefault();
+  }
   runApp(const ImagePrecacheWrapper());
 }
 
@@ -77,10 +99,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "SparkUp",
-      debugShowCheckedModeBanner: false,
-      routes: RouteMap.routes,
-      initialRoute: RouteMap.loginPage,
-    );
+        title: "SparkUp",
+        debugShowCheckedModeBanner: false,
+        routes: RouteMap.routes,
+        initialRoute: Network.manager.userId == null
+            ? RouteMap.loginPage
+            : noProfile == "Yes"
+                ? RouteMap.initialProfileDataPage
+                : RouteMap.homePage);
   }
 }

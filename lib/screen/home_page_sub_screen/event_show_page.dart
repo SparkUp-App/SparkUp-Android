@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
@@ -20,6 +21,8 @@ class _EventShowPageState extends State<EventShowPage>
   late ValueNotifier<String> searchKeyWord;
   bool filterMode = false;
   late ValueNotifier<bool> searchNeededNotifier;
+  late String currentSearchKeyWord;
+  late List<String> currentSelectType;
 
   @override
   void initState() {
@@ -28,6 +31,8 @@ class _EventShowPageState extends State<EventShowPage>
     selectTypeNotifier = ValueNotifier<List<String>>([]);
     searchKeyWord = ValueNotifier<String>("");
     searchNeededNotifier = ValueNotifier<bool>(false);
+    currentSearchKeyWord = "";
+    currentSelectType = [];
   }
 
   @override
@@ -36,35 +41,67 @@ class _EventShowPageState extends State<EventShowPage>
     super.dispose();
   }
 
-  void cancelMenuPressed() {
+  void clearTextPressed() {
     if (filterMode) {
-      searchKeyWord.value = "";
       _searchController.clear();
-      selectTypeNotifier.value = [];
-      setState(() {
-        filterMode = false;
-        searchNeededNotifier.value = !searchNeededNotifier.value;
-      });
+      setState(() {});
     } else {
-      setState(() {
-        filterMode = true;
-      });
+      _searchController.clear();
+      searchKeyWord.value = "";
+      currentSearchKeyWord = "";
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      setState(() {});
+    }
+  }
+
+  void cancelTextButton() {
+    if (filterMode) {
+      _searchController.clear();
+      searchKeyWord.value = "";
+      selectTypeNotifier.value = [];
+      if (currentSearchKeyWord != searchKeyWord.value ||
+          !listEquals(currentSelectType, selectTypeNotifier.value)) {
+        searchNeededNotifier.value = !searchNeededNotifier.value;
+        currentSearchKeyWord = "";
+        currentSelectType = [];
+      }
+      filterMode = false;
+      setState(() {});
+    } else {
+      _searchController.clear();
+      searchKeyWord.value = "";
+      selectTypeNotifier.value = [];
+      currentSearchKeyWord = "";
+      currentSelectType = [];
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      setState(() {});
     }
   }
 
   void searchIconPressed() {
     searchKeyWord.value = _searchController.text.trim();
+    if (currentSearchKeyWord != searchKeyWord.value ||
+        !listEquals(currentSelectType, selectTypeNotifier.value)) {
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      currentSearchKeyWord = searchKeyWord.value;
+      currentSelectType = selectTypeNotifier.value;
+    }
+
     setState(() {
       if (filterMode) filterMode = false;
-      searchNeededNotifier.value = !searchNeededNotifier.value;
     });
   }
 
   void searchButtonPressed() {
     searchKeyWord.value = _searchController.text.trim();
+    if (currentSearchKeyWord != searchKeyWord.value ||
+        !listEquals(currentSelectType, selectTypeNotifier.value)) {
+      searchNeededNotifier.value = !searchNeededNotifier.value;
+      currentSearchKeyWord = searchKeyWord.value;
+      currentSelectType = selectTypeNotifier.value;
+    }
     setState(() {
       filterMode = false;
-      searchNeededNotifier.value = !searchNeededNotifier.value;
     });
   }
 
@@ -103,61 +140,91 @@ class _EventShowPageState extends State<EventShowPage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
-                        height: 40.0,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              onPressed: searchIconPressed,
-                              icon: const Icon(
-                                Icons.search,
-                                color: Color(0xFF827C79),
-                              ),
-                            ),
-                            hintText: 'Search',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFF827C79),
-                              fontSize: 14.0,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 12.0),
-                            suffixIcon: SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: IconButton(
-                                onPressed: cancelMenuPressed,
-                                icon: Icon(
-                                  (filterMode
-                                      ? Icons.cancel_outlined
-                                      : Icons.menu),
-                                  color: const Color(0xFF827C79),
-                                  size: 20.0,
-                                ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 9,
+                            child: Container(
+                              height: 40.0,
+                              padding: filterMode ||
+                                      currentSearchKeyWord != "" ||
+                                      currentSelectType.isNotEmpty
+                                  ? const EdgeInsets.only(left: 16.0)
+                                  : const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                    prefixIcon: IconButton(
+                                      onPressed: searchIconPressed,
+                                      icon: const Icon(
+                                        Icons.search,
+                                        color: Color(0xFF827C79),
+                                      ),
+                                    ),
+                                    hintText: 'Search',
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF827C79),
+                                      fontSize: 14.0,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 12.0),
+                                    suffixIcon: _searchController.text != ""
+                                        ? SizedBox(
+                                            width: 20.0,
+                                            height: 20.0,
+                                            child: IconButton(
+                                              onPressed: clearTextPressed,
+                                              icon: const Icon(
+                                                Icons.cancel_outlined,
+                                                color: Color(0xFF827C79),
+                                                size: 20.0,
+                                              ),
+                                            ),
+                                          )
+                                        : null),
+                                onChanged: (value) => setState(() {}),
+                                onTap: () => setState(() {
+                                  filterMode = true;
+                                }),
+                                onEditingComplete: () {
+                                  FocusScope.of(context).unfocus();
+                                  searchIconPressed();
+                                },
+                                onTapOutside: (event) {
+                                  FocusScope.of(context).unfocus();
+                                },
                               ),
                             ),
                           ),
-                          onEditingComplete: () {
-                            FocusScope.of(context).unfocus();
-                            searchIconPressed();
-                          },
-                          onTapOutside:(event) {
-                            FocusScope.of(context).unfocus();
-                          },
-                        ),
+                          if (currentSearchKeyWord != "" ||
+                              currentSelectType.isNotEmpty ||
+                              filterMode)
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                  height: 40.0,
+                                  child: TextButton(
+                                      onPressed: cancelTextButton,
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(color: Colors.black38),
+                                      ))),
+                            ),
+                        ],
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(
+                              parent: BouncingScrollPhysics()),
                           scrollDirection: Axis.horizontal,
                           child: Padding(
                             padding:
@@ -199,6 +266,8 @@ class _EventShowPageState extends State<EventShowPage>
                                                         .value)
                                                       ..remove(type);
                                                 if (!filterMode) {
+                                                  currentSelectType =
+                                                      selectTypeNotifier.value;
                                                   searchNeededNotifier.value =
                                                       !searchNeededNotifier
                                                           .value;
@@ -340,13 +409,13 @@ class _HotContentState extends State<HotContent>
     });
 
     if (response["status"] == "success") {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        pages = response["data"]["pages"];
-        noMoreData = page >= pages;
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
+      }
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     } else {
       //TODO Request Failed Process
     }
@@ -411,7 +480,9 @@ class _HotContentState extends State<HotContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.removeListener((){refresh();});
+    widget.searchNeededNotifier.removeListener(() {
+      refresh();
+    });
     scrollController.dispose();
   }
 
@@ -419,19 +490,21 @@ class _HotContentState extends State<HotContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child:RefreshIndicator(
-                onRefresh: refresh,
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    for (var element in receivedPostList) ...[
-                      eventCard(element, context)
-                    ],
-                    if (isLoading) eventCardSkeletonList(),
-                    if (noMoreData) const Center(child: Text("沒有更多資料"))
-                  ],
-                )));
+        child: RefreshIndicator(
+            onRefresh: () async {
+              refresh();
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              children: [
+                for (var element in receivedPostList) ...[
+                  eventCard(element, context)
+                ],
+                if (isLoading) eventCardSkeletonList(),
+                if (noMoreData) const Center(child: Text("No More Data"))
+              ],
+            )));
   }
 }
 
@@ -483,13 +556,13 @@ class _ForYouContentState extends State<ForYouContent>
     });
 
     if (response["status"] == "success") {
-        List<Map> postList = List<Map>.from(response["data"]["posts"]);
-        for (var post in postList) {
-          receivedPostList.add(ListReceivePost.initfromData(post));
-        }
-        pages = response["data"]["pages"];
-        noMoreData = page >= pages;
-        page++;
+      List<Map> postList = List<Map>.from(response["data"]["posts"]);
+      for (var post in postList) {
+        receivedPostList.add(ListReceivePost.initfromData(post));
+      }
+      pages = response["data"]["pages"];
+      noMoreData = page >= pages;
+      page++;
     } else {
       //TODO Request Failed Process
     }
@@ -556,7 +629,9 @@ class _ForYouContentState extends State<ForYouContent>
   void dispose() {
     super.dispose();
 
-    widget.searchNeededNotifier.removeListener((){refresh();});
+    widget.searchNeededNotifier.removeListener(() {
+      refresh();
+    });
     scrollController.dispose();
   }
 
@@ -564,22 +639,24 @@ class _ForYouContentState extends State<ForYouContent>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-        child:RefreshIndicator(
-                onRefresh: refresh,
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: scrollController,
-                  children: [
-                    for (var element in receivedPostList) ...[
-                      eventCard(element, context)
-                    ],
-                    if (isLoading) eventCardSkeletonList(),
-                    if (noMoreData)
-                      const Center(
-                        child: Text("No More Data"),
-                      ),
-                  ],
-                )));
+        child: RefreshIndicator(
+            onRefresh: () async {
+              refresh();
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              children: [
+                for (var element in receivedPostList) ...[
+                  eventCard(element, context)
+                ],
+                if (isLoading) eventCardSkeletonList(),
+                if (noMoreData)
+                  const Center(
+                    child: Text("No More Data"),
+                  ),
+              ],
+            )));
   }
 }
 

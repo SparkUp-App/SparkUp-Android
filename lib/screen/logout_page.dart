@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/route.dart';
+import 'package:spark_up/secure_storage.dart';
 
 class LogoutPage extends StatelessWidget {
   const LogoutPage({Key? key}) : super(key: key);
@@ -42,6 +43,8 @@ class LogoutPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  SecureStorage.delete(StoreKey.userId);
+                  SecureStorage.delete(StoreKey.noProfile);
                   Navigator.of(context).pushReplacementNamed(RouteMap.loginPage);
                 },
                 style: ElevatedButton.styleFrom(
