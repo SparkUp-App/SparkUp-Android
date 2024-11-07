@@ -38,7 +38,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   late List<String> _selectedInterestTags; //紀錄當前選擇的tag
   late List<String> _availableInterestTags;
-
+  late List<String> _selectedLanguageTags; //紀錄當前選擇的tag
+  late List<String> _availableLanguageTags;
   @override
   initState() {
     super.initState();
@@ -53,75 +54,80 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     _availableInterestTags = List<String>.from(eventType);
-    _selectedInterestTags = _profileData["interest_types"];
+    _selectedInterestTags = List<String>.from(_profileData["interest_types"] ?? []);
+    _availableLanguageTags = List<String>.from(languageType);
+    _selectedLanguageTags = List<String>.from(_profileData["language"] ?? []);
     for (var type in _selectedInterestTags) {
       _availableInterestTags.remove(type);
     }
+    for (var lang in _selectedLanguageTags) {
+      _availableLanguageTags.remove(lang);
+    }
   }
 
- Widget _buildTagSelector(String label, String key, List<String> selectedTags, List<String> availableTags) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 120,
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            height: 60,
-            decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFFF16743), width: 2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: selectedTags.length,
-                    itemBuilder: (context, index) {
-                      final tag = selectedTags[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Chip(
-                          label: Text('#$tag'),
-                          onDeleted: () {
-                            setState(() {
-                              selectedTags.remove(tag);
-                              availableTags.add(tag);
-                              _profileData[key] = selectedTags;
-                            });
-                          },
-                          deleteIconColor: Colors.grey,
-                          backgroundColor: Colors.grey[200],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add, color: Color(0xFFF16743)),
-                  onPressed: () => _showTagSelectionDialog(
-                    label,
-                    key,
-                    selectedTags,
-                    availableTags,
-                  ),
-                ),
-              ],
+  Widget _buildTagSelector(String label, String key, List<String> selectedTags, List<String> availableTags) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          Expanded(
+            child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFFF16743), width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: selectedTags.length,
+                      itemBuilder: (context, index) {
+                        final tag = selectedTags[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Chip(
+                            label: Text('#$tag'),
+                            onDeleted: () {
+                              setState(() {
+                                selectedTags.remove(tag);
+                                availableTags.add(tag);
+                                _profileData[key] = selectedTags;
+                              });
+                            },
+                            deleteIconColor: Colors.grey,
+                            backgroundColor: Colors.grey[200],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add, color: Color(0xFFF16743)),
+                    onPressed: () => _showTagSelectionDialog(
+                      label,
+                      key,
+                      selectedTags,
+                      availableTags,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showTagSelectionDialog(String label, String key,
       List<String> selectedTags, List<String> availableTags) {
@@ -355,99 +361,140 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Widget _buildSectionTitle(String title, {String? subtitle}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: ProfileTheme.textColor,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+          if (subtitle != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                subtitle,
+                style: const TextStyle(
+                  color: ProfileTheme.subtitleColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme:  ThemeData(
+    return Theme(
+      data: ThemeData(
         fontFamily: 'IowanOldStyle',
+        scaffoldBackgroundColor: ProfileTheme.backgroundColor,
       ),
-      home:
-      Stack(children: [
-      Scaffold(
+      child: Scaffold(
         appBar: AppBar(
-          title: Text('Edit Profile'),
+          title: const Text(
+            'Edit Profile',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: ProfileTheme.textColor,
+            ),
+          ),
           backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
           elevation: 0,
+          centerTitle: true,
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
+        body: Stack(
           children: [
-            const Text(
-              "About Me",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              "Make it easy for others to get a sense of who you are",
-              style: TextStyle(
-                color: Colors.black26,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            _buildTextField('Bio', 'bio', maxLines: 4),
-            const Text(
-              "My Details",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            //_buildTextField('Name', 'name', isRequired: true),
-            _buildTextField('Phone', 'phone', isRequired: true),
-            _buildTextField('Nick Name', 'nickname', isRequired: true),
-            _buildDatePicker('Birthday', 'dob', isRequired: true),
-            _buildDropdown('Gender', 'gender', isRequired: true),
-            _buildTextField('Current Location', 'current_location'),
-            _buildTextField('Hometown', 'hometown'),
-            _buildTextField('College', 'college'),
-            _buildTextField('Job Title', 'job_title'),
-            _buildDropdown('Education', 'education_level'),
-            _buildDropdown('MBTI', 'mbti'),
-            _buildDropdown('Constellation', 'constellation'),
-            _buildDropdown('Blood Type', 'blood_type'),
-            _buildDropdown('Religion', 'religion'),
-            _buildDropdown('Sexuality', 'sexuality'),
-            _buildDropdown("Ethnicity", 'ethnicity'),
-            _buildDropdown('Diet', 'diet'),
-            _buildDropdown('Smoke', 'smoke'),
-            _buildDropdown('Drinking', 'drinking'),
-            _buildDropdown('Marijuana', 'marijuana'),
-            _buildDropdown('Drugs', 'drugs'),
+            ListView(
+              padding: const EdgeInsets.all(12.0),
+              children: [
+                _buildSectionTitle(
+                  "About Me",
+                  subtitle: "Make it easy for others to get a sense of who you are",
+                ),
+                _buildTextField('Bio', 'bio', maxLines: 4),
+                _buildTextField('Phone', 'phone', isRequired: true),
+                _buildTextField('Nick Name', 'nickname', isRequired: true),
+                _buildDatePicker('Birthday', 'dob', isRequired: true),
+                _buildDropdown('Gender', 'gender', isRequired: true),
+                _buildTextField('Current Location', 'current_location'),
+                _buildTextField('Hometown', 'hometown'),
+                _buildTextField('College', 'college'),
+                _buildTextField('Job Title', 'job_title'),
+                _buildDropdown('Education', 'education_level'),
+                _buildDropdown('MBTI', 'mbti'),
+                _buildDropdown('Constellation', 'constellation'),
+                _buildDropdown('Blood Type', 'blood_type'),
+                _buildDropdown('Religion', 'religion'),
+                _buildDropdown('Sexuality', 'sexuality'),
+                _buildDropdown("Ethnicity", 'ethnicity'),
+                _buildDropdown('Diet', 'diet'),
+                _buildDropdown('Smoke', 'smoke'),
+                _buildDropdown('Drinking', 'drinking'),
+                _buildDropdown('Marijuana', 'marijuana'),
+                _buildDropdown('Drugs', 'drugs'),
 
-            _buildTagSelector(
-              'Inetrest',
-              'interest_types',
-              _selectedInterestTags,
-              _availableInterestTags,
+                _buildTagSelector(
+                  'Inetrest',
+                  'interest_types',
+                  _selectedInterestTags,
+                  _availableInterestTags,
+                ),
+                _buildTagSelector(
+                  'Language',
+                  'Language',
+                  _selectedLanguageTags,
+                  _availableLanguageTags,
+                ),
+                // Doesn't have language , personalities , skills
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: ElevatedButton(
+                    onPressed: _saveProfile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ProfileTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Save Changes',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            // Doesn't have language , personalities , skills
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveProfile,
-              child: const Text('Save'),
-            ),
-            const SizedBox(
-              height: 30,
-            )
+            if (isLoading)
+              Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: ProfileTheme.primaryColor,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
-      if (isLoading) ...[
-        Opacity(
-          opacity: 0.8,
-          child: Container(
-            color: Colors.black,
-          ),
-        ),
-        const Center(child: CircularProgressIndicator())
-      ]
-    ]));
+    );
   }
 
   void _saveProfile() async {
@@ -509,4 +556,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
     }
   }
+}
+
+// 添加一個常量類來存儲顏色
+class ProfileTheme {
+  static const Color primaryColor = Color(0xFFF16743);
+  static const Color secondaryColor = Color(0xFF2E3A59);
+  static const Color backgroundColor = Color(0xFFF5F6FA);
+  static const Color textColor = Color(0xFF2E3A59);
+  static const Color subtitleColor = Color(0xFF8F9BB3);
 }

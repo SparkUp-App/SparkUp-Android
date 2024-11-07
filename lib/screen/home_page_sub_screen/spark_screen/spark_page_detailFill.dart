@@ -6,7 +6,10 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_competition_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_meal_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_social_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_speech_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -48,10 +51,67 @@ class _NextPageState extends State<NextPage> {
     _screenSize = MediaQuery.of(context).size.width;
     steps = getSteps(widget.selectedEventType);
   }
-
+  Widget regretDialog(){
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20), // Rounded corners
+      ),
+      backgroundColor: Colors.white,
+      title: Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error),
+          const SizedBox(width: 8),
+          const Text(
+            '您確定要放棄建立活動',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      ),
+      content: const Text(
+        '退出後，您所填寫的資料將不會被保存',
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black54,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            foregroundColor: Colors.grey,
+          ),
+          child: const Text('取消'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushReplacementNamed(context, RouteMap.homePage),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text('確定'),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        await showDialog(
+          context: context,
+          builder: (context) => regretDialog(),
+        );
+    }, child:Scaffold(
       appBar: AppBar(
         title: Text(
           '${widget.selectedEventType}',
@@ -88,6 +148,7 @@ class _NextPageState extends State<NextPage> {
           ],
         ),
       ),
+    )
     );
   }
 
@@ -109,6 +170,15 @@ List<Step> getSteps(String eventType) {
       break;
     case 'Roommate':
       steps.addAll(createRoommateSteps(_currentStep, basePost,setState));
+      break;
+    case 'Social':
+      steps.addAll(createSocialSteps(_currentStep, basePost,setState));
+      break;
+    case 'Meal':
+      steps.addAll(createMealSteps(_currentStep, basePost,setState));
+      break;
+    case 'Speech':
+      steps.addAll(createSpeechSteps(_currentStep, basePost,setState));
       break;
     default:
       steps.add(_buildDefaultStep());
@@ -288,7 +358,7 @@ void updateStepperShow(){
     });
 
     if (response["status"] == "success" && context.mounted) {
-      ToastService.showErrorToast(context,
+      ToastService.showSuccessToast(context,
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");

@@ -6,6 +6,7 @@ import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/network/path/profile_path.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:spark_up/common_widget/exit_dialog.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

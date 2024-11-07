@@ -3,7 +3,8 @@ import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
-
+import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/no_more_data.dart';
 class HoldEventTab extends StatefulWidget {
   const HoldEventTab({super.key, required this.userId});
 
@@ -74,14 +75,8 @@ class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClie
         child: ListView(
           children: [
             for (var element in postList) ...[eventCard(element, context)],
-            if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-            if (isEnd)
-              const Center(
-                child: Text("Normal Data"),
-              )
+            if (isLoading) eventCardSkeletonList(),
+            if (isEnd) NoMoreData(),
           ],
         ),
       ),

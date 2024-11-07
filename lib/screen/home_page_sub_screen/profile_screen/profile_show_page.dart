@@ -48,7 +48,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             Icon(
               stateIcon,
               color: Colors.white,
-              size: 40,
+              size: 30,
             ),
             Text(
               count,
@@ -69,7 +69,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
       decoration: const BoxDecoration(
         color: Color(0xFFF7AF8B),
       ),
-      height: 250,
+      height: 200,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,80 +79,47 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10),
-                      SizedBox(
+                      Container(
                         height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildStatColumn('Participated',
                                 participated.toString(), Icons.flag),
-                            const SizedBox(width: 16),
+                            Container(
+                              width: 2,
+                              height: 40,
+                              color: Colors.white.withOpacity(0.3),
+                            ),
                             _buildStatColumn('Rating',
                                 rating.toStringAsFixed(1), Icons.star),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 95,
+                      const SizedBox(height: 12),
+                      Container(
+                        height: 80,
                         width: MediaQuery.of(context).size.width * 0.75,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            profile.bio,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 40,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: Profile
-                                            .manager.interestTypes.length,
-                                        itemBuilder: (context, index) {
-                                          final tag = Profile
-                                              .manager.interestTypes[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            child: Chip(
-                                              label: Text(
-                                                '#$tag',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                              backgroundColor: Colors.grey[200],
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          profile.bio,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            height: 1.3,
+                          ),
                         ),
                       ),
                     ],
@@ -166,26 +133,37 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                const Center(
-                  child: CircleAvatar(
-                    radius: 50,
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 3,
+                    ),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 45,
                   ),
                 ),
                 const SizedBox(height: 16),
                 if (widget.editable) ...[
                   SizedBox(
                     width: 130,
-                    height: 25,
+                    height: 32,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF16743),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                       onPressed: () =>
                           Navigator.pushNamed(context, RouteMap.editProfile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFFF16743),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -270,11 +248,42 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   headerSliverBuilder: (context, _) {
                     return [
                       SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            profileHeaderWidget(context),
-                          ],
-                        ),
+                        delegate: SliverChildListDelegate([
+                          profileHeaderWidget(context),
+                          Container(
+                            height: 50,
+                            color: Color(0xFFF7AF8B),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              itemCount: Profile.manager.interestTypes.length,
+                              itemBuilder: (context, index) {
+                                final tag = Profile.manager.interestTypes[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: const Color(0xFFF16743),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '#$tag',
+                                      style: const TextStyle(
+                                        color: Color(0xFFF16743),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ]),
                       ),
                     ];
                   },
@@ -337,18 +346,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
           }
         });
   }
-
-  Widget _buildTabContent(String text) {
-    return ListView.builder(
-      itemCount: 20,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('$text Item $index'),
-        );
-      },
-    );
-  }
-
+  
   @override
   void dispose() {
     _tabController.dispose();

@@ -10,7 +10,6 @@ import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:intl/intl.dart';
 
 List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setState) {
-  List<String> tmp = [];
   return [
     Step(
       title: const SizedBox.shrink(),
@@ -167,9 +166,8 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           ),
           ProfileDoubleTextFieldToMakeMap(
             label: "MISC", 
-            firstHintLabel: "Type", 
-            secondHintLabel: "Type to do", 
-            icon: 'assets/icons/user.svg', 
+            firstHintLabel: "Item", 
+            secondHintLabel: "Amount", 
             values: basePost.attributes["MISC"] ?? {}, 
             onChanged:(newValues) {
               setState(() {

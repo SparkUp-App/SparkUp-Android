@@ -8,6 +8,7 @@ import 'package:spark_up/network/path/applicant_path.dart';
 import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:intl/intl.dart';
+import 'package:spark_up/common_widget/preview_detail_data.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
@@ -296,151 +297,197 @@ class _EventDetailPageState extends State<EventDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: initialing
-          ? const Center(child: CircularProgressIndicator())
-          : NestedScrollView(
-        controller: scrollController,
-        headerSliverBuilder:
-            (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-              leading: Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    size: 24.0,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              actions: [
-                Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: IconButton(
-                    onPressed: () => pressLikedProcess(),
-                    icon: Icon(
-                      postData.liked!
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: const Color.fromARGB(255, 233, 113, 153),
-                      size: 24.0,
+          ? const Center(child: CircularProgressIndicator()):
+          NestedScrollView(
+              controller: scrollController,
+              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    pinned: true,
+                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                    leading: IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 20.0,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ),
-              ],
-              expandedHeight: 220.0,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 40,),
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width - 80,
-                        ),
-                        child: Text(
-                          postData.title,
-                          style: const TextStyle(fontSize: 26.0),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                    actions: [
+                      IconButton(
+                        onPressed: () => pressLikedProcess(),
+                        icon: Icon(
+                          postData.liked!
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: const Color.fromARGB(255, 233, 113, 153),
+                          size: 24.0,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.view_timeline,
-                                  color: Colors.grey,
-                                ),
-                                Text(
-                                  postData.type,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: 10),
-
-                            const SparkIcon(
-                              icon: SparkIcons.heart,
-                              color: Colors.white,
-                              size: 15,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              "${postData.likes}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            const SparkIcon(
-                              icon: SparkIcons.comment,
-                              color: Colors.white,
-                              size: 15,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              "${postData.comments}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.bookmark_border,
+                          color: Colors.white,
+                          size: 24.0,
                         ),
                       ),
                     ],
+                    expandedHeight: 220.0,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Container(
+                        color: const Color.fromARGB(255, 245, 174, 128),
+                        padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
+                        child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      "#${postData?.type ?? ''}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    postData?.title ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 24.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.white,
+                                      decorationThickness: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // 左側資訊
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Hold by: ',
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              Text(
+                                                postData?.nickname ?? '',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Posted: ${postData?.eventStartDate != null ? DateFormat('yyyy/MM/dd').format(postData!.eventStartDate) : ''}',
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // 右側統計
+                                      Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.favorite,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData?.likes ?? 0}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.chat_bubble_outline,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData?.comments ?? 0}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.person_outline,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData.applicants ?? 0}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                    bottom: TabBar(
+                      controller: tabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.white70,
+                      indicatorColor: Colors.white,
+                      indicatorWeight: 3,
+                      tabs: const [
+                        Tab(text: "Overview"),
+                        Tab(text: "Comments"),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              bottom: TabBar(
+                ];
+              },
+              body: TabBarView(
                 controller: tabController,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withOpacity(0.7),
-                indicatorColor: Colors.white,
-                indicatorWeight: 3,
-                indicatorSize: TabBarIndicatorSize.tab,
-                tabs: const [
-                  Tab(text: "Detail"),
-                  Tab(text: "Comment"),
+                children: [
+                  detailContent(),
+                  commentContent(),
                 ],
               ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: tabController,
-          children: [
-            detailContent(),
-            commentContent(),
-          ],
-        ),
-      ),
     );
   }
 
@@ -450,276 +497,14 @@ class _EventDetailPageState extends State<EventDetailPage>
         Expanded(
             child: Container(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          // Date and time
-                          Row(
-                            children: [
-                              Icon(Icons.access_time,
-                                  color: Colors.blue[700], size: 20),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${DateFormat('M/d HH:mm').format(postData.eventStartDate)} - ${DateFormat('M/d HH:mm').format(postData.eventEndDate)}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 16),
-
-                          // People required
-                          Row(
-                            children: [
-                              Icon(Icons.group, color: Colors.green[700], size: 20),
-                              SizedBox(width: 12),
-                              Text(
-                                "${postData.numberOfPeopleRequired} people required",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 16),
-
-                          // Location
-                          Row(
-                            children: [
-                              Icon(Icons.location_on,
-                                  color: Colors.red[700], size: 20),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  postData.location,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        "Additional Information",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                    // Attributes section
-                    if (postData.attributes.isNotEmpty) ...[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (int i = 0; i < postData.attributes.length; i++)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                  border: Border.all(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //ElevatedButton(onPressed: ()=>print(postData.attributes), child: Text('A')), for testing 
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        "${postData.attributes.keys.elementAt(i)}",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.blue,
-                                          letterSpacing: 0.3,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    if (postData.attributes.values.elementAt(i) is String)
-                                      Text(
-                                        "${postData.attributes.values.elementAt(i)}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[800],
-                                          height: 1.5,
-                                        ),
-                                      )
-                                    else if (postData.attributes.values.elementAt(i) is List)
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          for (var item in (postData.attributes.values.elementAt(i) as List))
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 8.0),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: 6,
-                                                    height: 6,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[600],
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Expanded(
-                                                    child: Text(
-                                                      item.toString(),  // 將任何類型轉換為字串
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey[800],
-                                                        height: 1.5,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                        ],
-                                      )
-                                    else if (postData.attributes.values.elementAt(i) is Map)
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            for (var entry in (postData.attributes.values.elementAt(i) as Map).entries)
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom: 8.0),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 8,
-                                                      height: 8,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey[600],
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 8),
-                                                    Expanded(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              '${entry.key}: ',  // Display key and value separately
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors.black,
-                                                                height: 1.5,
-                                                                fontWeight: FontWeight.w600,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              '${entry.value}',  // Display key and value separately
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors.grey[600],
-                                                                height: 1.5,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        )
-
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                          ],
-                                        )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    ],
-                    const SizedBox(height:20),
-                    const Text(
-                      "Other Information",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                        border: Border.all(
-                          color: Colors.grey.withOpacity(0.1),
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        postData.content.isEmpty? "(The initiator did not mention)": postData.content,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color:postData.content.isEmpty? Colors.grey[400]:Colors.grey[800],
-                          height: 1.5,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: InfoPreviewCard(
+                  title: postData.title,
+                  startDate: postData.eventStartDate,
+                  endDate: postData.eventEndDate,
+                  peopleRequired: postData.numberOfPeopleRequired,
+                  location: postData.location,
+                  attributes: postData.attributes,
+                  content: postData.content,
                 ),
               ),
             )),

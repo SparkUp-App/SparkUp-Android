@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card.dart';
+import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -89,7 +90,15 @@ class _EventShowPageState extends State<EventShowPage>
                 elevation: 2,
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(
-                      selectTypeNotifier.value.isEmpty ? 90 : 130),
+                    (() {
+                      if (selectTypeNotifier.value.isEmpty) {
+                        return 90.0;
+                      } 
+                      else {
+                        return 130.0;
+                      }
+                    })(),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -419,11 +428,8 @@ class _HotContentState extends State<HotContent>
                     for (var element in receivedPostList) ...[
                       eventCard(element, context)
                     ],
-                    if (isLoading)
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    if (noMoreData) const Center(child: Text("No More Data"))
+                    if (isLoading) eventCardSkeletonList(),
+                    if (noMoreData) const Center(child: Text("沒有更多資料"))
                   ],
                 )));
   }
@@ -567,10 +573,7 @@ class _ForYouContentState extends State<ForYouContent>
                     for (var element in receivedPostList) ...[
                       eventCard(element, context)
                     ],
-                    if (isLoading)
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                    if (isLoading) eventCardSkeletonList(),
                     if (noMoreData)
                       const Center(
                         child: Text("No More Data"),
