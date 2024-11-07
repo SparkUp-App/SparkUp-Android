@@ -5,6 +5,7 @@ import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
+import 'package:flutter/rendering.dart';
 
 class EventShowPage extends StatefulWidget {
   const EventShowPage({super.key});
@@ -195,13 +196,6 @@ class _EventShowPageState extends State<EventShowPage>
                                 onTap: () => setState(() {
                                   filterMode = true;
                                 }),
-                                onEditingComplete: () {
-                                  FocusScope.of(context).unfocus();
-                                  searchIconPressed();
-                                },
-                                onTapOutside: (event) {
-                                  FocusScope.of(context).unfocus();
-                                },
                               ),
                             ),
                           ),
@@ -257,8 +251,8 @@ class _EventShowPageState extends State<EventShowPage>
                                                 fontSize: 13),
                                           ),
                                           Container(
-                                            height: 40,
-                                            width: 35,
+                                            height: 30,
+                                            width: 25,
                                             child: IconButton(
                                               iconSize: 10,
                                               onPressed: () => setState(() {
@@ -288,7 +282,7 @@ class _EventShowPageState extends State<EventShowPage>
                           ),
                         ),
                       ),
-                      if (!filterMode)
+                      if(!filterMode)
                         TabBar(
                           controller: _tabController,
                           labelColor: Colors.white,
@@ -301,6 +295,19 @@ class _EventShowPageState extends State<EventShowPage>
                             Tab(text: 'For You'),
                           ],
                         ),
+                      if(filterMode) const Center(
+                        child: SizedBox(
+                          height: 30,
+                          child: Text(
+                          "Choose the tag you want to search",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        )
+                      ),
                     ],
                   ),
                 ),
@@ -703,7 +710,7 @@ class _FilterPageState extends State<FilterPage> {
         height: 140,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.grey[200], // 添加預設背景色
+          color: Colors.grey[200],
         ),
         child: Stack(
           alignment: Alignment.center,
@@ -761,99 +768,94 @@ class _FilterPageState extends State<FilterPage> {
       valueListenable: widget.selectTypeNotifier,
       builder: (context, selectType, child) {
         return Container(
-          color: const Color.fromARGB(255, 255, 225, 209).withOpacity(0.5),
-          child: Stack(
-            children: [
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: SafeArea(
-                  child: Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: SizedBox(
-                          child: Column(
+          color: Colors.black.withOpacity(0.3),
+            child: Scaffold(
+              backgroundColor: Colors.white.withOpacity(0.95),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
                             children: [
+                              eventTypeContainer("Competition",
+                                  'assets/event/competition.jpg'),
                               const SizedBox(height: 20),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer("Competition",
-                                        'assets/event/competition.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer("Roommate",
-                                        'assets/event/roommates.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Sport", 'assets/event/sports.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Study", 'assets/event/study.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Social", 'assets/event/social.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Travel", 'assets/event/travel.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Meal", 'assets/event/meal.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer(
-                                        "Speech", 'assets/event/speech.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    eventTypeContainer(
-                                        "Parade", 'assets/event/parade.jpg'),
-                                    const SizedBox(height: 20),
-                                    eventTypeContainer("Exhibition",
-                                        'assets/event/exhibition.jpg'),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 120),
+                              eventTypeContainer("Roommate",
+                                  'assets/event/roommates.jpg'),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 15),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                            children: [
+                              eventTypeContainer(
+                                  "Sport", 'assets/event/sports.jpg'),
+                              const SizedBox(height: 20),
+                              eventTypeContainer(
+                                  "Study", 'assets/event/study.jpg'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                            children: [
+                              eventTypeContainer(
+                                  "Social", 'assets/event/social.jpg'),
+                              const SizedBox(height: 20),
+                              eventTypeContainer(
+                                  "Travel", 'assets/event/travel.jpg'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                            children: [
+                              eventTypeContainer(
+                                  "Meal", 'assets/event/meal.jpg'),
+                              const SizedBox(height: 20),
+                              eventTypeContainer(
+                                  "Speech", 'assets/event/speech.jpg'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                            children: [
+                              eventTypeContainer(
+                                  "Parade", 'assets/event/parade.jpg'),
+                              const SizedBox(height: 20),
+                              eventTypeContainer("Exhibition",
+                                  'assets/event/exhibition.jpg'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 120),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
         );
       },
     );
