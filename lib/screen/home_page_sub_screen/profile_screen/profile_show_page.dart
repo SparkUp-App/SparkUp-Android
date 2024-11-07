@@ -256,9 +256,9 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                              itemCount: Profile.manager.interestTypes.length,
+                              itemCount: profile.interestTypes.length,
                               itemBuilder: (context, index) {
-                                final tag = Profile.manager.interestTypes[index];
+                                final tag = profile.interestTypes[index];
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 4),
                                   child: Container(
