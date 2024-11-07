@@ -168,40 +168,19 @@ class _LoginPageState extends State<LoginPage> {
                                       if (context.mounted) {
                                         debugPrint("${response["status"]}");
                                         if (response["status"] == "success") {
-                                          SecureStorage.store(StoreKey.userId, "${response["data"]["user_id"]}");
+                                          SecureStorage.store(StoreKey.userId,
+                                              "${response["data"]["user_id"]}");
                                           Network.manager.saveUserId(
                                               response["data"]["user_id"]);
                                           if (response["data"]
                                               ["profile_exists"]) {
-                                            SecureStorage.store(StoreKey.noProfile, "No");
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            debugPrint(
-                                                "Sending Profile View Request");
-                                            final profileResponse =
-                                                await Network.manager
-                                                    .sendRequest(
-                                                        method:
-                                                            RequestMethod.get,
-                                                        path: ProfilePath.view,
-                                                        pathMid: [
-                                                  "${Network.manager.userId}"
-                                                ]);
-                                            debugPrint(
-                                                "Finished Profile View Request");
-                                            debugPrint(
-                                                "Profile Response Status: ${profileResponse["status"]}");
-                                            Profile.manager =
-                                                Profile.initfromData(
-                                                    profileResponse["data"]);
-
-                                            if (context.mounted) {
-                                              Navigator.pushReplacementNamed(
-                                                  context, RouteMap.homePage);
-                                            }
+                                            SecureStorage.store(
+                                                StoreKey.noProfile, "No");
+                                            Navigator.pushReplacementNamed(
+                                                context, RouteMap.homePage);
                                           } else {
-                                            SecureStorage.store(StoreKey.noProfile, "Yes");
+                                            SecureStorage.store(
+                                                StoreKey.noProfile, "Yes");
                                             Profile.manager =
                                                 Profile.initfromDefault();
                                             Navigator.pushReplacementNamed(
