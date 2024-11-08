@@ -22,7 +22,6 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers for existing topics and their values
     topicControllers = {};
     widget.topicsData.forEach((topic, values) {
       topicControllers[topic] = values
@@ -147,24 +146,44 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  topic,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFFE9765B),
-                    fontWeight: FontWeight.w600,
+              Container(
+                width: 120,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE9765B),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    topic,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.delete_outline),
+                icon: Icon(Icons.delete_outline, size: 22),
                 onPressed: () => _removeTopic(topic),
                 color: Color(0xFFE9765B),
+                splashRadius: 24,
+
               ),
             ],
           ),
@@ -183,11 +202,14 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 5.0),
               ),
               child: Text(
-                'Add describe',
-                style: TextStyle(color: Color(0xFFE9765B)),
+                '+',
+                style: TextStyle(
+                color: Color(0xFFE9765B),
+                fontSize: 25,
+                ),
               ),
             ),
           ),
@@ -198,7 +220,10 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Center(
+      child:Container(
+        width: MediaQuery.of(context).size.width * 0.75,
+        child:Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...topicControllers.keys.map((topic) => _buildTopicSection(topic)),
@@ -225,6 +250,8 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
           ),
         ),
       ],
+    ),
+      )
     );
   }
 }
