@@ -9,7 +9,9 @@ import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  const EditProfilePage({super.key, required this.profile});
+
+  final Profile profile;
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -44,7 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   initState() {
     super.initState();
 
-    _profileData = Profile.manager.toProfile;
+    _profileData = widget.profile.toProfile;
     _textContollerMap = _profileData.map(
       (key, value) {
         return value.runtimeType == String
@@ -540,7 +542,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (context.mounted) {
       if (response["status"] == "success") {
-        Profile.manager = profileTransformer;
         showDialog(
           context: context,
           builder: (context) {

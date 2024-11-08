@@ -3,6 +3,7 @@ import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/spark_Icon.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_show_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/notification_screen/notification_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage> {
       });
     }
     return PopScope(
+
         canPop: false,
         onPopInvoked: (didPop) async {
           if (didPop) return;
@@ -159,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                   size: 25.0,
                 ),
                 activeIcon: SparkIcon(
+
                   icon: SparkIcons.bookmark,
                   color: Color(0xFFF77D43),
                   size: 25.0,
@@ -176,6 +179,7 @@ class _HomePageState extends State<HomePage> {
                   size: 25.0,
                 ),
                 activeIcon: SparkIcon(
+
                   icon: SparkIcons.message,
                   color: Color(0xFFF77D43),
                   size: 25.0,

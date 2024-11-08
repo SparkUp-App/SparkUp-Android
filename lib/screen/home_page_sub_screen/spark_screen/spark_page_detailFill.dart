@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/system_message.dart';
-import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -13,14 +12,10 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
-import 'package:spark_up/common_widget/profile_Textfield.dart';
-import 'package:spark_up/common_widget/profile_DatePicker.dart';
-import 'package:spark_up/common_widget/profile_DropDown.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_study_templete.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class NextPage extends StatefulWidget {
   final String selectedEventType;
@@ -121,19 +116,19 @@ class _NextPageState extends State<NextPage> {
     }, child:Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.selectedEventType}',
-          style: TextStyle(
+          widget.selectedEventType,
+          style: const TextStyle(
             color: Colors.white, // 設定文字顏色為白色
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: Color(0xFFE9765B),
+        backgroundColor: const Color(0xFFE9765B),
         centerTitle: true, // 讓標題置中
         automaticallyImplyLeading: false,
       ),
       body: Theme(
         data: ThemeData(
-          colorScheme: ColorScheme.light(
+          colorScheme: const ColorScheme.light(
             primary: Color(0xFFE9765B),
           ),
         ),
@@ -218,7 +213,7 @@ void updateStepperShow(){
 }
   Widget _buildNavigationButtons() { //導航用的按鈕
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
@@ -233,7 +228,7 @@ void updateStepperShow(){
         children: [
         ElevatedButton(
           onPressed: _currentStep > 0 ? _goToPreviousStep : null,
-          child: Text('上一步'),
+          child: const Text('上一步'),
         ),
         /*ElevatedButton(
           onPressed: () {
@@ -315,7 +310,7 @@ void updateStepperShow(){
   Step _buildDefaultStep() {
     return Step(
       title: const SizedBox.shrink(),
-      content: Column(
+      content: const Column(
         children: [
           
         ],
