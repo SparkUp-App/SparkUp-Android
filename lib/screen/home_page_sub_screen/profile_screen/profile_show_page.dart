@@ -4,7 +4,7 @@ import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
-import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart
+import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
 import 'package:spark_up/screen/logout_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -377,27 +377,27 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    itemCount: Profile.manager.interestTypes.length,
+                                    itemCount: ['Loading...'].length,
                                     itemBuilder: (context, index) {
-                                      final tag = Profile.manager.interestTypes[index];
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                                        child: Skeleton.leaf(child:Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
-                                            border: Border.all(
-                                              color: const Color(0xFFF16743),
-                                              width: 1,
+                                        child: Skeleton.leaf(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(20),
+                                              border: Border.all(
+                                                color: const Color(0xFFF16743),
+                                                width: 1,
+                                              ),
                                             ),
-                                          ),
-                                          child: Text(
-                                            '#$tag',
-                                            style: const TextStyle(
-                                              color: Color(0xFFF16743),
-                                              fontSize: 12,
-                                            ),
+                                            child: const Text(
+                                              '#Loading...',
+                                              style: TextStyle(
+                                                color: Color(0xFFF16743),
+                                                fontSize: 12,
+                                              ),
                                           ),
                                         ),
                                         ),
