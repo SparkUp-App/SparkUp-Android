@@ -33,35 +33,51 @@ class _ProfileShowPageState extends State<ProfileShowPage>
   }
 
   Widget _buildStatColumn(String label, String count, IconData stateIcon) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Row(
-          children: [
-            Icon(
-              stateIcon,
+    return InkWell(
+      onTap: () {
+        switch (label) {
+          case "Participated":
+            Navigator.of(context)
+                .pushNamed(RouteMap.participatedPage, arguments: widget.userId);
+            break;
+          case "Rating":
+            Navigator.of(context)
+                .pushNamed(RouteMap.ratingPage, arguments: widget.userId);
+            break;
+        }
+      },
+      splashColor: Colors.grey,
+      highlightColor: Colors.grey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
               color: Colors.white,
-              size: 30,
+              fontWeight: FontWeight.w600,
             ),
-            Text(
-              count,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w600,
+          ),
+          Row(
+            children: [
+              Icon(
+                stateIcon,
                 color: Colors.white,
+                size: 30,
               ),
-            ),
-          ],
-        ),
-      ],
+              Text(
+                count,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -88,7 +104,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       Container(
                         height: 70,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -158,8 +174,9 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, RouteMap.editProfile, arguments: profile),
+                      onPressed: () => Navigator.pushNamed(
+                          context, RouteMap.editProfile,
+                          arguments: profile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
@@ -496,7 +513,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed(RouteMap.logoutPage);
+                              Navigator.of(context)
+                                  .pushNamed(RouteMap.logoutPage);
                             },
                           ),
                         ],
@@ -522,14 +540,17 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             color: const Color(0xFFF7AF8B),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 8),
                               itemCount: profile.interestTypes.length,
                               itemBuilder: (context, index) {
                                 final tag = profile.interestTypes[index];
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
@@ -613,7 +634,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
           }
         });
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
