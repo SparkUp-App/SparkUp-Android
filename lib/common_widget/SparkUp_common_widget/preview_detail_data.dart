@@ -204,7 +204,7 @@ class InfoPreviewCard extends StatelessWidget {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Color(0xFFE9765B).withOpacity(0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -212,7 +212,7 @@ class InfoPreviewCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.blue,
+                color: Color(0xFFE9765B),
                 letterSpacing: 0.3,
               ),
             ),
@@ -248,7 +248,7 @@ class InfoPreviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -259,7 +259,7 @@ class InfoPreviewCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: Color.fromARGB(255, 255, 159, 138).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -267,7 +267,7 @@ class InfoPreviewCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 255, 159, 138),
                           letterSpacing: 0.3,
                         ),
                       ),

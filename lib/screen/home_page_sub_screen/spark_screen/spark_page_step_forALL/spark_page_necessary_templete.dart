@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
-import 'package:spark_up/common_widget/sparkUp_int_counter.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
-import 'package:spark_up/common_widget/sparkUp_multiTopic_input.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTopic_input.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
-
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenSize, BuildContext context, Function setState) {
   return [
     Step(
@@ -16,18 +18,16 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
           NoteCard(message: "First, let’s decide some basic information for your activity."),
           
           SizedBox(height: 16,),
-          profileTextfield(
+          Textfield(
             label: "Title",
             hintLabel: "Enter Title Here",
-            textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
             isRequired: true,
           ),
-          profileTextfield(
+          Textfield(
             label: "Location",
             hintLabel: "Enter Location Here",
-            textFieldIcon: 'assets/icons/phone.svg',
             value: basePost.location,
             onChanged: (newValue) => setState(() => basePost.location = newValue ?? ""),
             isRequired: true,

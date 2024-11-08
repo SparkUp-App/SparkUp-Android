@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
 import 'package:intl/intl.dart';
 
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 List<Step> createStudySteps(int currentStep, BasePost basePost, Function setState) {
   return [
     Step(
@@ -11,11 +14,10 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
       content: Column(
         children: [
           NoteCard(message: "What is the topic of your study? It can be a book or an issue."),
-          profileTextfield(
+          Textfield(
             label: 'Kind of study topic',
             hintLabel: 'Enter topic',
             maxLine: 1,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Kind of study topic"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -23,11 +25,10 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
               });
             },
           ),
-          profileTextfield(
+          Textfield(
             label: 'Introduce the Topic',
             hintLabel: 'Enter introduce',
             maxLine: 4,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Introduce the Topic"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -44,11 +45,10 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
       content: Column(
         children: [
           NoteCard(message: "What are the participation guidelines that participants need to know?"),
-          profileTextfield(
+          Textfield(
             label: 'Participation Guidelines',
             hintLabel: 'Enter Guidelines',
             maxLine: 1,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Participation Guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -56,11 +56,10 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
               });
             },
           ),
-          profileTextfield(
+          Textfield(
             label: 'Entry Fee',
             hintLabel: 'Enter Entry Fee',
             maxLine: 1,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Entry Fee"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -77,11 +76,10 @@ Step(
   content: Column(
     children: [
       NoteCard(message: "Anything you would like to add to the participants"),
-      profileTextfield(
+      Textfield(
         label: 'Notes',
         hintLabel: 'Enter requirements',
         maxLine: 5,
-        textFieldIcon: 'assets/icons/user.svg',
         value: basePost.content ?? "",
         onChanged: (newValue) {
           setState(() {

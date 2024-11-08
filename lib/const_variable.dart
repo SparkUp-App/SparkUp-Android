@@ -15,7 +15,8 @@ List<String> smokeList = Smoke.values.map((element)=>element.label).toList();
 List<String> drinkingList = Drinking.values.map((element) => element.label).toList();
 List<String> marijuanaList = Marijuana.values.map((element)=>element.label).toList();
 List<String> drugsList = Drugs.values.map((element) => element.label).toList();
-
+List<String> liveList = ['Apartment', 'House','Shared Accommodation','Suite'];
+List<String> liveGenderList = ['Male','Female','No limit'];
 //Phone Number Checker 10 ~ 15 Digits
 RegExp phoneRegex = RegExp(r'^\d{10,15}$');
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spark_up/data/base_post.dart';
-import 'package:spark_up/common_widget/preview_detail_data.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
 Step previewStep(BasePost basePost) {
   return Step(
     title: const SizedBox.shrink(),

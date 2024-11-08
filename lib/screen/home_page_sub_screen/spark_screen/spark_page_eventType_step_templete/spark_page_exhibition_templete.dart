@@ -12,71 +12,39 @@ import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
-List<Step> createSocialSteps(int currentStep, BasePost basePost, Function setState) {
+List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function setState) {
   return [
     Step(
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: 'Please briefly introduce your activity.'),
+          NoteCard(message: 'Please give a brief introduction to the exhibition.'),
           Textfield(
-            label: 'Your activity',
-            hintLabel: 'Please desribe Your activity',
+            label: 'Introduction',
+            hintLabel: 'Please Introduction',
             maxLine: 5,
-            value: basePost.attributes["Your activity"] ?? "",
+            value: basePost.attributes["Introduction"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Your activity"] = newValue ?? "";
+                basePost.attributes["Introduction"] = newValue ?? "";
               });
             },
           ),
-          DoubleTextFieldToMakeMap(
-            label: "Activity Schedule", 
-            firstHintLabel: "Time", 
-            secondHintLabel: "Schedule", 
-            values: basePost.attributes["Activity Schedule"] ?? {}, 
-            onChanged:(newValues) {
+          Textfield(
+            label: 'Ticket price',
+            hintLabel: 'Please Ticket price',
+            maxLine: 5,
+            value: basePost.attributes["Ticket price"] ?? "",
+            onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Activity Schedule"] = newValues;
+                basePost.attributes["Ticket price"] = newValue ?? "";
               });
             },
-          )
+          ),
+          
         ],
       ),
       isActive: currentStep >= 2,
-    ),
-    Step(
-      title: const SizedBox.shrink(),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          NoteCard(message: "What kind of participants are you looking for ?"),
-          Textfield(
-            label: 'Requirements for Participants',
-            hintLabel: 'Enter Requirements for Participants',
-            maxLine: 4,
-            value: basePost.attributes["Requirements for Participants"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Requirements for Participants"] = newValue ?? "";
-              });
-            },
-          ),
-          Textfield(
-            label: 'Entry fee (optional)',
-            hintLabel: 'Enter Entry fee',
-            maxLine: 1,
-            value: basePost.attributes["Entry fee"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Entry fee"] = newValue ?? "";
-              });
-            },
-          ),
-        ],
-      ),
-      isActive: currentStep >= 3,
     ),
     Step(
       title: const SizedBox.shrink(),
@@ -96,7 +64,7 @@ List<Step> createSocialSteps(int currentStep, BasePost basePost, Function setSta
           ),
         ],
       ),
-      isActive: currentStep >= 4,
+      isActive: currentStep >= 3,
     ),
   ];
 }

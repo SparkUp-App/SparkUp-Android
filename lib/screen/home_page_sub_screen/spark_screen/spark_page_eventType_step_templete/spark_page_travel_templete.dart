@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
-import 'package:spark_up/common_widget/sparkUp_multiDate_input.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiDate_input.dart';
 import 'package:intl/intl.dart';
-
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setState) {
   return [
     Step(
@@ -12,11 +14,10 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
       content: Column(
         children: [
           NoteCard(message: "Please briefly introduce your travel."),
-          profileTextfield(
+          Textfield(
             label: 'Introduce',
             hintLabel: 'Enter Introduce',
             maxLine: 5,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Introduce"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -24,11 +25,10 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
               });
             },
           ),
-          profileTextfield(
+          Textfield(
             label: 'Price',
             hintLabel: 'Enter Price',
             maxLine: 1,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Price"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -36,11 +36,10 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
               });
             },
           ),
-          profileTextfield(
+          Textfield(
             label: 'Participation guidelines',
             hintLabel: 'Enter Participation guidelines',
             maxLine: 1,
-            textFieldIcon: 'assets/icons/user.svg',
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {
@@ -73,11 +72,10 @@ Step(
   content: Column(
     children: [
       NoteCard(message: "Anything you would like to add to the participants"),
-      profileTextfield(
+      Textfield(
         label: 'Notes',
         hintLabel: 'Enter requirements',
         maxLine: 5,
-        textFieldIcon: 'assets/icons/user.svg',
         value: basePost.content ?? "",
         onChanged: (newValue) {
           setState(() {

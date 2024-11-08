@@ -14,6 +14,8 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_ste
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_study_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_travel_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_parade_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_exhibition_templete.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -185,6 +187,12 @@ List<Step> getSteps(String eventType) {
       break;
     case  'Travel':
       steps.addAll(createTravelSteps(_currentStep, basePost,setState));
+      break;
+    case  'Parade':
+      steps.addAll(createParadeSteps(_currentStep, basePost,setState));
+      break;
+    case  'Exhibition':
+      steps.addAll(createExhibitionSteps(_currentStep, basePost,setState));
       break;
     default:
       steps.add(_buildDefaultStep());

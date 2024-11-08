@@ -7,7 +7,7 @@ import 'package:spark_up/network/path/applicant_path.dart';
 import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:intl/intl.dart';
-import 'package:spark_up/common_widget/preview_detail_data.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
