@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                     builder: (context) => const sparkPageEventTypeDecide(),
                   ));
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 255, 197, 170),
                 elevation: 0.0,
                 child: Image.asset(
                   'assets/sparkUpMainIcon.png',
