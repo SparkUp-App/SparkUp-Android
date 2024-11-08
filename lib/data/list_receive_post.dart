@@ -1,6 +1,6 @@
 class ListReceivePost {
   late int postId;
-  late String posterNickname;
+  late String? posterNickname;
   late String type;
   late String title;
   late DateTime eventStartDate;
