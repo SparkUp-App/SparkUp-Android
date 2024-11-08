@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
-import 'package:spark_up/network/path/profile_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
 
@@ -17,13 +16,7 @@ void main() async {
   noProfile = result[1];
 
   if (userId != null) Network.manager.userId = int.parse(userId!);
-  if (noProfile == "No") {
-    final data = await Network.manager.sendRequest(
-        method: RequestMethod.get, path: ProfilePath.view, pathMid: [userId!]);
-    if (data["status"] == "success") {
-      Profile.manager = Profile.initfromData(data["data"]);
-    }
-  } else if(noProfile == "Yes"){
+  if(noProfile == "Yes"){
     Profile.manager = Profile.initfromDefault();
   }
   runApp(const ImagePrecacheWrapper());

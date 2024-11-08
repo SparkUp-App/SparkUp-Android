@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class intCounterBox extends StatefulWidget {
   final String label;
@@ -54,9 +53,9 @@ class _intCounterBoxState extends State<intCounterBox> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 45),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 45),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black12),
+                        borderSide: const BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -64,7 +63,7 @@ class _intCounterBoxState extends State<intCounterBox> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black12),
+                        borderSide: const BorderSide(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
@@ -74,8 +73,8 @@ class _intCounterBoxState extends State<intCounterBox> {
                     ),
                     textAlign: TextAlign.center,
                     spacing: 0,
-                    incrementIcon: Icon(Icons.add, color: Colors.black26, size: 20),
-                    decrementIcon: Icon(Icons.remove, color: Colors.black26, size: 20),
+                    incrementIcon: const Icon(Icons.add, color: Colors.black26, size: 20),
+                    decrementIcon: const Icon(Icons.remove, color: Colors.black26, size: 20),
                   ),
                 ],
               ),

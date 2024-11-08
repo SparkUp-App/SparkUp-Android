@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileDoubleTextFieldToMakeMap extends StatefulWidget {
   const ProfileDoubleTextFieldToMakeMap({
@@ -94,9 +93,9 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
         decoration: InputDecoration(
           filled: true,
           fillColor: backgroundcolor,
-          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12),
+            borderSide: const BorderSide(color: Colors.black12),
             borderRadius: BorderRadius.circular(8.0),
           ),
           focusedBorder: OutlineInputBorder(
@@ -104,7 +103,7 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
             borderRadius: BorderRadius.circular(8.0),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12),
+            borderSide: const BorderSide(color: Colors.black12),
             borderRadius: BorderRadius.circular(8.0),
           ),
           hintText: hintText,
@@ -129,11 +128,11 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
             controllerPairs[index].first,
             widget.firstHintLabel,
             true,
-            Color(0xFFE9765B),
+            const Color(0xFFE9765B),
             Colors.white.withOpacity(0.8),
             Colors.white,
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.0),
             child: Text(
               ":",
@@ -153,10 +152,10 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
             Colors.black,
           ),
           IconButton(
-            icon: Icon(Icons.delete, size: 20), 
+            icon: const Icon(Icons.delete, size: 20), 
             onPressed: () => _removeInputPair(index),
             color: Colors.black26,
-            padding: EdgeInsets.all(4), 
+            padding: const EdgeInsets.all(4), 
           ),
         ],
       ),
@@ -181,21 +180,21 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextField
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 4), 
+          const SizedBox(height: 4), 
           for (int i = 0; i < controllerPairs.length; i++) _buildInputRow(i),
-          SizedBox(height: 4), 
+          const SizedBox(height: 4), 
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _addNewInputPair,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFE9765B),
+                backgroundColor: const Color(0xFFE9765B),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), 
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), 
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 20, 

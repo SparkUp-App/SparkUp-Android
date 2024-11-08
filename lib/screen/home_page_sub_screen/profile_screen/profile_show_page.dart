@@ -5,7 +5,6 @@ import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
-import 'package:spark_up/screen/logout_page.dart';
 
 class ProfileShowPage extends StatefulWidget {
   const ProfileShowPage(
@@ -158,7 +157,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         ),
                       ),
                       onPressed: () =>
-                          Navigator.pushNamed(context, RouteMap.editProfile),
+                          Navigator.pushNamed(context, RouteMap.editProfile, arguments: profile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
@@ -252,13 +251,13 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           profileHeaderWidget(context),
                           Container(
                             height: 50,
-                            color: Color(0xFFF7AF8B),
+                            color: const Color(0xFFF7AF8B),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                              itemCount: Profile.manager.interestTypes.length,
+                              itemCount: profile.interestTypes.length,
                               itemBuilder: (context, index) {
-                                final tag = Profile.manager.interestTypes[index];
+                                final tag = profile.interestTypes[index];
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 4),
                                   child: Container(

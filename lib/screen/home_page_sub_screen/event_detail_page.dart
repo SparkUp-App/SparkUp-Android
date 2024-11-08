@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/data/post_view.dart';
@@ -128,7 +127,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (context.mounted) {
       if (response["status"] == "success") {
         setState(() {
-          postData.liked = !postData.liked!;
+          postData.liked = !postData.liked;
         });
       } else {
         showDialog(
@@ -157,7 +156,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (context.mounted) {
       if (response["status"] == "success") {
         setState(() {
-          postData.bookmarked = !postData.bookmarked!;
+          postData.bookmarked = !postData.bookmarked;
         });
       } else {
         showDialog(
@@ -317,7 +316,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                       IconButton(
                         onPressed: () => pressLikedProcess(),
                         icon: Icon(
-                          postData.liked!
+                          postData.liked
                               ? Icons.favorite
                               : Icons.favorite_border,
                           color: const Color.fromARGB(255, 233, 113, 153),
@@ -348,7 +347,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
-                                      "#${postData?.type ?? ''}",
+                                      "#${postData.type}",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -356,7 +355,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                     ),
                                   ),
                                   Text(
-                                    postData?.title ?? '',
+                                    postData.title,
                                     style: const TextStyle(
                                       fontSize: 24.0,
                                       color: Colors.white,
@@ -384,7 +383,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                                 ),
                                               ),
                                               Text(
-                                                postData?.nickname ?? '',
+                                                postData.nickname,
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -394,7 +393,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            'Posted: ${postData?.eventStartDate != null ? DateFormat('yyyy/MM/dd').format(postData!.eventStartDate) : ''}',
+                                            'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
                                             style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 14,
@@ -414,7 +413,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
-                                                "${postData?.likes ?? 0}",
+                                                "${postData.likes}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -432,7 +431,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
-                                                "${postData?.comments ?? 0}",
+                                                "${postData.comments}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14,
@@ -495,7 +494,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     return Column(
       children: [
         Expanded(
-            child: Container(
+            child: SizedBox(
               child: SingleChildScrollView(
                 child: InfoPreviewCard(
                   title: postData.title,
@@ -601,7 +600,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ],
               ),
             )),
-        Divider(
+        const Divider(
           thickness: 1,
           color: Colors.grey,
         ),
@@ -609,21 +608,21 @@ class _EventDetailPageState extends State<EventDetailPage>
           children: [
             Expanded(
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextField(
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: "Write a comment...",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.deepOrange,
                         ),
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(color: Colors.grey)),
+                          borderSide: const BorderSide(color: Colors.grey)),
                     ),
                     cursorColor: Colors.deepOrange,
                   ),
@@ -633,7 +632,7 @@ class _EventDetailPageState extends State<EventDetailPage>
             else
               IconButton(
                 onPressed: () => sendingProcess(),
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 color: Colors.deepOrange,
               )
           ],
@@ -781,7 +780,7 @@ class _CommentBlockState extends State<CommentBlock> {
                       Text(widget.comment.content),
                       Text(
                         "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       )
                     ],
                   ))),
