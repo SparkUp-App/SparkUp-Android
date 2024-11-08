@@ -3,9 +3,15 @@ import 'package:spark_up/common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
+import 'package:spark_up/common_widget/event_multiTopic_input.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
+
 List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenSize, BuildContext context, Function setState) {
+            Map<String, List<String>> initialData = {
+            "产品特点": ["简单易用", "功能强大"],
+            "使用场景": ["办公环境", "家庭使用"],
+          };
   return [
     Step(
       title: const SizedBox.shrink(),
@@ -38,6 +44,13 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             initialValue: 4,
             onChanged: (newValue) {
               basePost.numberOfPeopleRequired = newValue.toInt();
+            },
+          ),
+
+          TopicMultiInput(
+            topicsData: initialData,
+            onChanged: (Map<String, List<String>> newData) {
+              print(newData); 
             },
           ),
           // 修改這裡的日期時間選擇器邏輯

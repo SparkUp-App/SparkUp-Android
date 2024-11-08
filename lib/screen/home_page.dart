@@ -48,6 +48,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<bool> _hasVisited = [false, false, false, false];
 
+  bool _isKeyboardVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -66,64 +68,75 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    if (isKeyboardVisible != _isKeyboardVisible) {
+      setState(() {
+        _isKeyboardVisible = isKeyboardVisible;
+      });
+    }
     return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        await showDialog(
-          context: context,
-          builder: (context) => const ExitConfirmationDialog(),
-        );
-      },
-      child: Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            LazyLoadPage(
-              shouldBuild: _hasVisited[0],
-              builder: () => const EventShowPage(),
-            ),
-            LazyLoadPage(
-              shouldBuild: _hasVisited[1],
-              builder: () => const BookmarkPage(),
-            ),
-            LazyLoadPage(
-              shouldBuild: _hasVisited[2],
-              builder: () => const NotificationPage(),
-            ),
-            LazyLoadPage(
-              shouldBuild: _hasVisited[3],
-              builder: () => ProfileShowPage(
-                userId: Network.manager.userId!,
-                editable: true,
+
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          await showDialog(
+            context: context,
+            builder: (context) => const ExitConfirmationDialog(),
+          );
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: _selectedIndex,
+            children: [
+              LazyLoadPage(
+                shouldBuild: _hasVisited[0],
+                builder: () => const EventShowPage(),
+              ),
+              LazyLoadPage(
+                shouldBuild: _hasVisited[1],
+                builder: () => const BookmarkPage(),
+              ),
+              LazyLoadPage(
+                shouldBuild: _hasVisited[2],
+                builder: () => const CenterTest(),
+              ),
+              LazyLoadPage(
+                shouldBuild: _hasVisited[3],
+                builder: () => ProfileShowPage(
+                  userId: Network.manager.userId!,
+                  editable: true,
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: Visibility(
+            visible: !_isKeyboardVisible,
+            child: Container(
+              margin: const EdgeInsets.only(top: 25),
+              width: 55,
+              height: 55,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const sparkPageEventTypeDecide(),
+                  ));
+                },
+                backgroundColor: Color.fromARGB(255, 255, 197, 170),
+                elevation: 0.0,
+                child: Image.asset(
+                  'assets/sparkUpMainIcon.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ],
-        ),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(top: 25),
-          width: 55,
-          height: 55,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const sparkPageEventTypeDecide(),
-              ));
-            },
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            child: Image.asset(
-              'assets/sparkUpMainIcon.png',
-              fit: BoxFit.contain,
-            ),
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Theme(
-          data: ThemeData(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar:Theme(
+            data: ThemeData(
               splashColor: Colors.transparent,
-              highlightColor: Colors.transparent),
-          child: BottomNavigationBar(
+              highlightColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -148,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                   size: 25.0,
                 ),
                 activeIcon: SparkIcon(
+
                   icon: SparkIcons.bookmark,
                   color: Color(0xFFF77D43),
                   size: 25.0,
@@ -165,6 +179,7 @@ class _HomePageState extends State<HomePage> {
                   size: 25.0,
                 ),
                 activeIcon: SparkIcon(
+
                   icon: SparkIcons.message,
                   color: Color(0xFFF77D43),
                   size: 25.0,
@@ -186,13 +201,13 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
             currentIndex:
-                _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
+            _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
             selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.grey,
             onTap: _onItemTapped,
           ),
-        ),
-      ),
+          ),
+        )
     );
   }
 }

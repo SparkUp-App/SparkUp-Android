@@ -32,6 +32,7 @@ class _NextPageState extends State<NextPage> {
   BasePost basePost = BasePost.initfromDefaule(Network.manager.userId!);
   late double _screenSize;
   bool isLoading = false;
+  bool _isKeyboardVisible = false;
 
   @override
   void initState() {
@@ -98,6 +99,12 @@ class _NextPageState extends State<NextPage> {
   }
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    if (isKeyboardVisible != _isKeyboardVisible) {
+      setState(() {
+        _isKeyboardVisible = isKeyboardVisible;
+      });
+    }
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -139,7 +146,7 @@ class _NextPageState extends State<NextPage> {
                 steps: steps,
               ),
             ),
-            _buildNavigationButtons(),
+            if(!isKeyboardVisible) _buildNavigationButtons(),
           ],
         ),
       ),
