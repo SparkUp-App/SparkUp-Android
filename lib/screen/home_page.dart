@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
               ),
               LazyLoadPage(
                 shouldBuild: _hasVisited[2],
-                builder: () => const CenterTest(),
+                builder: () => const NotificationPage(),
               ),
               LazyLoadPage(
                 shouldBuild: _hasVisited[3],
