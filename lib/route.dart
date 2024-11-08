@@ -23,6 +23,7 @@ class RouteMap{
   static const editProfile = "/profile_page";
   static const sparkUpEventTypeSelect = "/sparkPageEventTypeDecide";
   static const logoutPage = "/logoutPage";
+  
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage : (context) => const LoginPage(),

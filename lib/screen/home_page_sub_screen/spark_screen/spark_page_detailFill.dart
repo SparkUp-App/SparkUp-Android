@@ -13,6 +13,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_ste
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_study_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_travel_templete.dart';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -182,6 +183,9 @@ List<Step> getSteps(String eventType) {
     case 'Speech':
       steps.addAll(createSpeechSteps(_currentStep, basePost,setState));
       break;
+    case  'Travel':
+      steps.addAll(createTravelSteps(_currentStep, basePost,setState));
+      break;
     default:
       steps.add(_buildDefaultStep());
       break;
@@ -224,38 +228,55 @@ void updateStepperShow(){
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-        ElevatedButton(
-          onPressed: _currentStep > 0 ? _goToPreviousStep : null,
-          child: const Text('上一步'),
-        ),
-        /*ElevatedButton(
-          onPressed: () {
-            print('userId: ${basePost.userId}');
-            print('type: ${basePost.type}');
-            print('title: ${basePost.title}');
-            print('content: ${basePost.content}');
-            print('eventStartDate: ${basePost.eventStartDate}');
-            print('eventEndDate: ${basePost.eventEndDate}');
-            print('numberOfPeopleRequired: ${basePost.numberOfPeopleRequired}');
-            print('location: ${basePost.location}');
-            print('attributes: ${basePost.attributes}');
-            print('postId: ${basePost.postId}');steps
-            print('posterNickname: ${basePost.posterNickname}');
-            print('likes: ${basePost.likes}');
-            print('liked: ${basePost.liked}');
-            print('bookmarks: ${basePost.bookmarks}');
-            print('bookmarked: ${basePost.bookmarked}');
-            print('comments: ${basePost.comments}');
-            print('applicants: ${basePost.applicants}');
-          },
-          child: Text('testing'),
-        ),*/
-        ElevatedButton(
-          onPressed: _currentStep < steps.length - 1 ? _goToNextStep : createEvent,
-          child: Text(_currentStep < steps.length - 1 ? '下一步' : '發送'),
-        ),
+          SizedBox(
+            width: 150,
+            height: 47,
+            child: ElevatedButton(
+              onPressed: _currentStep > 0 
+                ? _goToPreviousStep 
+                : () => showDialog(
+                    context: context,
+                    builder: (context) => regretDialog(),
+                  ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _currentStep > 0 ? const Color(0xFFF16743) : Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                _currentStep > 0 ? '上一步':"取消建立",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 150,
+            height: 47,
+            child: ElevatedButton(
+              onPressed: _currentStep < steps.length - 1 ? _goToNextStep : createEvent,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:_currentStep < steps.length - 1 ?const Color(0xFFF16743):Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                _currentStep < steps.length - 1 ? '下一步' : '發送',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
