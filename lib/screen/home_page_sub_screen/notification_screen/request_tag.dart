@@ -4,6 +4,7 @@ import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/applicant_list_received.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/applicant_path.dart';
+import 'package:spark_up/route.dart';
 
 class RequestTag extends StatefulWidget {
   const RequestTag({super.key});
@@ -138,24 +139,34 @@ class _RequestTagState extends State<RequestTag>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         //User Head
-                        Container(
-                          child: const Icon(
-                            Icons.circle,
-                            color: Colors.black12,
-                            size: 60.0,
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                              RouteMap.profileShowPage,
+                              arguments: (element.userId, false)),
+                          child: Container(
+                            child: const Icon(
+                              Icons.circle,
+                              color: Colors.black12,
+                              size: 60.0,
+                            ),
                           ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 15.0),
-                              child: Text(
-                                element.nickname,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  RouteMap.profileShowPage,
+                                  arguments: (element.userId, false)),
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 15.0),
+                                child: Text(
+                                  element.nickname,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             Container(
