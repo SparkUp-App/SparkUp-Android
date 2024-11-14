@@ -16,12 +16,12 @@ class SparkIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-          icon.path,
-          width: size,
-          height: size,
-          colorFilter:
-              color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
-        );
+      icon.path,
+      width: size,
+      height: size,
+      colorFilter:
+          color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+    );
   }
 }
 
@@ -67,6 +67,27 @@ enum SparkIcons {
   userBorder("assets/icons/user_border.svg"),
   users('assets/icons/users.svg'),
   work('assets/icons/work.svg'),
+  bars('assets/icons/bars.svg'),
+  competition('assets/icons/competition.svg'),
+  exhibition('assets/icons/exhibition.svg'),
+  file('assets/icons/file.svg'),
+  info('assets/icons/info.svg'),
+  license('assets/icons/license.svg'),
+  logout('assets/icons/logout.svg'),
+  meal('assets/icons/meal.svg'),
+  money('assets/icons/money.svg'),
+  more('assets/icons/more.svg'),
+  notification('assets/icons/notification.svg'),
+  outline('assets/icons/outline.svg'),
+  parade('assets/icons/parade.svg'),
+  roommate('assets/icons/roommate.svg'),
+  search('assets/icons/search.svg'),
+  social('assets/icons/social.svg'),
+  speech('assets/icons/speech.svg'),
+  sport('assets/icons/sport.svg'),
+  study('assets/icons/study.svg'),
+  trash('assets/icons/trash.svg'),
+  travel('assets/icons/travel.svg'),
   zodiacSign('assets/icons/zodiac_sign.svg');
 
   final String path;
