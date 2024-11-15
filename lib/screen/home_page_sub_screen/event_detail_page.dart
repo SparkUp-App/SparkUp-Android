@@ -8,6 +8,7 @@ import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:math';
 
@@ -357,68 +358,68 @@ class _EventDetailPageState extends State<EventDetailPage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                        Skeleton.leaf(
-                          child:Container(
-                            height: 20,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              "Hold By:AAAAA", // 使用隨機生成的空白字符
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                height: 1.5,
-                              ),
-                            ),
+                    Skeleton.leaf(
+                      child:Container(
+                        height: 20,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "Hold By:AAAAA", // 使用隨機生成的空白字符
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        Skeleton.leaf(
-                          child:Container(
-                            height: 20,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              "Posted:2024/01/10", // 使用隨機生成的空白字符
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                height: 1.5,
-                              ),
-                            ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Skeleton.leaf(
+                      child:Container(
+                        height: 20,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "Posted:2024/01/10", // 使用隨機生成的空白字符
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            height: 1.5,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
                 ),
-              
+
                 Skeleton.leaf(
-                          child:Container(
-                            height: 25,
-                            width:135,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              "Hold By:AAAAA", // 使用隨機生成的空白字符
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                        ),
+                  child:Container(
+                    height: 25,
+                    width:135,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      "Hold By:AAAAA", // 使用隨機生成的空白字符
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ]
@@ -616,17 +617,96 @@ class _EventDetailPageState extends State<EventDetailPage>
         },
         body: TabBarView(
           controller: tabController,
-          children: [
-            /*
+          children: !initialing
+              ? [
                   detailContent(),
                   commentContent(),
-                  */
-          ],
+                ]
+              : [
+                  detailContentSkeleton(),
+                  detailContentSkeleton(),
+                ],
         ),
       ),
     );
   }
-
+Widget detailContentSkeleton() {
+    return Column(
+      children: [
+        Expanded(
+            child: SizedBox(
+              child: SingleChildScrollView(
+                child: InfoPreviewCardSkeleton(),
+              ),
+            )),
+        const Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                margin:
+                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: ElevatedButton(
+                  onPressed: () => pressBookMarkedProcess(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.all(10.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.bookmark,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Bookmark",
+                        style: const TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin:
+                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: ElevatedButton(
+                  onPressed: () => pressAplyProcess(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.all(10.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        (Icons.check),
+                        color: Colors.white,
+                      ),
+                      Text(
+                         'Apply',
+                        style: const TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
   Widget detailContent() {
     return Column(
       children: [
