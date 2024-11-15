@@ -69,9 +69,15 @@ class _RequestTagState extends State<RequestTag>
         : RefreshIndicator(
             child: ListView(
               children: [
-                for (int index = 0;
-                    index < haveApplicantEvents.length;
-                    index++) ...[applyDroper(index)]
+                for (var element in haveApplicantEvents)
+                  ApplyDroper(applicantListReceived: element),
+                if (haveApplicantEvents.isEmpty)
+                  const Center(
+                    child: Text(
+                      "Nobody Apply",
+                      style: TextStyle(color: Colors.black26),
+                    ),
+                  ),
               ],
             ),
             onRefresh: () async {
@@ -80,65 +86,83 @@ class _RequestTagState extends State<RequestTag>
               return;
             });
   }
+}
 
-  Widget applyDroper(int index) {
+class ApplyDroper extends StatefulWidget {
+  const ApplyDroper({super.key, required this.applicantListReceived});
+
+  final ApplicantListReceived applicantListReceived;
+
+  @override
+  State<ApplyDroper> createState() => _ApplyDroperState();
+}
+
+class _ApplyDroperState extends State<ApplyDroper> {
+  bool dropStatus = false;
+  final buttonKey = GlobalKey();
+
+  void removeApplyUserCard(ApplicantUser applicantUser) {
+    widget.applicantListReceived.applicants.remove(applicantUser);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-            decoration: BoxDecoration(
-                borderRadius: dropDownStatus[index]
-                    ? const BorderRadius.only(
-                        topRight: Radius.circular(10.0),
-                        topLeft: Radius.circular(10.0))
-                    : BorderRadius.circular(10.0),
-                color: const Color(0xFFF5A278)),
-            margin: const EdgeInsets.all(10.0),
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  haveApplicantEvents[index].postTitle,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.0,
+        InkWell(
+          onTap: () {
+            (buttonKey.currentWidget as IconButton).onPressed?.call();
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: dropStatus
+                      ? const BorderRadius.only(
+                          topRight: Radius.circular(10.0),
+                          topLeft: Radius.circular(10.0))
+                      : BorderRadius.circular(10.0),
+                  color: const Color(0xFFF5A278)),
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.applicantListReceived.postTitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.0,
+                    ),
                   ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      dropDownStatus[index] = !dropDownStatus[index];
-                      setState(() {});
-                    },
-                    icon: dropDownStatus[index]
-                        ? const Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                          )
-                        : const Icon(
-                            Icons.keyboard_arrow_up,
-                            color: Colors.white,
-                          ))
-              ],
-            )),
-        if (dropDownStatus[index]) ...[
-          for (var element in haveApplicantEvents[index].applicants) ...[
+                  IconButton(
+                      key: buttonKey,
+                      onPressed: () {
+                        dropStatus = !dropStatus;
+                        setState(() {});
+                      },
+                      icon: dropStatus
+                          ? const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              Icons.keyboard_arrow_up,
+                              color: Colors.white,
+                            ))
+                ],
+              )),
+        ),
+        if (dropStatus) ...[
+          for (var element in widget.applicantListReceived.applicants) ...[
             ApplyUserCard(
               applicantUser: element,
-              postId: haveApplicantEvents[index].postId,
+              postId: widget.applicantListReceived.postId,
               removeApplyUserCard: removeApplyUserCard,
             )
           ]
         ]
       ],
     );
-  }
-
-  void removeApplyUserCard(ApplicantUser applicantUser, int postId) {
-    haveApplicantEvents
-        .firstWhere((event) => event.postId == postId)
-        .applicants
-        .remove(applicantUser);
   }
 }
 
@@ -151,7 +175,7 @@ class ApplyUserCard extends StatefulWidget {
 
   final int postId;
   final ApplicantUser applicantUser;
-  final Function(ApplicantUser, int) removeApplyUserCard;
+  final Function(ApplicantUser) removeApplyUserCard;
 
   @override
   State<ApplyUserCard> createState() => _ApplyUserCardState();
@@ -186,7 +210,7 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
               builder: (context) =>
                   const SystemMessage(content: "Approve Successs"));
           approve = true;
-          widget.removeApplyUserCard(widget.applicantUser, widget.postId);
+          widget.removeApplyUserCard(widget.applicantUser);
         } else {
           showDialog(
               context: context,
@@ -224,7 +248,7 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
               builder: (context) =>
                   const SystemMessage(content: "Reject Successs"));
           reject = true;
-          widget.removeApplyUserCard(widget.applicantUser, widget.postId);
+          widget.removeApplyUserCard(widget.applicantUser);
         } else {
           showDialog(
               context: context,
