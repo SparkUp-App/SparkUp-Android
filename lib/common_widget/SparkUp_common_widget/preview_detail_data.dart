@@ -218,13 +218,14 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _buildAttributeValue(value),
+          _buildAttributeValue(key,value),
         ],
       ),
     );
   }
 
-  Widget _buildAttributeValue(dynamic value) {
+  Widget _buildAttributeValue(String key,dynamic value) {
+    
     if (value is String) {
       return Text(
         value,
@@ -242,8 +243,7 @@ class InfoPreviewCard extends StatelessWidget {
             _buildBulletPoint(item.toString()),
         ],
       );
-    } else if (value is Map) {
-      if (value is Map<String, List<String>>) {
+    } else if (value is Map<String, List<String>> || key == "Itinerary") {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -284,7 +284,7 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ],
         );
-      } else {
+      } else if(value is Map){
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -293,8 +293,7 @@ class InfoPreviewCard extends StatelessWidget {
           ],
         );
       }
-    }
-    return const SizedBox.shrink();
+    return const Text("無可用的值");
   }
 
   Widget _buildBulletPoint(String text, {bool isMap = false}) {

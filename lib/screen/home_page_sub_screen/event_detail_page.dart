@@ -11,6 +11,10 @@ import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:math';
+import 'package:toasty_box/toasty_box.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
+import 'package:toasty_box/toast_enums.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
@@ -136,6 +140,20 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.liked = !postData.liked;
+          if(postData.liked == true) 
+          ToastService.showSuccessToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "This event gets your like!"
+          );
+          else if(postData.liked == false )
+          ToastService.showSuccessToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "You take back your like!"
+          );
         });
       } else {
         showDialog(
@@ -165,6 +183,20 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.bookmarked = !postData.bookmarked;
+          if(postData.bookmarked == true) 
+          ToastService.showSuccessToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "You have bookmark this event!"
+          );
+          else if(postData.bookmarked == false )
+          ToastService.showSuccessToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "You have unbookmark this event!"
+          );
         });
       } else {
         showDialog(
@@ -459,12 +491,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.bookmark_border,
-                    color: Colors.white,
-                    size: 24.0,
+                  onPressed: pressBookMarkedProcess,
+                  icon: Icon(
+                    postData.bookmarked
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
                   ),
+                  color: Colors.white,
+                  
                 ),
               ],
 
@@ -646,34 +680,7 @@ Widget detailContentSkeleton() {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Container(
-                margin:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                child: ElevatedButton(
-                  onPressed: () => pressBookMarkedProcess(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    padding: const EdgeInsets.all(10.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.bookmark,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Bookmark",
-                        style: const TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          
             Expanded(
               child: Container(
                 margin:
@@ -731,36 +738,7 @@ Widget detailContentSkeleton() {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Container(
-                margin:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                child: ElevatedButton(
-                  onPressed: () => pressBookMarkedProcess(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    padding: const EdgeInsets.all(10.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        (postData.bookmarked
-                            ? Icons.bookmark
-                            : Icons.bookmark_border),
-                        color: Colors.white,
-                      ),
-                      Text(
-                        (postData.bookmarked ? "Unbookmark" : "Bookmark"),
-                        style: const TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            
             Expanded(
               child: Container(
                 margin:
