@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
@@ -69,7 +70,7 @@ class _TorateTagState extends State<TorateTag>
                 .toList());
         page++;
         pages = response["data"]["pages"];
-        noMoreData = page >= pages;
+        noMoreData = page > pages;
       } else {
         showDialog(
             context: context,
@@ -86,33 +87,42 @@ class _TorateTagState extends State<TorateTag>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return isLoading
-        ? const eventCardSkeletonList()
-        : RefreshIndicator(
-            child: ListView(
-              children: [
-                for (var element in referenceableList)
-                  RateCard(referenceListReceived: element),
-                if (referenceableList.isEmpty) ...[
-                  const Center(
-                    child: Text(
-                      "No Reference Need Submit",
-                      style: TextStyle(color: Colors.black26),
-                    ),
+    return RefreshIndicator(
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: (referenceableList.isEmpty && page > 1)
+              ? Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: const Text(
+                    "No Reference Need Submit",
+                    style: TextStyle(color: Colors.black26),
                   ),
-                ] else if (noMoreData)
-                  const Center(child: NoMoreData()),
-                if (isLoading) const eventCardSkeletonList(),
-              ],
-            ),
-            onRefresh: () async {
-              if (isLoading) return;
-              referenceableList.clear();
-              page = 1;
-              noMoreData = false;
-              await getReferenceableList();
-              return;
-            });
+                )
+              : Column(
+                  children: [
+                    for (var element in referenceableList) ...[
+                      RateCard(referenceListReceived: element),
+                    ],
+                    if (noMoreData && referenceableList.isNotEmpty) ...[
+                      const Center(child: NoMoreData()),
+                    ],
+                    if (isLoading) ...[
+                      const eventCardSkeletonList(),
+                    ]
+                  ],
+                ),
+        ),
+        onRefresh: () async {
+          if (isLoading) return;
+          referenceableList.clear();
+          page = 1;
+          noMoreData = false;
+          await getReferenceableList();
+          return;
+        });
   }
 }
 
@@ -127,7 +137,61 @@ class RateCard extends StatefulWidget {
 
 class _RateCardState extends State<RateCard> {
   int rate = 0;
+  bool isLoading = false;
+  bool rateCoplete = false;
+  bool rateAlert = false;
   final TextEditingController _commentController = TextEditingController();
+  final FocusNode _commentFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _commentFocus.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _commentController.dispose();
+  }
+
+  Future sentRateProcess() async {
+    if (isLoading) return;
+    isLoading = true;
+    setState(() {});
+
+    final response = await Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: ReferencePath.create,
+        data: {
+          "from_user_id": Network.manager.userId,
+          "to_user_id": widget.referenceListReceived.userId,
+          "post_id": widget.referenceListReceived.postId,
+          "rating": rate,
+          "content": _commentController.text
+        });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                const SystemMessage(content: "Rate Successful"));
+        rateCoplete = true;
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                content: "Something Went Wrong\nPleas Try Again Later"));
+      }
+    }
+
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +227,14 @@ class _RateCardState extends State<RateCard> {
                 style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
               const SizedBox(height: 10.0),
+              if (rateAlert) ...[
+                Container(
+                    margin: const EdgeInsets.only(left: 10.0),
+                    child: const Text(
+                      "* At Least 1 Star Score",
+                      style: TextStyle(color: Colors.red),
+                    ))
+              ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -170,7 +242,9 @@ class _RateCardState extends State<RateCard> {
                   return IconButton(
                       padding: const EdgeInsets.all(0.0),
                       onPressed: () {
+                        if (isLoading || rateCoplete) return;
                         setState(() {
+                          rateAlert = false;
                           rate = index + 1;
                         });
                       },
@@ -198,6 +272,10 @@ class _RateCardState extends State<RateCard> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
+                        onTapOutside: (event) => _commentFocus.unfocus(),
+                        onSubmitted: (value) => _commentFocus.unfocus(),
+                        focusNode: _commentFocus,
+                        enabled: !(isLoading || rateCoplete),
                         controller: _commentController,
                         maxLines: 3,
                         decoration: const InputDecoration(
@@ -210,29 +288,40 @@ class _RateCardState extends State<RateCard> {
                     ),
                   ),
                   const SizedBox(width: 25.0),
-                  Container(
-                    height: 35.0,
-                    width: 100.0,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        debugPrint('Rating: $rate');
-                        debugPrint('Comment: ${_commentController.text}');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF77D43),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  if (!rateCoplete && !_commentFocus.hasFocus)
+                    SizedBox(
+                      height: 35.0,
+                      width: 100.0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (rate == 0) {
+                            rateAlert = true;
+                            setState(() {});
+                            return;
+                          }
+                          sentRateProcess();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF77D43),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Rate',
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w400),
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                strokeWidth: 1.0,
+                                color: Colors.black12,
+                              )
+                            : const Text(
+                                'Rate',
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w400),
+                              ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ],
