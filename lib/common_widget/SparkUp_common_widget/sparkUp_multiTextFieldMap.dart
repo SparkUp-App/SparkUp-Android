@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfileDoubleTextFieldToMakeMap extends StatefulWidget {
-  const ProfileDoubleTextFieldToMakeMap({
+class DoubleTextFieldToMakeMap extends StatefulWidget {
+  const DoubleTextFieldToMakeMap({
     super.key,
     required this.label,
     required this.firstHintLabel,
@@ -17,10 +17,10 @@ class ProfileDoubleTextFieldToMakeMap extends StatefulWidget {
   final Function(Map<String, String>) onChanged;
 
   @override
-  State<ProfileDoubleTextFieldToMakeMap> createState() => _ProfileDoubleTextFieldToMakeMapState();
+  State<DoubleTextFieldToMakeMap> createState() => _ProfileDoubleTextFieldToMakeMapState();
 }
 
-class _ProfileDoubleTextFieldToMakeMapState extends State<ProfileDoubleTextFieldToMakeMap> {
+class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeMap> {
   late List<Pair<TextEditingController>> controllerPairs;
 
   @override

@@ -2,69 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiDate_input.dart';
 import 'package:intl/intl.dart';
-
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
-List<Step> createStudySteps(int currentStep, BasePost basePost, Function setState) {
+List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setState) {
   return [
     Step(
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: "What is the topic of your study? It can be a book or an issue."),
+          NoteCard(message: "Please briefly introduce your travel."),
           Textfield(
-            label: 'Kind of study topic',
-            hintLabel: 'Enter topic',
+            label: 'Introduce',
+            hintLabel: 'Enter Introduce',
+            maxLine: 5,
+            value: basePost.attributes["Introduce"] ?? "",
+            onChanged: (newValue) {
+              setState(() {
+                basePost.attributes["Introduce"] = newValue ?? "";
+              });
+            },
+          ),
+          Textfield(
+            label: 'Price',
+            hintLabel: 'Enter Price',
             maxLine: 1,
-            value: basePost.attributes["Kind of study topic"] ?? "",
+            value: basePost.attributes["Price"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Kind of study topic"] = newValue ?? "";
+                basePost.attributes["Price"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Introduce the Topic',
-            hintLabel: 'Enter introduce',
-            maxLine: 4,
-            value: basePost.attributes["Introduce the Topic"] ?? "",
+            label: 'Participation guidelines',
+            hintLabel: 'Enter Participation guidelines',
+            maxLine: 1,
+            value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Introduce the Topic"] = newValue ?? "";
+                basePost.attributes["Participation guidelines"] = newValue ?? "";
               });
             },
           ),
+          
         ],
       ),
       isActive: currentStep >= 2,
     ),
-        Step(
+    Step(
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: "What are the participation guidelines that participants need to know?"),
-          Textfield(
-            label: 'Participation Guidelines',
-            hintLabel: 'Enter Guidelines',
-            maxLine: 1,
-            value: basePost.attributes["Participation Guidelines"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Participation Guidelines"] = newValue ?? "";
-              });
-            },
-          ),
-          Textfield(
-            label: 'Entry Fee',
-            hintLabel: 'Enter Entry Fee',
-            maxLine: 1,
-            value: basePost.attributes["Entry Fee"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Entry Fee"] = newValue ?? "";
-              });
+          NoteCard(message: "Please fill in the destination according to the order of the travel itinerary."),
+          TopicMultiInput(
+            topicsData: basePost.attributes["Itinerary"] ?? <String, List<String>>{},
+            onChanged: (Map<String, List<String>> newData) {
+               basePost.attributes["Itinerary"] = newData;
             },
           ),
         ],
@@ -93,3 +89,7 @@ Step(
 ),
   ];
 }
+       
+ 
+          
+          

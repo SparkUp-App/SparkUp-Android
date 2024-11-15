@@ -17,7 +17,6 @@ class TopicMultiInput extends StatefulWidget {
 
 class _TopicMultiInputState extends State<TopicMultiInput> {
   late Map<String, List<TextEditingController>> topicControllers;
-  late TextEditingController newTopicController;
 
   @override
   void initState() {
@@ -28,41 +27,37 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
           .map((value) => TextEditingController(text: value))
           .toList();
     });
-    newTopicController = TextEditingController();
   }
 
-  void _addNewTopic() {
-    showDialog(
+    void _addNewTopic() async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add new topic'),
-          content: TextField(
-            controller: newTopicController,
-            decoration: InputDecoration(hintText: 'Topic Name'),
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFE9765B),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Delete'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (newTopicController.text.trim().isNotEmpty) {
-                  setState(() {
-                    topicControllers[newTopicController.text] = [];
-                  });
-                  newTopicController.clear();
-                  Navigator.pop(context);
-                  _updateValues();
-                }
-              },
-              child: Text('Confirm'),
-            ),
-          ],
+          child: child!,
         );
       },
     );
+
+    if (picked != null) {
+      final String formattedDate = "${picked.year}/${picked.month}/${picked.day}";
+      setState(() {
+        if (!topicControllers.containsKey(formattedDate)) {
+          topicControllers[formattedDate] = [];
+          _updateValues();
+        }
+      });
+    }
   }
 
   void _removeTopic(String topic) {
@@ -149,11 +144,9 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 120,
-                height: 40,
                 decoration: BoxDecoration(
                   color: Color(0xFFE9765B),
                   borderRadius: BorderRadius.circular(8),
@@ -165,9 +158,10 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
                     ),
                   ],
                 ),
-                child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
-                    topic,
+                    "#${topic}",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -186,6 +180,22 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
 
               ),
             ],
+          ),
+
+          Container(
+            width: MediaQuery.of(context).size.width*0.9,
+            height: 4,
+            decoration: BoxDecoration(
+                  color: Color(0xFFE9765B),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
           ),
           ...topicControllers[topic]!
               .asMap()
@@ -221,37 +231,35 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child:Container(
-        width: MediaQuery.of(context).size.width * 0.75,
-        child:Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...topicControllers.keys.map((topic) => _buildTopicSection(topic)),
-        SizedBox(height: 20),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.75,
-          child: ElevatedButton(
-            onPressed: _addNewTopic,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE9765B),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.72,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...topicControllers.keys.map((topic) => _buildTopicSection(topic)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _addNewTopic,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: BorderSide(color: Color(0xFFE9765B)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 5.0),
               ),
-              padding: EdgeInsets.symmetric(vertical: 12.0),
-            ),
-            child: Text(
-              'Add new topic',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+              child: Text(
+                '#Add new Date',
+                style: TextStyle(
+                  color: Color(0xFFE9765B),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-      )
+      ),
     );
   }
 }

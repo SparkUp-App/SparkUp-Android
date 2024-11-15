@@ -31,18 +31,25 @@ class InfoPreviewCard extends StatelessWidget {
         color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (showPreviewBadge) ...[ 
               _buildPreviewBadge(),
               const SizedBox(height: 16),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize:25,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
             ],
             const SizedBox(height: 20),
             _buildInfoSection(),
             if (attributes?.isNotEmpty ?? false) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               _buildAttributesSection(),
             ],
             const SizedBox(height: 20),
@@ -152,15 +159,33 @@ class InfoPreviewCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Column(
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.grey.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+        child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var entry in attributes!.entries)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: _buildAttributeCard(entry.key, entry.value),
-              ),
+              
+                _buildAttributeCard(entry.key, entry.value),
+              
           ],
+        ),
         ),
       ],
     );
@@ -169,22 +194,7 @@ class InfoPreviewCard extends StatelessWidget {
   Widget _buildAttributeCard(String key, dynamic value) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
+      padding: const EdgeInsets.all(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -194,7 +204,7 @@ class InfoPreviewCard extends StatelessWidget {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Color(0xFFE9765B).withOpacity(0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -202,7 +212,7 @@ class InfoPreviewCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.blue,
+                color: Color(0xFFE9765B),
                 letterSpacing: 0.3,
               ),
             ),
@@ -233,13 +243,56 @@ class InfoPreviewCard extends StatelessWidget {
         ],
       );
     } else if (value is Map) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var entry in value.entries)
-            _buildBulletPoint('${entry.key}: ${entry.value}', isMap: true),
-        ],
-      );
+      if (value is Map<String, List<String>>) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var entry in value.entries) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 159, 138).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        entry.key,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 255, 159, 138),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...entry.value.map((item) => Padding(
+                          padding: const EdgeInsets.only(left: 8.0, bottom: 2.0),
+                          child: _buildBulletPoint(item),
+                        )),
+                    const SizedBox(height: 16),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var entry in value.entries)
+              _buildBulletPoint('${entry.key}: ${entry.value}', isMap: true),
+          ],
+        );
+      }
     }
     return const SizedBox.shrink();
   }

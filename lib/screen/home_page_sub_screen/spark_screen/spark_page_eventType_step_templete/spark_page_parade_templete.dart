@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/profile_DatePicker.dart';
+import 'package:spark_up/common_widget/profile_MultiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiChooseWithOther.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextFieldMap.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/common_widget/profile_Textfield.dart';
@@ -8,56 +11,44 @@ import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
-List<Step> createSportSteps(int currentStep, BasePost basePost, Function setState) {
+List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setState) {
   return [
     Step(
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: 'What kind of exercise are you planning to do?'),
-          SparkupSingleChoose(
-            label: 'Sport Type',
-            hintlabel:'Please select sport type',
-            availableTags: sportType,
-            onChanged: (selectedSport) {
-              setState(() {
-                basePost.attributes["Selected Sport"] = selectedSport;
-                print(basePost.attributes);
-              });
-            },
-          ),
+          NoteCard(message: 'Please briefly introduce your parade.'),
           Textfield(
-            label: 'Sports Rule',
-            hintLabel: 'Enter rule',
-            maxLine: 4,
-            value: basePost.attributes["Sports Rule"] ?? "",
+            label: 'Introduce',
+            hintLabel: 'Please Introduce',
+            maxLine: 5,
+            value: basePost.attributes["Introduce"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Sports Rule"] = newValue ?? "";
+                basePost.attributes["Introduce"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Winning Prize',
-            hintLabel: 'Enter Winning Prize',
+            label: 'Address',
+            hintLabel: 'Please desribe the Address',
             maxLine: 1,
-            value: basePost.attributes["Winning Prize"] ?? "",
+            value: basePost.attributes["Address"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Winning Prize"] = newValue ?? "";
+                basePost.attributes["Address"] = newValue ?? "";
               });
             },
           ),
-          Textfield(
-            label: 'Entry Fee',
-            hintLabel: 'Enter Entry Fee',
-            maxLine: 1,
-            value: basePost.attributes["Entry Fee"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Entry Fee"] = newValue ?? "";
-              });
-            },
+          MultiInput(
+            label: 'Parade route',
+            hintLabel: 'Enter Entry Parade route',
+            values: basePost.attributes["Parade route"]?? [],
+          onChanged:(newValues) {
+            setState(() {
+              basePost.attributes["Parade route"] = newValues;
+            });
+          },
           ),
         ],
       ),
@@ -69,17 +60,15 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          NoteCard(message: "What kind of participants are you looking for ?"),
-
-          SizedBox(height: 16,),
+          NoteCard(message: "What are the participation guidelines that participants need to know? "),
           Textfield(
-            label: 'Requirements of Participants',
-            hintLabel: 'Enter requirements',
-            maxLine: 4,
-            value: basePost.attributes["Requirements of Participants"] ?? "",
+            label: 'Participation guidelines',
+            hintLabel: 'Enter Participation guidelines',
+            maxLine: 1,
+            value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Requirements of Participants"] = newValue ?? "";
+                basePost.attributes["Participation guidelines"] = newValue ?? "";
               });
             },
           ),
@@ -87,15 +76,14 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
       ),
       isActive: currentStep >= 3,
     ),
-
     Step(
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: "Anything you would like to add to the participants"),
+          NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?A"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter requirements',
+            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {
