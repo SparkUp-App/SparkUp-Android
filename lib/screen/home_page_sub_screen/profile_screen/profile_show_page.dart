@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
-import 'package:spark_up/screen/logout_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileShowPage extends StatefulWidget {
@@ -33,35 +33,51 @@ class _ProfileShowPageState extends State<ProfileShowPage>
   }
 
   Widget _buildStatColumn(String label, String count, IconData stateIcon) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Row(
-          children: [
-            Icon(
-              stateIcon,
+    return InkWell(
+      onTap: () {
+        switch (label) {
+          case "Participated":
+            Navigator.of(context)
+                .pushNamed(RouteMap.participatedPage, arguments: widget.userId);
+            break;
+          case "Rating":
+            Navigator.of(context)
+                .pushNamed(RouteMap.ratingPage, arguments: widget.userId);
+            break;
+        }
+      },
+      splashColor: Colors.grey,
+      highlightColor: Colors.grey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
               color: Colors.white,
-              size: 30,
+              fontWeight: FontWeight.w600,
             ),
-            Text(
-              count,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w600,
+          ),
+          Row(
+            children: [
+              Icon(
+                stateIcon,
                 color: Colors.white,
+                size: 30,
               ),
-            ),
-          ],
-        ),
-      ],
+              Text(
+                count,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -88,7 +104,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       Container(
                         height: 70,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -158,8 +174,9 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, RouteMap.editProfile, arguments: profile),
+                      onPressed: () => Navigator.pushNamed(
+                          context, RouteMap.editProfile,
+                          arguments: profile),
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
@@ -216,7 +233,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildStatColumn('Participated', '0', Icons.flag),
+                                _buildStatColumn(
+                                    'Participated', '0', Icons.flag),
                                 Container(
                                   width: 2,
                                   height: 40,
@@ -311,7 +329,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
         future: Network.manager.sendRequest(
             method: RequestMethod.get,
             path: UserPath.view,
-            pathMid: ["${Network.manager.userId}"]),
+            pathMid: ["${widget.userId}"]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
@@ -322,29 +340,43 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   child: Column(
                     children: [
                       AppBar(
+                        leading: widget.editable
+                            ? null
+                            : IconButton(
+                                onPressed: () => Navigator.pop(context),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                )),
                         automaticallyImplyLeading: false,
                         title: Text(
                           "Loading...",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
-                            color: snapshot.connectionState == ConnectionState.waiting ? Colors.white54:Colors.white,
+                            color: snapshot.connectionState ==
+                                    ConnectionState.waiting
+                                ? Colors.white54
+                                : Colors.white,
                           ),
                         ),
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.black,
                         elevation: 0,
-                        actions: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(RouteMap.logoutPage);
-                            },
-                          ),
-                        ],
+                        actions: widget.editable
+                            ? [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.settings,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(RouteMap.logoutPage);
+                                  },
+                                ),
+                              ]
+                            : null,
                       ),
                       Container(
                         height: 1,
@@ -376,17 +408,21 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                                   color: const Color(0xFFF7AF8B),
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 8),
                                     itemCount: ['Loading...'].length,
                                     itemBuilder: (context, index) {
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
                                         child: Skeleton.leaf(
                                           child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 6),
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius: BorderRadius.circular(20),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                               border: Border.all(
                                                 color: const Color(0xFFF16743),
                                                 width: 1,
@@ -398,8 +434,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                                                 color: Color(0xFFF16743),
                                                 fontSize: 12,
                                               ),
+                                            ),
                                           ),
-                                        ),
                                         ),
                                       );
                                     },
@@ -456,6 +492,14 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               ),
             );
           } else if (snapshot.hasError) {
+            //other user view profile
+            if (!widget.editable) {
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      content: "Something Went Wrong Pleas Try Again Later"));
+              Navigator.pop(context);
+            }
             return Center(
               child: Text("${snapshot.error}"),
             );
@@ -477,6 +521,14 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   child: Column(
                     children: [
                       AppBar(
+                        leading: widget.editable
+                            ? null
+                            : IconButton(
+                                onPressed: () => Navigator.pop(context),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                )),
                         automaticallyImplyLeading: false,
                         title: Text(
                           profile.nickname,
@@ -489,17 +541,20 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.black,
                         elevation: 0,
-                        actions: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(RouteMap.logoutPage);
-                            },
-                          ),
-                        ],
+                        actions: widget.editable
+                            ? [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.settings,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(RouteMap.logoutPage);
+                                  },
+                                ),
+                              ]
+                            : null,
                       ),
                       Container(
                         height: 1,
@@ -522,14 +577,17 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             color: const Color(0xFFF7AF8B),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 8),
                               itemCount: profile.interestTypes.length,
                               itemBuilder: (context, index) {
                                 final tag = profile.interestTypes[index];
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
@@ -607,13 +665,21 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               ),
             );
           } else {
+            //other user view profile
+            if (!widget.editable) {
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      content: "Something Went Wrong Pleas Try Againg Later"));
+              Navigator.pop(context);
+            }
             return const Center(
               child: Text("Error"),
             );
           }
         });
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();

@@ -36,13 +36,13 @@ class _NotificationPageState extends State<NotificationPage>
           ),
         ),
         backgroundColor: Colors.white,
-        elevation: 2,
         bottom: TabBar(
           controller: _tabController,
           labelStyle: const TextStyle(fontSize: 14.0),
           labelColor: Colors.black,
           unselectedLabelColor: const Color(0xFF827C79),
           indicatorColor: const Color(0xFFF5A278),
+          dividerColor: Colors.transparent,
           indicatorWeight: 3,
           indicatorSize: TabBarIndicatorSize.tab,
           tabs: const [
@@ -51,9 +51,12 @@ class _NotificationPageState extends State<NotificationPage>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [MessageTag(), RequestTag()],
+      body: Container(
+        color: Colors.white,
+        child: TabBarView(
+          controller: _tabController,
+          children: const [MessageTag(), RequestTag()],
+        ),
       ),
     );
   }
