@@ -8,6 +8,8 @@ import 'package:spark_up/network/path/comment_path.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'dart:math';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
@@ -35,6 +37,11 @@ class _EventDetailPageState extends State<EventDetailPage>
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
   int page = 2, perPage = 20;
+
+  String _generateRandomSpaces(int length) {
+    return ' ' * length; // 生成指定長度的空白字符
+  }
+  final Random random = Random();
 
   @override
   void initState() {
@@ -290,203 +297,333 @@ class _EventDetailPageState extends State<EventDetailPage>
     gettingComment = false;
     setState(() {});
   }
-
-  @override
+  Widget SkeletonLoader(){
+    final labelSpaces = _generateRandomSpaces(random.nextInt(15) + 10); // 隨機生成5到15個空白字符
+    final titleSpaces = _generateRandomSpaces(random.nextInt(50) + 40); // 隨機生成10到40個空白字符
+    return Skeletonizer(
+      effect: const ShimmerEffect(
+        baseColor: Colors.white12,
+        highlightColor: Colors.white24,
+        duration: Duration(seconds: 1),
+      ),
+      child:
+      Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            Skeleton.leaf(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFff6b6b),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Text(
+                  labelSpaces, // 使用隨機生成的空白字符
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 6,),
+            Skeleton.leaf(
+              child: Container(
+                height: 30,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  titleSpaces, // 使用隨機生成的空白字符
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 12,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // 左側資訊
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                        Skeleton.leaf(
+                          child:Container(
+                            height: 20,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              "Hold By:AAAAA", // 使用隨機生成的空白字符
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Skeleton.leaf(
+                          child:Container(
+                            height: 20,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              "Posted:2024/01/10", // 使用隨機生成的空白字符
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                ),
+              
+                Skeleton.leaf(
+                          child:Container(
+                            height: 25,
+                            width:135,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              "Hold By:AAAAA", // 使用隨機生成的空白字符
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+              ],
+            ),
+          ]
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: initialing
-          ? const Center(child: CircularProgressIndicator()):
-          NestedScrollView(
-              controller: scrollController,
-              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    pinned: true,
-                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                    leading: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        size: 20.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    actions: [
-                      IconButton(
-                        onPressed: () => pressLikedProcess(),
-                        icon: Icon(
-                          postData.liked
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: const Color.fromARGB(255, 233, 113, 153),
-                          size: 24.0,
+      body:
+      NestedScrollView(
+        controller: scrollController,
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              pinned: true,
+              backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  size: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+              actions: initialing
+                  ? []
+                  : [
+                IconButton(
+                  onPressed: () => pressLikedProcess(),
+                  icon: Icon(
+                    postData.liked
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: const Color.fromARGB(255, 233, 113, 153),
+                    size: 24.0,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.bookmark_border,
+                    color: Colors.white,
+                    size: 24.0,
+                  ),
+                ),
+              ],
+
+              expandedHeight: 220.0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  color: const Color.fromARGB(255, 245, 174, 128),
+                  padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
+                  child:initialing? SkeletonLoader(): Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          "#${postData.type}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.bookmark_border,
+                      Text(
+                        postData.title,
+                        style: const TextStyle(
+                          fontSize: 24.0,
                           color: Colors.white,
-                          size: 24.0,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.white,
+                          decorationThickness: 2,
                         ),
                       ),
-                    ],
-                    expandedHeight: 220.0,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        color: const Color.fromARGB(255, 245, 174, 128),
-                        padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
-                        child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // 左側資訊
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      "#${postData.type}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
+                                  const Text(
+                                    'Hold by: ',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14,
                                     ),
                                   ),
                                   Text(
-                                    postData.title,
+                                    postData.nickname,
                                     style: const TextStyle(
-                                      fontSize: 24.0,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.white,
-                                      decorationThickness: 2,
+                                      fontSize: 14,
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      // 左側資訊
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Text(
-                                                'Hold by: ',
-                                                style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              Text(
-                                                postData.nickname,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
-                                            style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      // 右側統計
-                                      Row(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.favorite,
-                                                color: Colors.white,
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                "${postData.likes}",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 16),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.chat_bubble_outline,
-                                                color: Colors.white,
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                "${postData.comments}",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 16),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.person_outline,
-                                                color: Colors.white,
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                "${postData.applicants ?? 0}",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // 右側統計
+                          Row(
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.favorite,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${postData.likes}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 16),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.chat_bubble_outline,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${postData.comments}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 16),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person_outline,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${postData.applicants ?? 0}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    bottom: TabBar(
-                      controller: tabController,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.white70,
-                      indicatorColor: Colors.white,
-                      indicatorWeight: 3,
-                      tabs: const [
-                        Tab(text: "Overview"),
-                        Tab(text: "Comments"),
-                      ],
-                    ),
+                    ],
                   ),
-                ];
-              },
-              body: TabBarView(
+                ),
+              ),
+              bottom: TabBar(
                 controller: tabController,
-                children: [
-                  detailContent(),
-                  commentContent(),
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white70,
+                indicatorColor: Colors.white,
+                indicatorWeight: 3,
+                tabs: const [
+                  Tab(text: "Overview"),
+                  Tab(text: "Comments"),
                 ],
               ),
             ),
+          ];
+        },
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            /*
+                  detailContent(),
+                  commentContent(),
+                  */
+          ],
+        ),
+      ),
     );
   }
 
@@ -761,107 +898,109 @@ class _CommentBlockState extends State<CommentBlock> {
         ],
       )
           : widget.comment.userId == Network.manager.userId
-              ? Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: const Icon(Icons.circle),
-                    ),
-                    Expanded(
-                        child: Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.comment.userNickName,
-                                  style:
-                                  const TextStyle(fontWeight: FontWeight.w900),
-                                ),
-                                Text(widget.comment.content),
-                                Text(
-                                  "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
-                            ))),
-                    Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: IconButton(
-                        onPressed: () => pressLikedProcess(),
-                        icon: Icon(widget.comment.liked
-                            ? Icons.favorite
-                            : Icons.favorite_border),
+          ? Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(5.0),
+            child: const Icon(Icons.circle),
+          ),
+          Expanded(
+              child: Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.comment.userNickName,
+                        style:
+                        const TextStyle(fontWeight: FontWeight.w900),
                       ),
-                    ),
-                      Container(
-                        margin: const EdgeInsets.all(5.0),
-                        child: GestureDetector(
-                          onLongPress: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('刪除評論'),
-                                content: const Text('您確定要刪除此評論嗎？'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('取消'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      pressDeleteProcess();
-                                    },
-                                    child: const Text('確定'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: IconButton(
-                            onPressed: () => pressDeleteProcess(),
-                            icon: const Icon(Icons.delete),
-                          ),
-                        ),
+                      Text(widget.comment.content),
+                      Text(
+                        "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    ],
+                  ))),
+          Container(
+            margin: const EdgeInsets.all(5.0),
+            child: IconButton(
+              onPressed: () => pressLikedProcess(),
+              icon: Icon(widget.comment.liked
+                  ? Icons.favorite
+                  : Icons.favorite_border),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(5.0),
+            child: GestureDetector(
+              onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('刪除評論'),
+                    content: const Text('您確定要刪除此評論嗎？'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('取消'),
                       ),
-                  ],
-                )
-              : Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: const Icon(Icons.circle),
-                    ),
-                    Expanded(
-                        child: Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.comment.userNickName,
-                                  style:
-                                  const TextStyle(fontWeight: FontWeight.w900),
-                                ),
-                                Text(widget.comment.content),
-                                Text(
-                                  "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
-                            ))),
-                    Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: IconButton(
-                        onPressed: () => pressLikedProcess(),
-                        icon: Icon(widget.comment.liked
-                            ? Icons.favorite
-                            : Icons.favorite_border),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          pressDeleteProcess();
+                        },
+                        child: const Text('確定'),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                );
+              },
+              child: IconButton(
+                onPressed: () => pressDeleteProcess(),
+                icon: const Icon(Icons.delete),
+              ),
+            ),
+          ),
+        ],
+      )
+          : Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(5.0),
+            child: const Icon(Icons.circle),
+          ),
+          Expanded(
+              child: Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.comment.userNickName,
+                        style:
+                        const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                      Text(widget.comment.content),
+                      Text(
+                        "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    ],
+                  ))),
+          Container(
+            margin: const EdgeInsets.all(5.0),
+            child: IconButton(
+              onPressed: () => pressLikedProcess(),
+              icon: Icon(widget.comment.liked
+                  ? Icons.favorite
+                  : Icons.favorite_border),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
+
