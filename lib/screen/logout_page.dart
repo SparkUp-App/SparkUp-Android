@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
+import 'package:spark_up/socket_service.dart';
 
 class LogoutPage extends StatelessWidget {
-  const LogoutPage({Key? key}) : super(key: key);
+  const LogoutPage({super.key});
+
+  void logoutProcess(BuildContext context) {
+    SecureStorage.delete(StoreKey.userId);
+    SecureStorage.delete(StoreKey.noProfile);
+    SocketService.manager.disconnect();
+    Navigator.of(context).pushReplacementNamed(RouteMap.loginPage);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,10 +138,7 @@ class LogoutPage extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               child: TextButton.icon(
                 onPressed: () {
-                  SecureStorage.delete(StoreKey.userId);
-                  SecureStorage.delete(StoreKey.noProfile);
-                  Navigator.of(context)
-                      .pushReplacementNamed(RouteMap.loginPage);
+                  logoutProcess(context);
                 },
                 icon: const Icon(Icons.logout, color: Colors.grey),
                 label:

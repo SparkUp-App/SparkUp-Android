@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -10,9 +11,7 @@ class SocketService {
   static const String baseUrl = "https://sparkup-9db24d093e0f.herokuapp.com";
 
   // Singleton pattern (Differ from normal setting just for restrict factory or other declare)
-  static final SocketService manager = SocketService._internal();
-  factory SocketService() => manager;
-  SocketService._internal();
+  static SocketService manager = SocketService();
 
   IO.Socket? socket;
   int? _userId;
@@ -33,6 +32,9 @@ class SocketService {
     onNewMessage = onMessage;
     onStatusChange = onStatus;
 
+    disconnect();
+
+    debugPrint("Build Socket Connect");
     // Initialize socket with configuration
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
@@ -102,7 +104,17 @@ class SocketService {
   }
 
   void disconnect() {
+    if (socket != null) {
+      socket!
+        ..off("connect")
+        ..off("disconnect")
+        ..off("error")
+        ..off("connect_error")
+        ..off("new_message");
+    }
     socket?.disconnect();
+    socket?.close();
+    socket?.dispose();
     socket = null;
     _userId = null;
     onNewMessage = null;
