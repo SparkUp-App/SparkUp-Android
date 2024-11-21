@@ -56,19 +56,23 @@ class MyReference {
   late String nickname;
   late int rating;
   late String content;
+  late bool isHost;
 
   MyReference({
     required this.userId,
     required this.nickname,
     required this.rating,
     required this.content,
+    required this.isHost,
   });
 
   factory MyReference.initfromData(Map data) {
     return MyReference(
-        userId: data["from_user_id"],
-        nickname: data["from_user_nickname"],
-        rating: data["rating"],
-        content: data["content"]);
+      userId: data["from_user_id"],
+      nickname: data["from_user_nickname"],
+      rating: data["rating"],
+      content: data["content"],
+      isHost: data["is_host"],
+    );
   }
 }
