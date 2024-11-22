@@ -83,11 +83,13 @@ class ChatRoomManager {
       if (roomList.value[i].postId == message.postId) {
         ChatListReceived updateChatRoom;
         updateChatRoom = roomList.value[i];
-        updateChatRoom.latestMessage.id = message.id;
-        updateChatRoom.latestMessage.senderId = message.senderId;
-        updateChatRoom.latestMessage.senderName = message.senderName;
-        updateChatRoom.latestMessage.content = message.content;
-        updateChatRoom.latestMessage.createTime = message.createdAt;
+        LatestMessage updateLatestMessage = LatestMessage(
+            id: message.id,
+            senderId: message.senderId,
+            senderName: message.senderName,
+            content: message.content,
+            createTime: message.createdAt);
+        updateChatRoom.latestMessage = updateLatestMessage;
         updateChatRoom.unreadCount++;
 
         roomList.value.removeAt(i);
