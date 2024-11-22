@@ -939,125 +939,130 @@ class _CommentBlockState extends State<CommentBlock> {
       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
       child: widget.comment.deleted
           ? Row(
-        children: [
-          Expanded(
-              child: Container(
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          top: BorderSide(color: Colors.grey),
-                          right: BorderSide(color: Colors.grey),
-                          bottom: BorderSide(color: Colors.grey),
-                          left: BorderSide(color: Colors.grey))),
-                  child: const Center(
-                    child: Text(
-                      "Comment Had Beend Deleted",
-                      style: TextStyle(color: Colors.grey),
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey),
                     ),
-                  )))
-        ],
-      )
-          : widget.comment.userId == Network.manager.userId
-          ? Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: const Icon(Icons.circle),
-          ),
-          Expanded(
-              child: Container(
-                  margin: const EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.comment.userNickName,
-                        style:
-                        const TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                      Text(widget.comment.content),
-                      Text(
-                        "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
+                    padding: const EdgeInsets.all(10),
+                    child: const Center(
+                      child: Text(
+                        "Comment Has Been Deleted",
                         style: TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ))),
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: IconButton(
-              onPressed: () => pressLikedProcess(),
-              icon: Icon(widget.comment.liked
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: GestureDetector(
-              onLongPress: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('刪除評論'),
-                    content: const Text('您確定要刪除此評論嗎？'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('取消'),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          pressDeleteProcess();
-                        },
-                        child: const Text('確定'),
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
-              child: IconButton(
-                onPressed: () => pressDeleteProcess(),
-                icon: const Icon(Icons.delete),
-              ),
-            ),
-          ),
-        ],
-      )
+                ),
+              ],
+            )
           : Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: const Icon(Icons.circle),
-          ),
-          Expanded(
-              child: Container(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
                   margin: const EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.comment.userNickName,
-                        style:
-                        const TextStyle(fontWeight: FontWeight.w900),
+                  child: const Icon(Icons.circle, color: Colors.black),
+                ),
+Text(
+                          widget.comment.userNickName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                          ),
+                        ),
+                          ],
+                        ),
+                        
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+                          child: Text(
+                          widget.comment.content,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        ),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+                          child: Text(
+                          "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes",
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(1.0),
+                  child: IconButton(
+                    onPressed: () => pressLikedProcess(),
+                    icon: Icon(
+                      widget.comment.liked
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: widget.comment.liked
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
+                  ),
+                ),
+                if (widget.comment.userId == Network.manager.userId)
+                  Container(
+                    margin: const EdgeInsets.all(4.0),
+                    child: GestureDetector(
+                      onLongPress: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('刪除評論'),
+                            content: const Text('您確定要刪除此評論嗎？'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('取消'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  pressDeleteProcess();
+                                },
+                                child: const Text('確定'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        
+                        Icons.delete, color: Colors.red,
                       ),
-                      Text(widget.comment.content),
-                      Text(
-                        "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes No Replay haha~",
-                        style: TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ))),
-          Container(
-            margin: const EdgeInsets.all(5.0),
-            child: IconButton(
-              onPressed: () => pressLikedProcess(),
-              icon: Icon(widget.comment.liked
-                  ? Icons.favorite
-                  : Icons.favorite_border),
+                    ),
+                  ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
