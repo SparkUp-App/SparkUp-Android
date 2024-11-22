@@ -16,7 +16,7 @@ class MyReferenceListReceived {
   }
 }
 
-class MyReferenceEvent {
+class MyReferenceEvent { // 鱉人給我的 rate 詳細資訊
   late int postId;
   late String postTitle;
   late String type;

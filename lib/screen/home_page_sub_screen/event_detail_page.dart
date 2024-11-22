@@ -399,7 +399,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
-                          "Hold By:AAAAA", // 使用隨機生成的空白字符
+                          "Hold By:AAAAA", // 使用隨機��成的空白字符
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -677,10 +677,9 @@ Widget detailContentSkeleton() {
           color: Colors.grey,
           thickness: 1,
         ),
-        Row(
+        if(!initialing) Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          
             Expanded(
               child: Container(
                 margin:
@@ -693,7 +692,9 @@ Widget detailContentSkeleton() {
                         borderRadius: BorderRadius.circular(8.0)),
                     padding: const EdgeInsets.all(10.0),
                   ),
-                  child: Row(
+                  child: Visibility(
+                    visible: (postData.postId != Network.manager.userId), // 要求你給我他這篇文的api
+                    child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
@@ -706,6 +707,7 @@ Widget detailContentSkeleton() {
                       )
                     ],
                   ),
+                  )
                 ),
               ),
             ),
@@ -738,7 +740,6 @@ Widget detailContentSkeleton() {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Expanded(
               child: Container(
                 margin:

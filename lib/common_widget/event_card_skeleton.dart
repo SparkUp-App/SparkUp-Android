@@ -148,3 +148,31 @@ class eventCardSkeletonList extends StatelessWidget {
     );
   }
 }
+
+class EventCardSkeletonListRandomLength extends StatelessWidget {
+  const EventCardSkeletonListRandomLength({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final random = Random();
+    final randomCount = random.nextInt(6) + 1;  // nextInt(6) 生成 0-5，加 1 變成 1-6
+
+    return Skeletonizer(
+      effect: const ShimmerEffect(
+        baseColor: Colors.black12,
+        highlightColor: Colors.white24,
+        duration: Duration(seconds: 1),
+      ),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: randomCount,
+          itemBuilder: (context, index) {
+            return const EventCardSkeleton();
+          },
+        ),
+      ),
+    );
+  }
+}
