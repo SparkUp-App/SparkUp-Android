@@ -7,6 +7,7 @@ import "package:spark_up/screen/home_page_sub_screen/notification_screen/notific
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
+import "package:spark_up/socket_service.dart";
 
 class LazyLoadPage extends StatefulWidget {
   final Widget Function() builder;
@@ -54,6 +55,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _hasVisited[0] = true;
+
+    SocketService.manager.initSocket(userId: Network.manager.userId!);
   }
 
   void _onItemTapped(int index) {
@@ -75,7 +78,6 @@ class _HomePageState extends State<HomePage> {
       });
     }
     return PopScope(
-
         canPop: false,
         onPopInvoked: (didPop) async {
           if (didPop) return;
@@ -130,85 +132,83 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar:Theme(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: Theme(
             data: ThemeData(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
             ),
             child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: SparkIcon(
-                  icon: SparkIcons.homeBorder,
-                  color: Color(0xFF827C79),
-                  size: 25.0,
+              type: BottomNavigationBarType.fixed,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: SparkIcon(
+                    icon: SparkIcons.homeBorder,
+                    color: Color(0xFF827C79),
+                    size: 25.0,
+                  ),
+                  activeIcon: SparkIcon(
+                    icon: SparkIcons.home,
+                    color: Color(0xFFF77D43),
+                    size: 25.0,
+                  ),
+                  label: "Home",
                 ),
-                activeIcon: SparkIcon(
-                  icon: SparkIcons.home,
-                  color: Color(0xFFF77D43),
-                  size: 25.0,
+                BottomNavigationBarItem(
+                  icon: SparkIcon(
+                    icon: SparkIcons.bookmarkBorder,
+                    color: Color(0xFF827C79),
+                    size: 25.0,
+                  ),
+                  activeIcon: SparkIcon(
+                    icon: SparkIcons.bookmark,
+                    color: Color(0xFFF77D43),
+                    size: 25.0,
+                  ),
+                  label: 'BookMarks',
                 ),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: SparkIcon(
-                  icon: SparkIcons.bookmarkBorder,
-                  color: Color(0xFF827C79),
-                  size: 25.0,
+                BottomNavigationBarItem(
+                  icon: SizedBox(width: 40), // Placeholder for FAB
+                  label: '',
                 ),
-                activeIcon: SparkIcon(
-
-                  icon: SparkIcons.bookmark,
-                  color: Color(0xFFF77D43),
-                  size: 25.0,
+                BottomNavigationBarItem(
+                  icon: SparkIcon(
+                    icon: SparkIcons.messageBorder,
+                    color: Color(0xFF827C79),
+                    size: 25.0,
+                  ),
+                  activeIcon: SparkIcon(
+                    icon: SparkIcons.message,
+                    color: Color(0xFFF77D43),
+                    size: 25.0,
+                  ),
+                  label: 'Messages',
                 ),
-                label: 'BookMarks',
-              ),
-              BottomNavigationBarItem(
-                icon: SizedBox(width: 40), // Placeholder for FAB
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SparkIcon(
-                  icon: SparkIcons.messageBorder,
-                  color: Color(0xFF827C79),
-                  size: 25.0,
+                BottomNavigationBarItem(
+                  icon: SparkIcon(
+                    icon: SparkIcons.userBorder,
+                    color: Color(0xFF827C79),
+                    size: 25.0,
+                  ),
+                  activeIcon: SparkIcon(
+                    icon: SparkIcons.user,
+                    color: Color(0xFFF77D43),
+                    size: 25.0,
+                  ),
+                  label: 'Profile',
                 ),
-                activeIcon: SparkIcon(
-
-                  icon: SparkIcons.message,
-                  color: Color(0xFFF77D43),
-                  size: 25.0,
-                ),
-                label: 'Messages',
-              ),
-              BottomNavigationBarItem(
-                icon: SparkIcon(
-                  icon: SparkIcons.userBorder,
-                  color: Color(0xFF827C79),
-                  size: 25.0,
-                ),
-                activeIcon: SparkIcon(
-                  icon: SparkIcons.user,
-                  color: Color(0xFFF77D43),
-                  size: 25.0,
-                ),
-                label: 'Profile',
-              ),
-            ],
-            currentIndex:
-            _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            onTap: _onItemTapped,
+              ],
+              currentIndex:
+                  _selectedIndex < 2 ? _selectedIndex : _selectedIndex + 1,
+              selectedItemColor: Colors.blue,
+              unselectedItemColor: Colors.grey,
+              onTap: _onItemTapped,
+            ),
           ),
-          ),
-        )
-    );
+        ));
   }
 }
 
