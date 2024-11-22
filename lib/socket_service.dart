@@ -4,6 +4,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // Define callback types
 typedef MessageCallback = void Function(ChatMessage message);
+typedef ApprovedCallback = void Function(ApprovedMessage message);
+typedef RejectedCallback = void Function(RejectedMessage message);
 typedef StatusCallback = void Function(SocketStatus status, String? message);
 
 class SocketService {
@@ -18,6 +20,8 @@ class SocketService {
 
   // Callbacks
   MessageCallback? onNewMessage;
+  ApprovedCallback? onNewApprovedMessage;
+  RejectedCallback? onNewRejectedMessage;
   StatusCallback? onStatusChange;
 
   bool get isConnected => socket?.connected ?? false;
@@ -27,10 +31,14 @@ class SocketService {
     required int userId,
     MessageCallback? onMessage,
     StatusCallback? onStatus,
+    ApprovedCallback? onApprovedMessage,
+    RejectedCallback? onRejectedMessage,
   }) {
     _userId = userId;
     onNewMessage = onMessage;
     onStatusChange = onStatus;
+    onNewApprovedMessage = onApprovedMessage;
+    onNewRejectedMessage = onRejectedMessage;
 
     debugPrint("Build Socket Connect");
     // Initialize socket with configuration
@@ -68,7 +76,9 @@ class SocketService {
         debugPrint('Connection error: $error');
         onStatusChange?.call(SocketStatus.error, 'Connection failed: $error');
       })
-      ..on('new_message', _handleNewMessage);
+      ..on('new_message', _handleNewMessage)
+      ..on('application_approved', _handleNewApproved)
+      ..on('application_rejected', _handleNewRejected);
   }
 
   void _handleNewMessage(dynamic data) {
@@ -76,6 +86,28 @@ class SocketService {
       final message = ChatMessage.initfromData(data);
       debugPrint('New message received: ${message.content}');
       onNewMessage?.call(message);
+    } catch (e) {
+      debugPrint('Error parsing message: $e');
+      onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
+    }
+  }
+
+  void _handleNewApproved(dynamic data) {
+    try {
+      final message = ApprovedMessage.initfromData(data);
+      debugPrint('New message received: ${message.message}');
+      onNewApprovedMessage?.call(message);
+    } catch (e) {
+      debugPrint('Error parsing message: $e');
+      onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
+    }
+  }
+
+  void _handleNewRejected(dynamic data) {
+    try {
+      final message = RejectedMessage.initfromData(data);
+      debugPrint('New message received: ${message.message}');
+      onNewRejectedMessage?.call(message);
     } catch (e) {
       debugPrint('Error parsing message: $e');
       onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
@@ -133,19 +165,19 @@ class ChatMessage {
   final int id;
   final int postId;
   final int senderId;
-  //final String senderName;
+  final String senderName;
   final String content;
   final DateTime createdAt;
-  final List<int> readUsers;
+  //final List<int> readUsers;
 
   ChatMessage({
     required this.id,
     required this.postId,
     required this.senderId,
-    //required this.senderName,
+    required this.senderName,
     required this.content,
     required this.createdAt,
-    required this.readUsers,
+    //required this.readUsers,
   });
 
   factory ChatMessage.initfromData(Map<String, dynamic> data) {
@@ -153,10 +185,10 @@ class ChatMessage {
       id: data['id'],
       postId: data['post_id'],
       senderId: data['sender_id'],
-      //senderName: json['sender_name'] as String,
+      senderName: data['sender_name'] as String,
       content: data['content'],
       createdAt: DateTime.parse(data['created_at']).toLocal(),
-      readUsers: List<int>.from(data['read_users'] as List<dynamic>),
+      //: List<int>.from(data['read_users'] as List<dynamic>),
     );
   }
 
@@ -165,13 +197,55 @@ class ChatMessage {
       'id': id,
       'post_id': postId,
       'sender_id': senderId,
-      //'sender_name': senderName,
+      'sender_name': senderName,
       'content': content,
       'created_at': createdAt.toIso8601String(),
-      'read_users': readUsers,
+      //'read_users': readUsers,
     };
   }
 }
 
 // Define event types
 enum SocketStatus { connected, disconnected, error }
+
+class ApprovedMessage {
+  final int postId;
+  final String postTitle;
+  final String hostNickName;
+  final String message;
+
+  const ApprovedMessage(
+      {required this.postId,
+      required this.postTitle,
+      required this.hostNickName,
+      required this.message});
+
+  factory ApprovedMessage.initfromData(Map data) {
+    return ApprovedMessage(
+        postId: data["post_id"],
+        postTitle: data["post_title"],
+        hostNickName: data["host_nickname"],
+        message: data["message"]);
+  }
+}
+
+class RejectedMessage {
+  final int postId;
+  final String postTitle;
+  final String hostNickName;
+  final String message;
+
+  const RejectedMessage(
+      {required this.postId,
+      required this.postTitle,
+      required this.hostNickName,
+      required this.message});
+
+  factory RejectedMessage.initfromData(Map data) {
+    return RejectedMessage(
+        postId: data["post_id"],
+        postTitle: data["post_title"],
+        hostNickName: data["host_nickname"],
+        message: data["message"]);
+  }
+}
