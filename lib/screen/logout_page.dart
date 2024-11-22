@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
 import 'package:spark_up/socket_service.dart';
@@ -10,6 +11,7 @@ class LogoutPage extends StatelessWidget {
     SecureStorage.delete(StoreKey.userId);
     SecureStorage.delete(StoreKey.noProfile);
     SocketService.manager.disconnect();
+    ChatRoomManager.manager.clear();
     Navigator.of(context).pushReplacementNamed(RouteMap.loginPage);
   }
 
