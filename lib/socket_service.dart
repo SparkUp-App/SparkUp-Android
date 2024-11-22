@@ -32,8 +32,6 @@ class SocketService {
     onNewMessage = onMessage;
     onStatusChange = onStatus;
 
-    disconnect();
-
     debugPrint("Build Socket Connect");
     // Initialize socket with configuration
     socket = IO.io(baseUrl, <String, dynamic>{
@@ -44,6 +42,7 @@ class SocketService {
       'reconnectionDelay': 1000,
       'reconnectionDelayMax': 5000,
       'reconnectionAttempts': 5,
+      'forceNew': true,
     });
 
     _setupEventHandlers();
