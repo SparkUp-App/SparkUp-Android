@@ -1,26 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class InfoPreviewCard extends StatelessWidget {
-  final String title;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final int? peopleRequired;
-  final String? location;
-  final Map<String, dynamic>? attributes;
-  final String content;
-  final bool showPreviewBadge; 
+class InfoPreviewCardSkeleton extends StatelessWidget {
 
-  const InfoPreviewCard({
+  const InfoPreviewCardSkeleton({
     super.key,
-    required this.title,
-    this.startDate,
-    this.endDate,
-    this.peopleRequired,
-    this.location,
-    this.attributes,
-    this.content = '',
-    this.showPreviewBadge = false, 
   });
 
   @override
@@ -35,23 +20,10 @@ class InfoPreviewCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (showPreviewBadge) ...[ 
-              _buildPreviewBadge(),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize:25,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            ],
             const SizedBox(height: 20),
             _buildInfoSection(),
-            if (attributes?.isNotEmpty ?? false) ...[
-              const SizedBox(height: 5),
-              _buildAttributesSection(),
-            ],
+            const SizedBox(height: 5),
+            _buildAttributesSection(),
             const SizedBox(height: 20),
             _buildOtherInformation(),
           ],
@@ -60,30 +32,6 @@ class InfoPreviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPreviewBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.preview, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 4),
-          Text(
-            "Preview",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildInfoSection() {
     return Container(
@@ -94,25 +42,23 @@ class InfoPreviewCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          if (startDate != null && endDate != null) ...[
+          
             _buildInfoRow(
               icon: Icon(Icons.access_time, color: Colors.blue[700], size: 20),
-              text: "${DateFormat('M/d HH:mm').format(startDate!)} - ${DateFormat('M/d HH:mm').format(endDate!)}",
+              text: "",
               isBold: true,
             ),
             const SizedBox(height: 16),
-          ],
-          if (peopleRequired != null) ...[
+          
             _buildInfoRow(
               icon: Icon(Icons.group, color: Colors.green[700], size: 20),
-              text: "$peopleRequired people required",
+              text: "",
             ),
             const SizedBox(height: 16),
-          ],
-          if (location != null)
+      
             _buildInfoRow(
               icon: Icon(Icons.location_on, color: Colors.red[700], size: 20),
-              text: location!,
+              text: "",
               maxLines: 2,
             ),
         ],
@@ -131,7 +77,14 @@ class InfoPreviewCard extends StatelessWidget {
         icon,
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
+          
+          child: Skeletonizer(
+            effect: const ShimmerEffect(
+              baseColor: Colors.white12,
+              highlightColor: Colors.white24,
+              duration: Duration(seconds: 1),
+            ),
+            child:Text(
             text,
             style: TextStyle(
               fontSize: 16,
@@ -140,6 +93,7 @@ class InfoPreviewCard extends StatelessWidget {
             ),
             maxLines: maxLines,
             overflow: TextOverflow.ellipsis,
+          ),
           ),
         ),
       ],
@@ -179,12 +133,6 @@ class InfoPreviewCard extends StatelessWidget {
           ),
         child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var entry in attributes!.entries)
-              
-                _buildAttributeCard(entry.key, entry.value),
-              
-          ],
         ),
         ),
       ],
@@ -218,14 +166,13 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _buildAttributeValue(key,value),
+          _buildAttributeValue(value),
         ],
       ),
     );
   }
 
-  Widget _buildAttributeValue(String key,dynamic value) {
-    
+  Widget _buildAttributeValue(dynamic value) {
     if (value is String) {
       return Text(
         value,
@@ -243,7 +190,8 @@ class InfoPreviewCard extends StatelessWidget {
             _buildBulletPoint(item.toString()),
         ],
       );
-    } else if (value is Map<String, List<String>> || key == "Itinerary") {
+    } else if (value is Map) {
+      if (value is Map<String, List<String>>) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -284,7 +232,7 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ],
         );
-      } else if(value is Map){
+      } else {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -293,7 +241,8 @@ class InfoPreviewCard extends StatelessWidget {
           ],
         );
       }
-    return const Text("無可用的值");
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildBulletPoint(String text, {bool isMap = false}) {
@@ -372,10 +321,9 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ),
           child: Text(
-            content.isEmpty ? "(The initiator did not mention)" : content,
+            " ",
             style: TextStyle(
               fontSize: 16,
-              color: content.isEmpty ? Colors.grey[400] : Colors.grey[800],
               height: 1.5,
             ),
           ),

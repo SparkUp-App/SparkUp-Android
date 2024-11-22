@@ -298,7 +298,7 @@ class _EventShowPageState extends State<EventShowPage>
                         ),
                       if(filterMode) const Center(
                         child: SizedBox(
-                          height: 30,
+                          height: 35,
                           child: Text(
                           "Choose the tag you want to search",
                           style: TextStyle(
