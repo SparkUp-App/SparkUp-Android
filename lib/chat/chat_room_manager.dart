@@ -6,28 +6,28 @@ import 'package:spark_up/socket_service.dart';
 
 class ChatRoomManager {
   static ChatRoomManager manager = ChatRoomManager();
-  late ValueNotifier<bool> hasData;
+  late bool hasData;
   late ValueNotifier<bool> isLoading;
-  late ValueNotifier<bool> error;
+  late bool error;
   late int roomCount;
   late ValueNotifier<List<ChatListReceived>> roomList;
   late int page, perPage, pages;
-  late ValueNotifier<bool> noMoreData;
+  late bool noMoreData;
 
   ChatRoomManager() {
-    hasData = ValueNotifier(false);
+    hasData = false;
     isLoading = ValueNotifier(false);
-    error = ValueNotifier(false);
+    error = false;
     roomCount = 0;
     roomList = ValueNotifier([]);
     page = 1;
     perPage = 20;
     pages = 0;
-    noMoreData = ValueNotifier(false);
+    noMoreData = false;
   }
 
   Future<void> getData() async {
-    if (isLoading.value || noMoreData.value || error.value) return;
+    if (isLoading.value || noMoreData || error) return;
     isLoading.value = true;
 
     final response = await Network.manager.sendRequest(
@@ -47,9 +47,9 @@ class ChatRoomManager {
       roomCount = roomList.value.length;
       page = response["data"]["page"] + 1;
       pages = response["data"]["pages"];
-      noMoreData.value = page > pages;
+      noMoreData = page > pages;
     } else {
-      error.value = true;
+      error = true;
     }
 
     isLoading.value = false;
@@ -65,15 +65,15 @@ class ChatRoomManager {
   }
 
   Future<void> clear() async {
-    hasData.value = false;
+    hasData = false;
     isLoading.value = false;
-    error.value = false;
+    error = false;
     roomCount = 0;
     roomList.value = [];
     page = 1;
     perPage = 20;
     pages = 0;
-    noMoreData.value = false;
+    noMoreData = false;
 
     return;
   }
