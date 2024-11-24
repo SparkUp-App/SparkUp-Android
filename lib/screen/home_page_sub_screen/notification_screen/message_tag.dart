@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/data/list_rooms_received.dart';
+import 'package:spark_up/route.dart';
 
 class MessageTag extends StatefulWidget {
   const MessageTag({super.key});
@@ -73,79 +74,84 @@ class _MessageTagState extends State<MessageTag>
   }
 
   Widget chatRoomCard(ChatListReceived chatRoom) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-        width: double.infinity,
-        height: 100,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(bottom: BorderSide(color: Color(0xFFADADAD)))),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        chatRoom.postName,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold),
-                      ),
+    return GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushNamed(RouteMap.chatPage,
+              arguments: (chatRoom.postId, chatRoom.postName));
+        },
+        child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            width: double.infinity,
+            height: 100,
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(bottom: BorderSide(color: Color(0xFFADADAD)))),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            chatRoom.postName,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        if (chatRoom.latestMessage != null) ...[
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              "${chatRoom.latestMessage!.senderName}: ${chatRoom.latestMessage!.content}",
+                              style: const TextStyle(
+                                  color: Color(0xFF4B4B4B),
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: const Text(
+                              "temp mins ago",
+                              style: TextStyle(
+                                  color: Color(0xFF7F7E7E),
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                    if (chatRoom.latestMessage != null) ...[
-                      Container(
-                        margin: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          "${chatRoom.latestMessage!.senderName}: ${chatRoom.latestMessage!.content}",
+                  ),
+                  if (chatRoom.unreadCount != 0) ...[
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Icon(
+                          Icons.circle,
+                          size: 25.0,
+                          color: Colors.red,
+                        ),
+                        Text(
+                          chatRoom.unreadCount > 99
+                              ? "99+"
+                              : "${chatRoom.unreadCount}",
                           style: const TextStyle(
-                              color: Color(0xFF4B4B4B),
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 20.0),
-                        child: const Text(
-                          "temp mins ago",
-                          style: TextStyle(
-                              color: Color(0xFF7F7E7E),
+                              color: Colors.white,
                               fontSize: 10.0,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (chatRoom.unreadCount != 0) ...[
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Icon(
-                      Icons.circle,
-                      size: 25.0,
-                      color: Colors.red,
-                    ),
-                    Text(
-                      chatRoom.unreadCount > 99
-                          ? "99+"
-                          : "${chatRoom.unreadCount}",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     )
-                  ],
-                )
-              ]
-            ]));
+                  ]
+                ])));
   }
 }
 

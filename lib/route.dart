@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:spark_up/chat/chat_page.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_detail_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/participated_page.dart";
@@ -29,6 +30,7 @@ class RouteMap {
   static const participatedPage = "/participatedPage";
   static const ratingPage = "/ratingPage";
   static const profileShowPage = "/profileShowPage";
+  static const chatPage = "/chatPage";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage: (context) => const LoginPage(),
@@ -62,6 +64,13 @@ class RouteMap {
       (userId, editable) =
           ModalRoute.of(context)!.settings.arguments as (int, bool);
       return ProfileShowPage(userId: userId, editable: editable);
+    },
+    chatPage: (context) {
+      int postId;
+      String postName;
+      (postId, postName) =
+          ModalRoute.of(context)!.settings.arguments as (int, String);
+      return ChatPage(postId: postId, postName: postName);
     }
   };
 }
