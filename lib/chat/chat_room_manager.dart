@@ -13,6 +13,7 @@ class ChatRoomManager {
   late ValueNotifier<List<ChatListReceived>> roomList;
   late int page, perPage, pages;
   late bool noMoreData;
+  late int? currentPostId;
 
   ChatRoomManager() {
     hasData = false;
@@ -24,6 +25,7 @@ class ChatRoomManager {
     perPage = 20;
     pages = 0;
     noMoreData = false;
+    currentPostId = null;
   }
 
   Future<void> getData() async {
@@ -102,10 +104,10 @@ class ChatRoomManager {
   }
 
   void socketApproveCallback(ApprovedMessage message) {
-    refresh();
+    //dont need to refresh but need to show message
   }
 
   void socketRejectedCallback(RejectedMessage message) {
-    refresh();
+    //dont need to refresh but need to show message
   }
 }
