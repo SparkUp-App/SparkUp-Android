@@ -90,7 +90,9 @@ class ChatRoomManager {
             content: message.content,
             createTime: message.createdAt);
         updateChatRoom.latestMessage = updateLatestMessage;
-        updateChatRoom.unreadCount++;
+        if (message.senderId != Network.manager.userId) {
+          updateChatRoom.unreadCount++;
+        }
 
         roomList.value.removeAt(i);
         roomList.value = [updateChatRoom, ...roomList.value];
