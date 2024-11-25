@@ -5,6 +5,7 @@ import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
+import 'package:spark_up/socket_service.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.postId, required this.postName});
@@ -37,6 +38,16 @@ class _ChatPageState extends State<ChatPage> {
         getMoreMessage();
       }
     });
+    ChatRoomManager.manager.updateMessage.addListener(() {
+      if (ChatRoomManager.manager.updateMessage.value != null) {
+        currentMessageDate =
+            ChatRoomManager.manager.updateMessage.value!.createdAt;
+        messageList.value = [
+          ChatRoomManager.manager.updateMessage.value!,
+          ...messageList.value
+        ];
+      }
+    });
     getMoreMessage();
   }
 
@@ -49,6 +60,16 @@ class _ChatPageState extends State<ChatPage> {
       if (_scrollController.offset ==
           _scrollController.position.maxScrollExtent) {
         getMoreMessage();
+      }
+    });
+    ChatRoomManager.manager.updateMessage.removeListener(() {
+      if (ChatRoomManager.manager.updateMessage.value != null) {
+        currentMessageDate =
+            ChatRoomManager.manager.updateMessage.value!.createdAt;
+        messageList.value = [
+          ChatRoomManager.manager.updateMessage.value!,
+          ...messageList.value
+        ];
       }
     });
   }
