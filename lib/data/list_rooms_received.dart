@@ -4,6 +4,10 @@ class ChatListReceived {
   late int unreadCount;
   late LatestMessage? latestMessage;
 
+  void setunreadCount(int value) {
+    unreadCount = value;
+  }
+
   ChatListReceived({
     required this.postId,
     required this.postName,
