@@ -16,6 +16,7 @@ class ChatRoomManager {
   late int page, perPage, pages;
   late bool noMoreData;
   late int? currentPostId;
+  late ValueNotifier<ChatMessage?> updateMessage;
 
   ChatRoomManager() {
     hasData = false;
@@ -28,6 +29,7 @@ class ChatRoomManager {
     pages = 0;
     noMoreData = false;
     currentPostId = null;
+    updateMessage = ValueNotifier(null);
   }
 
   Future<void> getData() async {
@@ -83,6 +85,12 @@ class ChatRoomManager {
   }
 
   void socketMessageCallback(ChatMessage message) {
+    // For Update Current Room Message
+    if (message.postId == currentPostId) {
+      updateMessage.value = message;
+    }
+
+    // For Update Chat Room List
     for (int i = 0; i < roomCount; i++) {
       if (roomList.value[i].postId == message.postId) {
         ChatListReceived updateChatRoom;
