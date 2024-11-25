@@ -94,7 +94,8 @@ class ChatRoomManager {
             content: message.content,
             createTime: message.createdAt);
         updateChatRoom.latestMessage = updateLatestMessage;
-        if (message.senderId != Network.manager.userId) {
+        if (message.senderId != Network.manager.userId &&
+            currentPostId != message.postId) {
           updateChatRoom.unreadCount++;
         }
 
