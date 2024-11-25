@@ -77,13 +77,14 @@ class _ChatPageState extends State<ChatPage> {
         .firstWhere((element) => element.postId == widget.postId)
         .setunreadCount(0);
 
-    Network.manager
-        .sendRequest(method: RequestMethod.post, path: ChatPath.message, data: {
-      "postId": widget.postId,
-      "user_id": Network.manager.userId,
-      "before_id": null,
-      "limit": 5
-    });
+    Network.manager.sendRequest(
+        method: RequestMethod.post,
+        path: ChatPath.message,
+        data: {
+          "post_id": widget.postId,
+          "user_id": Network.manager.userId,
+          "limit": 1
+        });
   }
 
   void getMoreMessage() async {
