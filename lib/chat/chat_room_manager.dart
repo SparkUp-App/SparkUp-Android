@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/chat/data/approved_message.dart';
+import 'package:spark_up/chat/data/chat_message.dart';
+import 'package:spark_up/chat/data/rejected_message.dart';
 import 'package:spark_up/data/list_rooms_received.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
-import 'package:spark_up/socket_service.dart';
 
 class ChatRoomManager {
   static ChatRoomManager manager = ChatRoomManager();

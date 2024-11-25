@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:spark_up/chat/data/approved_message.dart';
+import 'package:spark_up/chat/data/chat_message.dart';
+import 'package:spark_up/chat/data/rejected_message.dart';
 
 // Define callback types
 typedef MessageCallback = void Function(ChatMessage message);
@@ -161,91 +164,5 @@ class SocketException implements Exception {
   String toString() => 'SocketException: $message';
 }
 
-class ChatMessage {
-  final int id;
-  final int postId;
-  final int senderId;
-  final String senderName;
-  final String content;
-  final DateTime createdAt;
-  //final List<int> readUsers;
-
-  ChatMessage({
-    required this.id,
-    required this.postId,
-    required this.senderId,
-    required this.senderName,
-    required this.content,
-    required this.createdAt,
-    //required this.readUsers,
-  });
-
-  factory ChatMessage.initfromData(Map<String, dynamic> data) {
-    return ChatMessage(
-      id: data['id'],
-      postId: data['post_id'],
-      senderId: data['sender_id'],
-      senderName: data['sender_name'] as String,
-      content: data['content'],
-      createdAt: DateTime.parse(data['created_at']).toLocal(),
-      //: List<int>.from(data['read_users'] as List<dynamic>),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'post_id': postId,
-      'sender_id': senderId,
-      'sender_name': senderName,
-      'content': content,
-      'created_at': createdAt.toIso8601String(),
-      //'read_users': readUsers,
-    };
-  }
-}
-
 // Define event types
 enum SocketStatus { connected, disconnected, error }
-
-class ApprovedMessage {
-  final int postId;
-  final String postTitle;
-  final String hostNickName;
-  final String message;
-
-  const ApprovedMessage(
-      {required this.postId,
-      required this.postTitle,
-      required this.hostNickName,
-      required this.message});
-
-  factory ApprovedMessage.initfromData(Map data) {
-    return ApprovedMessage(
-        postId: data["post_id"],
-        postTitle: data["post_title"],
-        hostNickName: data["host_nickname"],
-        message: data["message"]);
-  }
-}
-
-class RejectedMessage {
-  final int postId;
-  final String postTitle;
-  final String hostNickName;
-  final String message;
-
-  const RejectedMessage(
-      {required this.postId,
-      required this.postTitle,
-      required this.hostNickName,
-      required this.message});
-
-  factory RejectedMessage.initfromData(Map data) {
-    return RejectedMessage(
-        postId: data["post_id"],
-        postTitle: data["post_title"],
-        hostNickName: data["host_nickname"],
-        message: data["message"]);
-  }
-}
