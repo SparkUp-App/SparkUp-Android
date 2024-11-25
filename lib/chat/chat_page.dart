@@ -5,7 +5,6 @@ import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
-import 'package:spark_up/socket_service.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.postId, required this.postName});
@@ -232,16 +231,18 @@ class _ChatPageState extends State<ChatPage> {
                     : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
-                    style: const TextStyle(
-                      color: Color(0xFF999998),
-                      fontSize: 10.0,
+                  if (selfMessage) ...[
+                    Text(
+                      "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
+                      style: const TextStyle(
+                        color: Color(0xFF999998),
+                        fontSize: 10.0,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 5.0,
-                  ),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                  ],
                   Flexible(
                     child: Container(
                       decoration: BoxDecoration(
@@ -270,6 +271,18 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
+                  if (!selfMessage) ...[
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
+                      style: const TextStyle(
+                        color: Color(0xFF999998),
+                        fontSize: 10.0,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
