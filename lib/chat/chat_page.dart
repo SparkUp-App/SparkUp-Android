@@ -25,6 +25,7 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController _scrollController = ScrollController();
   final int limit = 50;
   final TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   ValueNotifier<List<ChatMessage>> messageList = ValueNotifier([]);
 
@@ -264,6 +265,8 @@ class _ChatPageState extends State<ChatPage> {
                   width: MediaQuery.of(context).size.width,
                   height: 80.0,
                   child: TextField(
+                    focusNode: _focusNode,
+                    onTapOutside: (event) => _focusNode.unfocus(),
                     enabled: !sendingMessage,
                     controller: _textEditingController,
                     expands: true,
