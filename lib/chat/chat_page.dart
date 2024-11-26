@@ -186,6 +186,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
           leadingWidth: 50.0,
           leading: IconButton(
             padding: const EdgeInsets.only(left: 8.0),
