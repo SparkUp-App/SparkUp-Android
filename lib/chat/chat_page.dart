@@ -5,6 +5,7 @@ import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
+import 'package:spark_up/route.dart';
 import 'package:spark_up/socket_service.dart';
 
 class ChatPage extends StatefulWidget {
@@ -233,7 +234,9 @@ class _ChatPageState extends State<ChatPage> {
                                 title: 'Members',
                                 onTap: () {
                                   toggleMenu();
-                                  // Add your navigation logic here
+                                  Navigator.of(context).pushNamed(
+                                      RouteMap.memberlistPage,
+                                      arguments: widget.postId);
                                 },
                               ),
                               _buildMenuItem(
@@ -241,7 +244,9 @@ class _ChatPageState extends State<ChatPage> {
                                 title: 'Event Detail',
                                 onTap: () {
                                   toggleMenu();
-                                  // Add your navigation logic here
+                                  Navigator.of(context).pushNamed(
+                                      RouteMap.eventDetailePage,
+                                      arguments: widget.postId);
                                 },
                               ),
                             ],
