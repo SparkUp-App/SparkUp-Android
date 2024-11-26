@@ -75,9 +75,10 @@ class _MessageTagState extends State<MessageTag>
 
   Widget chatRoomCard(ChatListReceived chatRoom) {
     return GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed(RouteMap.chatPage,
+        onTap: () async {
+          await Navigator.of(context).pushNamed(RouteMap.chatPage,
               arguments: (chatRoom.postId, chatRoom.postName));
+          setState(() {});
         },
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
