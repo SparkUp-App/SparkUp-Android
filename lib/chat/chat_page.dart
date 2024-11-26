@@ -21,11 +21,13 @@ class _ChatPageState extends State<ChatPage> {
   bool isLoading = false;
   bool sendingMessage = false;
   bool hasMoreMessage = true;
+  bool menuOpen = false;
   int? oldestMessageId;
   final ScrollController _scrollController = ScrollController();
   final int limit = 50;
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  OverlayEntry? _overlayEntry;
 
   ValueNotifier<List<ChatMessage>> messageList = ValueNotifier([]);
 
@@ -182,6 +184,113 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  void toggleMenu() {
+    setState(() {
+      if (menuOpen) {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+      } else {
+        final overlay = Overlay.of(context);
+        _overlayEntry = OverlayEntry(
+            builder: (context) => Stack(
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: toggleMenu,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                    // Menu items
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top +
+                          45, // Adjust based on your AppBar height
+                      right: 32,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: 200,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildMenuItem(
+                                icon: SparkIcons.users,
+                                title: 'Members',
+                                onTap: () {
+                                  toggleMenu();
+                                  // Add your navigation logic here
+                                },
+                              ),
+                              _buildMenuItem(
+                                icon: SparkIcons.file,
+                                title: 'Event Detail',
+                                onTap: () {
+                                  toggleMenu();
+                                  // Add your navigation logic here
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ));
+        overlay.insert(_overlayEntry!);
+      }
+      menuOpen = !menuOpen;
+    });
+  }
+
+  Widget _buildMenuItem({
+    required SparkIcons icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 20.0,
+              width: 20.0,
+              child: SparkIcon(icon: icon, size: 20, color: Colors.black87),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.arrow_forward_ios_rounded,
+                size: 15, color: Colors.black54),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,11 +322,12 @@ class _ChatPageState extends State<ChatPage> {
               )),
           actions: [
             IconButton(
-                onPressed: () {/*Meun Process */},
-                icon: const SparkIcon(
-                  icon: SparkIcons.bars,
-                  color: Color(0xFFF77D43),
-                ))
+              onPressed: () => toggleMenu(),
+              icon: const SparkIcon(
+                icon: SparkIcons.bars,
+                color: Color(0xFFF77D43),
+              ),
+            )
           ],
         ),
         backgroundColor: Colors.white,
@@ -257,7 +367,10 @@ class _ChatPageState extends State<ChatPage> {
                       ],
                       if (isLoading)
                         const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                            color: Colors.black26,
+                            strokeWidth: 2.0,
+                          ),
                         )
                     ],
                   ),
@@ -269,6 +382,7 @@ class _ChatPageState extends State<ChatPage> {
                   child: TextField(
                     focusNode: _focusNode,
                     onTapOutside: (event) => _focusNode.unfocus(),
+                    onChanged: (element) => setState(() {}),
                     enabled: !sendingMessage,
                     controller: _textEditingController,
                     expands: true,
@@ -286,6 +400,7 @@ class _ChatPageState extends State<ChatPage> {
                         vertical: 12.0,
                       ),
                       suffixIcon: IconButton(
+                        padding: const EdgeInsets.only(right: 10.0),
                         icon: sendingMessage
                             ? Container(
                                 alignment: Alignment.centerRight,
@@ -296,7 +411,13 @@ class _ChatPageState extends State<ChatPage> {
                                   color: Color(0xFFF77D43),
                                 ),
                               )
-                            : const Icon(Icons.send, color: Color(0xFFF77D43)),
+                            : SparkIcon(
+                                icon: SparkIcons.sent,
+                                color: (_textEditingController.text.isEmpty ||
+                                        _textEditingController.text == "" &&
+                                            !_focusNode.hasFocus)
+                                    ? Colors.black12
+                                    : const Color(0xFFF77D43)),
                         onPressed: () {
                           if (sendingMessage) return;
                           sendMessageProcess();
