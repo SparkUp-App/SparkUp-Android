@@ -323,64 +323,79 @@ class _ChatPageState extends State<ChatPage> {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.7,
               ),
-              child: Row(
-                mainAxisAlignment: selfMessage
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: selfMessage
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (selfMessage) ...[
+                  if (!selfMessage)
                     Text(
-                      "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
+                      message.senderName,
                       style: const TextStyle(
-                        color: Color(0xFF999998),
-                        fontSize: 10.0,
-                      ),
+                          color: Color(0xFF4B4B4B), fontSize: 10.0),
                     ),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                  ],
-                  Flexible(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: selfMessage
-                            ? const Color(0xFFF77D43)
-                            : const Color(0xFF999998),
-                        borderRadius: selfMessage
-                            ? const BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                topRight: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(10.0),
-                              )
-                            : const BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                topRight: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
-                              ),
-                      ),
-                      padding: const EdgeInsets.all(12.0),
-                      child: Text(
-                        message.content,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
+                  Row(
+                    mainAxisAlignment: selfMessage
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (selfMessage) ...[
+                        Text(
+                          "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
+                          style: const TextStyle(
+                            color: Color(0xFF999998),
+                            fontSize: 10.0,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                      ],
+                      Flexible(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: selfMessage
+                                ? const Color(0xFFF77D43)
+                                : const Color(0xFF999998),
+                            borderRadius: selfMessage
+                                ? const BorderRadius.only(
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0),
+                                    bottomLeft: Radius.circular(20.0),
+                                  )
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0),
+                                  ),
+                          ),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            message.content,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  if (!selfMessage) ...[
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
-                      style: const TextStyle(
-                        color: Color(0xFF999998),
-                        fontSize: 10.0,
-                      ),
-                    ),
-                  ],
+                      if (!selfMessage) ...[
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          "${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}",
+                          style: const TextStyle(
+                            color: Color(0xFF999998),
+                            fontSize: 10.0,
+                          ),
+                        ),
+                      ],
+                    ],
+                  )
                 ],
               ),
             ),
