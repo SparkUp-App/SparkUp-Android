@@ -5,6 +5,7 @@ import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
+import 'package:spark_up/socket_service.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.postId, required this.postName});
@@ -18,11 +19,12 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool isLoading = false;
+  bool sendingMessage = false;
   bool hasMoreMessage = true;
   int? oldestMessageId;
   final ScrollController _scrollController = ScrollController();
   final int limit = 50;
-  late DateTime? currentMessageDate;
+  final TextEditingController _textEditingController = TextEditingController();
 
   ValueNotifier<List<ChatMessage>> messageList = ValueNotifier([]);
 
@@ -38,9 +40,13 @@ class _ChatPageState extends State<ChatPage> {
       }
     });
     ChatRoomManager.manager.updateMessage.addListener(() {
+      // Update currentMessageDate, Message List, Check Text Field Loading Content
       if (ChatRoomManager.manager.updateMessage.value != null) {
-        currentMessageDate =
-            ChatRoomManager.manager.updateMessage.value!.createdAt;
+        if (ChatRoomManager.manager.updateMessage.value!.content ==
+            _textEditingController.text.trim()) {
+          sendingMessage = false;
+          _textEditingController.clear();
+        }
         messageList.value = [
           ChatRoomManager.manager.updateMessage.value!,
           ...messageList.value
@@ -63,21 +69,12 @@ class _ChatPageState extends State<ChatPage> {
     });
     ChatRoomManager.manager.updateMessage.removeListener(() {
       if (ChatRoomManager.manager.updateMessage.value != null) {
-        currentMessageDate =
-            ChatRoomManager.manager.updateMessage.value!.createdAt;
         messageList.value = [
           ChatRoomManager.manager.updateMessage.value!,
           ...messageList.value
         ];
       }
     });
-  }
-
-  @override
-  void setState(VoidCallback fn) {
-    super.setState(fn);
-    currentMessageDate =
-        messageList.value.isEmpty ? null : messageList.value[0].createdAt;
   }
 
   void readAll() {
@@ -144,6 +141,46 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {});
   }
 
+  void sendMessageProcess() async {
+    sendingMessage = true;
+    setState(() {});
+
+    String sendMessage = _textEditingController.text.trim();
+
+    if (sendMessage.isNotEmpty) {
+      try {
+        bool success = await SocketService.manager.sendMessage(
+          postId: widget.postId,
+          content: sendMessage,
+          timeoutSeconds: 15, // Set the timeout to 15 seconds
+        );
+        if (success) {
+          _textEditingController.clear();
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) => const SystemMessage(
+                  content: "Something Went Wrong\n Please Try Again Later"));
+          debugPrint('Message failed to send');
+        }
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                content:
+                    "Something Went Wrong\n Please Try Again Later\n(Error: scoket error)"));
+        debugPrint('Error sending message: $e');
+      } finally {
+        sendingMessage = false;
+        setState(() {});
+      }
+    } else {
+      _textEditingController.clear();
+      sendingMessage = false;
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,31 +217,89 @@ class _ChatPageState extends State<ChatPage> {
                 ))
           ],
         ),
+        backgroundColor: Colors.white,
         body: ValueListenableBuilder(
           valueListenable: messageList,
           builder: (context, messageList, child) {
-            return ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              reverse: true,
+            return Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                for (var message in messageList) ...[
-                  if (currentMessageDate!.month != message.createdAt.month ||
-                      currentMessageDate!.day != message.createdAt.day) ...[
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: dateBubble(message),
-                    )
-                  ],
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: chatBubble(message),
+                Expanded(
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    reverse: true,
+                    children: [
+                      for (int i = 0; i < messageList.length; i++) ...[
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: chatBubble(messageList[i]),
+                        ),
+                        if (i < messageList.length - 1 &&
+                            (messageList[i].createdAt.month !=
+                                    messageList[i + 1].createdAt.month ||
+                                messageList[i].createdAt.day !=
+                                    messageList[i + 1].createdAt.day)) ...[
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: dateBubble(messageList[i]),
+                          )
+                        ],
+                      ],
+                      if (messageList.isNotEmpty) ...[
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: dateBubble(messageList.last),
+                        ),
+                      ],
+                      if (isLoading)
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                    ],
                   ),
-                ],
-                if (isLoading)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(13.0, 5.0, 13.0, 20.0),
+                  width: MediaQuery.of(context).size.width,
+                  height: 80.0,
+                  child: TextField(
+                    enabled: !sendingMessage,
+                    controller: _textEditingController,
+                    expands: true,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Message...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF5F5F5),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: sendingMessage
+                            ? Container(
+                                alignment: Alignment.centerRight,
+                                height: 15.0,
+                                width: 15.0,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  color: Color(0xFFF77D43),
+                                ),
+                              )
+                            : const Icon(Icons.send, color: Color(0xFFF77D43)),
+                        onPressed: () {
+                          if (sendingMessage) return;
+                          sendMessageProcess();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
               ],
             );
           },
@@ -293,8 +388,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget dateBubble(ChatMessage message) {
-    DateTime needShowDate = currentMessageDate!;
-    currentMessageDate = message.createdAt;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -304,7 +397,7 @@ class _ChatPageState extends State<ChatPage> {
               borderRadius: BorderRadius.circular(20.0),
               color: Colors.black26.withOpacity(0.3)),
           child: Text(
-            "${needShowDate.month}/${needShowDate.day} ${weekDayIntToString(needShowDate.weekday)}",
+            "${message.createdAt.month}/${message.createdAt.day} ${weekDayIntToString(message.createdAt.weekday)}",
             style: const TextStyle(color: Colors.white, fontSize: 10.0),
           ),
         )

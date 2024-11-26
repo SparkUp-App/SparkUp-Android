@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -117,22 +119,37 @@ class SocketService {
     }
   }
 
-  Future<void> sendMessage({
+  Future<bool> sendMessage({
     required int postId,
     required String content,
+    int timeoutSeconds = 10,
   }) async {
     if (!isConnected || _userId == null) {
       throw SocketException('Socket is not connected');
     }
 
+    Completer<bool> sendCompleter = Completer();
     try {
       socket!.emit('send_message', {
         'post_id': postId,
         'sender_id': _userId,
         'content': content,
       });
+
+      socket!.on('new_message', (data) {
+        final message = ChatMessage.initfromData(data);
+        if (message.content == content) {
+          if (!sendCompleter.isCompleted) {
+            sendCompleter.complete(true);
+          }
+        }
+      });
+      return await sendCompleter.future;
     } catch (e) {
       debugPrint('Error sending message: $e');
+      if (!sendCompleter.isCompleted) {
+        sendCompleter.complete(false);
+      }
       throw SocketException('Failed to send message: $e');
     }
   }
