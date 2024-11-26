@@ -88,7 +88,8 @@ enum SparkIcons {
   study('assets/icons/study.svg'),
   trash('assets/icons/trash.svg'),
   travel('assets/icons/travel.svg'),
-  zodiacSign('assets/icons/zodiac_sign.svg');
+  zodiacSign('assets/icons/zodiac_sign.svg'),
+  sent('assets/icons/sent.svg');
 
   final String path;
   const SparkIcons(this.path);
