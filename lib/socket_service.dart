@@ -129,6 +129,8 @@ class SocketService {
     }
 
     Completer<bool> sendCompleter = Completer();
+    Timer? timeoutTimer;
+
     try {
       socket!.emit('send_message', {
         'post_id': postId,
@@ -139,9 +141,17 @@ class SocketService {
       socket!.on('new_message', (data) {
         final message = ChatMessage.initfromData(data);
         if (message.content == content) {
+          timeoutTimer?.cancel();
           if (!sendCompleter.isCompleted) {
             sendCompleter.complete(true);
           }
+        }
+      });
+
+      timeoutTimer = Timer(Duration(seconds: timeoutSeconds), () {
+        if (!sendCompleter.isCompleted) {
+          sendCompleter.complete(false);
+          throw SocketException("Timeout");
         }
       });
       return await sendCompleter.future;
