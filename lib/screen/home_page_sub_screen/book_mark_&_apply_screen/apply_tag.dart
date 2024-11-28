@@ -4,6 +4,7 @@ import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
+import 'package:spark_up/common_widget/event_card_skeleton.dart';
 class ApplyTag extends StatefulWidget {
   const ApplyTag({super.key});
 
@@ -84,7 +85,7 @@ class _ApplyTagState extends State<ApplyTag>
               for (var element in postList) ...[eventCard(element, context)],
               if (isLoading)
                 const Center(
-                  child: CircularProgressIndicator(),
+                  child: EventCardSkeletonListRandomLength(),
                 ),
               if (isEnd) NoMoreData(),
             ],
