@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/confirm_dialog.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/request_tag_skeleton.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/applicant_list_received.dart';
 import 'package:spark_up/network/network.dart';
@@ -65,7 +66,7 @@ class _RequestTagState extends State<RequestTag>
   Widget build(BuildContext context) {
     super.build(context);
     return isLoading
-        ? const eventCardSkeletonList()
+        ? const RequestSkeletonListRandomLength()
         : RefreshIndicator(
             child: ListView(
               children: [
