@@ -1,9 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:spark_up/chat/data/approved_message.dart';
+import 'package:spark_up/chat/data/chat_message.dart';
+import 'package:spark_up/chat/data/rejected_message.dart';
 
 // Define callback types
 typedef MessageCallback = void Function(ChatMessage message);
+typedef ApprovedCallback = void Function(ApprovedMessage message);
+typedef RejectedCallback = void Function(RejectedMessage message);
 typedef StatusCallback = void Function(SocketStatus status, String? message);
 
 class SocketService {
@@ -18,6 +25,8 @@ class SocketService {
 
   // Callbacks
   MessageCallback? onNewMessage;
+  ApprovedCallback? onNewApprovedMessage;
+  RejectedCallback? onNewRejectedMessage;
   StatusCallback? onStatusChange;
 
   bool get isConnected => socket?.connected ?? false;
@@ -27,12 +36,14 @@ class SocketService {
     required int userId,
     MessageCallback? onMessage,
     StatusCallback? onStatus,
+    ApprovedCallback? onApprovedMessage,
+    RejectedCallback? onRejectedMessage,
   }) {
     _userId = userId;
     onNewMessage = onMessage;
     onStatusChange = onStatus;
-
-    disconnect();
+    onNewApprovedMessage = onApprovedMessage;
+    onNewRejectedMessage = onRejectedMessage;
 
     debugPrint("Build Socket Connect");
     // Initialize socket with configuration
@@ -44,6 +55,7 @@ class SocketService {
       'reconnectionDelay': 1000,
       'reconnectionDelayMax': 5000,
       'reconnectionAttempts': 5,
+      'forceNew': true,
     });
 
     _setupEventHandlers();
@@ -69,7 +81,9 @@ class SocketService {
         debugPrint('Connection error: $error');
         onStatusChange?.call(SocketStatus.error, 'Connection failed: $error');
       })
-      ..on('new_message', _handleNewMessage);
+      ..on('new_message', _handleNewMessage)
+      ..on('application_approved', _handleNewApproved)
+      ..on('application_rejected', _handleNewRejected);
   }
 
   void _handleNewMessage(dynamic data) {
@@ -83,13 +97,39 @@ class SocketService {
     }
   }
 
-  Future<void> sendMessage({
+  void _handleNewApproved(dynamic data) {
+    try {
+      final message = ApprovedMessage.initfromData(data);
+      debugPrint('New message received: ${message.message}');
+      onNewApprovedMessage?.call(message);
+    } catch (e) {
+      debugPrint('Error parsing message: $e');
+      onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
+    }
+  }
+
+  void _handleNewRejected(dynamic data) {
+    try {
+      final message = RejectedMessage.initfromData(data);
+      debugPrint('New message received: ${message.message}');
+      onNewRejectedMessage?.call(message);
+    } catch (e) {
+      debugPrint('Error parsing message: $e');
+      onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
+    }
+  }
+
+  Future<bool> sendMessage({
     required int postId,
     required String content,
+    int timeoutSeconds = 10,
   }) async {
     if (!isConnected || _userId == null) {
       throw SocketException('Socket is not connected');
     }
+
+    Completer<bool> sendCompleter = Completer();
+    Timer? timeoutTimer;
 
     try {
       socket!.emit('send_message', {
@@ -97,8 +137,29 @@ class SocketService {
         'sender_id': _userId,
         'content': content,
       });
+
+      socket!.on('new_message', (data) {
+        final message = ChatMessage.initfromData(data);
+        if (message.content == content) {
+          timeoutTimer?.cancel();
+          if (!sendCompleter.isCompleted) {
+            sendCompleter.complete(true);
+          }
+        }
+      });
+
+      timeoutTimer = Timer(Duration(seconds: timeoutSeconds), () {
+        if (!sendCompleter.isCompleted) {
+          sendCompleter.complete(false);
+          throw SocketException("Timeout");
+        }
+      });
+      return await sendCompleter.future;
     } catch (e) {
       debugPrint('Error sending message: $e');
+      if (!sendCompleter.isCompleted) {
+        sendCompleter.complete(false);
+      }
       throw SocketException('Failed to send message: $e');
     }
   }
@@ -128,50 +189,6 @@ class SocketException implements Exception {
 
   @override
   String toString() => 'SocketException: $message';
-}
-
-class ChatMessage {
-  final int id;
-  final int postId;
-  final int senderId;
-  //final String senderName;
-  final String content;
-  final DateTime createdAt;
-  final List<int> readUsers;
-
-  ChatMessage({
-    required this.id,
-    required this.postId,
-    required this.senderId,
-    //required this.senderName,
-    required this.content,
-    required this.createdAt,
-    required this.readUsers,
-  });
-
-  factory ChatMessage.initfromData(Map<String, dynamic> data) {
-    return ChatMessage(
-      id: data['id'],
-      postId: data['post_id'],
-      senderId: data['sender_id'],
-      //senderName: json['sender_name'] as String,
-      content: data['content'],
-      createdAt: DateTime.parse(data['created_at']).toLocal(),
-      readUsers: List<int>.from(data['read_users'] as List<dynamic>),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'post_id': postId,
-      'sender_id': senderId,
-      //'sender_name': senderName,
-      'content': content,
-      'created_at': createdAt.toIso8601String(),
-      'read_users': readUsers,
-    };
-  }
 }
 
 // Define event types

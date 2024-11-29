@@ -1,5 +1,6 @@
-class PostView{
+class PostView {
   late int postId;
+  late int userId;
   late String nickname;
   late String type;
   late String title;
@@ -22,6 +23,7 @@ class PostView{
 
   PostView({
     required this.postId,
+    required this.userId,
     required this.nickname,
     required this.type,
     required this.title,
@@ -46,11 +48,13 @@ class PostView{
   factory PostView.initfromData(Map<String, dynamic> data) {
     return PostView(
       postId: data['id'] as int,
+      userId: data['user_id'] as int,
       nickname: data['nickname'] as String,
       type: data['type'] as String,
       title: data['title'] as String,
       content: data['content'] as String,
-      eventStartDate: DateTime.parse(data['event_start_date'] as String).toLocal(),
+      eventStartDate:
+          DateTime.parse(data['event_start_date'] as String).toLocal(),
       eventEndDate: DateTime.parse(data['event_end_date'] as String).toLocal(),
       numberOfPeopleRequired: data['number_of_people_required'] as int,
       location: data['location'] as String,
