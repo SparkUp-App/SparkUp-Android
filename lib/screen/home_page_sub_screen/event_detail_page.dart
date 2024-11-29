@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/data/post_view.dart';
@@ -14,7 +15,6 @@ import 'dart:math';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
-import 'package:toasty_box/toast_enums.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage({super.key, required this.postId});
@@ -34,6 +34,7 @@ class _EventDetailPageState extends State<EventDetailPage>
   bool sendingMessage = false;
   bool gettingComment = false;
   bool noMoreComment = false;
+  bool prePageReload = false;
 
   late PostView postData;
   late TabController tabController;
@@ -43,9 +44,13 @@ class _EventDetailPageState extends State<EventDetailPage>
   TextEditingController textEditingController = TextEditingController();
   int page = 2, perPage = 20;
 
+  OverlayEntry? _overlayEntry;
+  bool moreMeun = false;
+
   String _generateRandomSpaces(int length) {
     return ' ' * length; // 生成指定長度的空白字符
   }
+
   final Random random = Random();
 
   @override
@@ -140,20 +145,16 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.liked = !postData.liked;
-          if(postData.liked == true) 
-          ToastService.showSuccessToast(
-            context,
-            length: ToastLength.medium,
-            expandedHeight: 100,
-            message: "This event gets your like!"
-          );
-          else if(postData.liked == false )
-          ToastService.showSuccessToast(
-            context,
-            length: ToastLength.medium,
-            expandedHeight: 100,
-            message: "You take back your like!"
-          );
+          if (postData.liked == true)
+            ToastService.showSuccessToast(context,
+                length: ToastLength.medium,
+                expandedHeight: 100,
+                message: "This event gets your like!");
+          else if (postData.liked == false)
+            ToastService.showSuccessToast(context,
+                length: ToastLength.medium,
+                expandedHeight: 100,
+                message: "You take back your like!");
         });
       } else {
         showDialog(
@@ -183,20 +184,16 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.bookmarked = !postData.bookmarked;
-          if(postData.bookmarked == true) 
-          ToastService.showSuccessToast(
-            context,
-            length: ToastLength.medium,
-            expandedHeight: 100,
-            message: "You have bookmark this event!"
-          );
-          else if(postData.bookmarked == false )
-          ToastService.showSuccessToast(
-            context,
-            length: ToastLength.medium,
-            expandedHeight: 100,
-            message: "You have unbookmark this event!"
-          );
+          if (postData.bookmarked == true)
+            ToastService.showSuccessToast(context,
+                length: ToastLength.medium,
+                expandedHeight: 100,
+                message: "You have bookmark this event!");
+          else if (postData.bookmarked == false)
+            ToastService.showSuccessToast(context,
+                length: ToastLength.medium,
+                expandedHeight: 100,
+                message: "You have unbookmark this event!");
         });
       } else {
         showDialog(
@@ -211,7 +208,8 @@ class _EventDetailPageState extends State<EventDetailPage>
 
   void pressAplyProcess() async {
     if (sendingApplicant) return;
-    if (postData.applicationStatus == 1 || postData.applicationStatus == 2) return;
+    if (postData.applicationStatus == 1 || postData.applicationStatus == 2)
+      return;
     sendingApplicant = true;
 
     Map response;
@@ -330,23 +328,26 @@ class _EventDetailPageState extends State<EventDetailPage>
     gettingComment = false;
     setState(() {});
   }
-  Widget SkeletonLoader(){
-    final labelSpaces = _generateRandomSpaces(random.nextInt(15) + 10); // 隨機生成5到15個空白字符
-    final titleSpaces = _generateRandomSpaces(random.nextInt(50) + 40); // 隨機生成10到40個空白字符
+
+  Widget SkeletonLoader() {
+    final labelSpaces =
+        _generateRandomSpaces(random.nextInt(15) + 10); // 隨機生成5到15個空白字符
+    final titleSpaces =
+        _generateRandomSpaces(random.nextInt(50) + 40); // 隨機生成10到40個空白字符
     return Skeletonizer(
       effect: const ShimmerEffect(
         baseColor: Colors.white12,
         highlightColor: Colors.white24,
         duration: Duration(seconds: 1),
       ),
-      child:
-      Column(
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:[
+          children: [
             Skeleton.leaf(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFFff6b6b),
                   borderRadius: BorderRadius.circular(30.0),
@@ -362,11 +363,14 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ),
             ),
-            SizedBox(height: 6,),
+            SizedBox(
+              height: 6,
+            ),
             Skeleton.leaf(
               child: Container(
                 height: 30,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(5),
@@ -382,7 +386,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ),
             ),
-            SizedBox(height: 12,),
+            SizedBox(
+              height: 12,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -391,9 +397,10 @@ class _EventDetailPageState extends State<EventDetailPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Skeleton.leaf(
-                      child:Container(
+                      child: Container(
                         height: 20,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(5),
@@ -411,9 +418,10 @@ class _EventDetailPageState extends State<EventDetailPage>
                     ),
                     const SizedBox(height: 6),
                     Skeleton.leaf(
-                      child:Container(
+                      child: Container(
                         height: 20,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(5),
@@ -433,10 +441,11 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
 
                 Skeleton.leaf(
-                  child:Container(
+                  child: Container(
                     height: 25,
-                    width:135,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    width: 135,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(5),
@@ -454,15 +463,149 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ],
             ),
-          ]
+          ]),
+    );
+  }
+
+  void toggleMenu() {
+    setState(() {
+      if (moreMeun) {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+      } else {
+        final overlay = Overlay.of(context);
+        _overlayEntry = OverlayEntry(
+            builder: (context) => Stack(
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: toggleMenu,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                    // Menu items
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top +
+                          45, // Adjust based on your AppBar height
+                      right: 32,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: 200,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildMenuItem(
+                                icon: SparkIcons.skill,
+                                title: 'Edit',
+                                onTap: () async {
+                                  toggleMenu();
+                                  // bool result = await confirmDialog(
+                                  //     context,
+                                  //     "You sure to delete post:",
+                                  //     postData.title);
+
+                                  // if (result && context.mounted) {
+                                  //   final result = await loadingIndicator(
+                                  //       Network.manager.sendRequest(
+                                  //           method: RequestMethod.post,
+                                  //           path: PostPath.delete,
+                                  //           data: {
+                                  //             "user_id": Network.manager.userId,
+                                  //             "post_id": widget.postId
+                                  //           }),
+                                  //       context);
+                                  //   if (context.mounted) {
+                                  //     if (result.$1) {
+                                  //       prePageReload = true;
+                                  //       Navigator.pop(context, prePageReload);
+                                  //     } else {
+                                  //       showDialog(
+                                  //           context: context,
+                                  //           builder: (context) =>
+                                  //               const SystemMessage(
+                                  //                   content:
+                                  //                       "Something Went Wrong\n Please Try Again Later"));
+                                  //     }
+                                  //   }
+                                  // }
+                                },
+                              ),
+                              _buildMenuItem(
+                                icon: SparkIcons.trash,
+                                title: 'Delete',
+                                onTap: () {
+                                  toggleMenu();
+                                  // Remove Post
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ));
+        overlay.insert(_overlayEntry!);
+      }
+      moreMeun = !moreMeun;
+    });
+  }
+
+  Widget _buildMenuItem({
+    required SparkIcons icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 20.0,
+              width: 20.0,
+              child: SparkIcon(icon: icon, size: 20, color: Colors.black87),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.arrow_forward_ios_rounded,
+                size: 15, color: Colors.black54),
+          ],
+        ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-      NestedScrollView(
+      body: NestedScrollView(
         controller: scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
@@ -480,159 +623,167 @@ class _EventDetailPageState extends State<EventDetailPage>
               actions: initialing
                   ? []
                   : [
-                IconButton(
-                  onPressed: () => pressLikedProcess(),
-                  icon: Icon(
-                    postData.liked
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: const Color.fromARGB(255, 233, 113, 153),
-                    size: 24.0,
-                  ),
-                ),
-                IconButton(
-                  onPressed: pressBookMarkedProcess,
-                  icon: Icon(
-                    postData.bookmarked
-                        ? Icons.bookmark
-                        : Icons.bookmark_border,
-                  ),
-                  color: Colors.white,
-                  
-                ),
-              ],
-
+                      IconButton(
+                        onPressed: () => pressLikedProcess(),
+                        icon: Icon(
+                          postData.liked
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: const Color.fromARGB(255, 233, 113, 153),
+                          size: 24.0,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: pressBookMarkedProcess,
+                        icon: Icon(
+                          postData.bookmarked
+                              ? Icons.bookmark
+                              : Icons.bookmark_border,
+                        ),
+                        color: Colors.white,
+                      ),
+                      if (postData.userId == Network.manager.userId)
+                        IconButton(
+                            onPressed: () => toggleMenu(),
+                            icon: const SparkIcon(
+                              icon: SparkIcons.more,
+                              color: Colors.white,
+                            ))
+                    ],
               expandedHeight: 220.0,
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
                   color: const Color.fromARGB(255, 245, 174, 128),
                   padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
-                  child:initialing? SkeletonLoader(): Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          "#${postData.type}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        postData.title,
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                          decorationThickness: 2,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // 左側資訊
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    'Hold by: ',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    postData.nickname,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
+                  child: initialing
+                      ? SkeletonLoader()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
+                              child: Text(
+                                "#${postData.type}",
                                 style: const TextStyle(
-                                  color: Colors.white70,
+                                  color: Colors.white,
                                   fontSize: 14,
                                 ),
                               ),
-                            ],
-                          ),
-                          // 右側統計
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.favorite,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "${postData.likes}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
+                            ),
+                            Text(
+                              postData.title,
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.white,
+                                decorationThickness: 2,
                               ),
-                              const SizedBox(width: 16),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.chat_bubble_outline,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "${postData.comments}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // 左側資訊
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Hold by: ',
+                                          style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        Text(
+                                          postData.nickname,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 16),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.person_outline,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "${postData.applicants ?? 0}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                                  ],
+                                ),
+                                // 右側統計
+                                Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.favorite,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "${postData.likes}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.chat_bubble_outline,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "${postData.comments}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.person_outline,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "${postData.applicants ?? 0}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                 ),
               ),
               bottom: TabBar(
@@ -664,75 +815,79 @@ class _EventDetailPageState extends State<EventDetailPage>
       ),
     );
   }
-Widget detailContentSkeleton() {
+
+  Widget detailContentSkeleton() {
     return Column(
       children: [
         Expanded(
             child: SizedBox(
-              child: SingleChildScrollView(
-                child: InfoPreviewCardSkeleton(),
-              ),
-            )),
+          child: SingleChildScrollView(
+            child: InfoPreviewCardSkeleton(),
+          ),
+        )),
         const Divider(
           color: Colors.grey,
           thickness: 1,
         ),
-        if(!initialing) Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Container(
-                margin:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                child: ElevatedButton(
-                  onPressed: () => pressAplyProcess(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    padding: const EdgeInsets.all(10.0),
-                  ),
-                  child: Visibility(
-                    visible: (postData.postId != Network.manager.userId), // 要求你給我他這篇文的api
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        (Icons.check),
-                        color: Colors.white,
+        if (!initialing)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 5.0, horizontal: 10.0),
+                  child: ElevatedButton(
+                      onPressed: () => pressAplyProcess(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 245, 174, 128),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        padding: const EdgeInsets.all(10.0),
                       ),
-                      Text(
-                         'Apply',
-                        style: const TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  )
+                      child: Visibility(
+                        visible: (postData.postId !=
+                            Network.manager.userId), // 要求你給我他這篇文的api
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              (Icons.check),
+                              color: Colors.white,
+                            ),
+                            Text(
+                              'Apply',
+                              style: const TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      )),
                 ),
               ),
-            ),
-          ],
-        )
+            ],
+          )
       ],
     );
   }
+
   Widget detailContent() {
     return Column(
       children: [
         Expanded(
             child: SizedBox(
-              child: SingleChildScrollView(
-                child: InfoPreviewCard(
-                  title: postData.title,
-                  startDate: postData.eventStartDate,
-                  endDate: postData.eventEndDate,
-                  peopleRequired: postData.numberOfPeopleRequired,
-                  location: postData.location,
-                  attributes: postData.attributes,
-                  content: postData.content,
-                ),
-              ),
-            )),
+          child: SingleChildScrollView(
+            child: InfoPreviewCard(
+              title: postData.title,
+              startDate: postData.eventStartDate,
+              endDate: postData.eventEndDate,
+              peopleRequired: postData.numberOfPeopleRequired,
+              location: postData.location,
+              attributes: postData.attributes,
+              content: postData.content,
+            ),
+          ),
+        )),
         const Divider(
           color: Colors.grey,
           thickness: 1,
@@ -743,7 +898,7 @@ Widget detailContentSkeleton() {
             Expanded(
               child: Container(
                 margin:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 child: ElevatedButton(
                   onPressed: () => pressAplyProcess(),
                   style: ElevatedButton.styleFrom(
@@ -784,18 +939,18 @@ Widget detailContentSkeleton() {
       children: [
         Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (int index = commentList.length - 1; index >= 0; index--) ...[
-                    CommentBlock(comment: commentList[index])
-                  ],
-                  if (noMoreComment)
-                    const Center(child: Text("No More Comment"))
-                  else if (gettingComment)
-                    const CircularProgressIndicator()
-                ],
-              ),
-            )),
+          child: Column(
+            children: [
+              for (int index = commentList.length - 1; index >= 0; index--) ...[
+                CommentBlock(comment: commentList[index])
+              ],
+              if (noMoreComment)
+                const Center(child: Text("No More Comment"))
+              else if (gettingComment)
+                const CircularProgressIndicator()
+            ],
+          ),
+        )),
         const Divider(
           thickness: 1,
           color: Colors.grey,
@@ -804,25 +959,25 @@ Widget detailContentSkeleton() {
           children: [
             Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      hintText: "Write a comment...",
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
-                          color: Colors.deepOrange,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.grey)),
+              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: TextField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  hintText: "Write a comment...",
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(
+                      color: Colors.deepOrange,
                     ),
-                    cursorColor: Colors.deepOrange,
                   ),
-                )),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.grey)),
+                ),
+                cursorColor: Colors.deepOrange,
+              ),
+            )),
             if (sendingMessage)
               const CircularProgressIndicator()
             else
@@ -857,7 +1012,7 @@ class _CommentBlockState extends State<CommentBlock> {
     super.initState();
 
     Duration differTime =
-    DateTime.now().difference(widget.comment.lastUpdateDate);
+        DateTime.now().difference(widget.comment.lastUpdateDate);
     int monthsDiff =
         (DateTime.now().year - widget.comment.lastUpdateDate.year) * 12 +
             DateTime.now().month -
@@ -981,36 +1136,35 @@ class _CommentBlockState extends State<CommentBlock> {
                         Row(
                           children: [
                             Container(
-                  margin: const EdgeInsets.all(5.0),
-                  child: const Icon(Icons.circle, color: Colors.black),
-                ),
-Text(
-                          widget.comment.userNickName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                          ),
-                        ),
+                              margin: const EdgeInsets.all(5.0),
+                              child:
+                                  const Icon(Icons.circle, color: Colors.black),
+                            ),
+                            Text(
+                              widget.comment.userNickName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
-                        
                         const SizedBox(height: 4),
                         Padding(
                           padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
                           child: Text(
-                          widget.comment.content,
-                          style: const TextStyle(fontSize: 14),
-                        ),
+                            widget.comment.content,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Padding(
                           padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
                           child: Text(
-                          "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes",
-                          style: TextStyle(color: Colors.grey[600]),
+                            "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
                         ),
-                        ),
-                        
                       ],
                     ),
                   ),
@@ -1023,9 +1177,7 @@ Text(
                       widget.comment.liked
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: widget.comment.liked
-                          ? Colors.red
-                          : Colors.grey,
+                      color: widget.comment.liked ? Colors.red : Colors.grey,
                     ),
                   ),
                 ),
@@ -1056,8 +1208,8 @@ Text(
                         );
                       },
                       child: Icon(
-                        
-                        Icons.delete, color: Colors.red,
+                        Icons.delete,
+                        color: Colors.red,
                       ),
                     ),
                   ),
@@ -1066,5 +1218,3 @@ Text(
     );
   }
 }
-
-
