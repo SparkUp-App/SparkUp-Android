@@ -158,8 +158,13 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       width: 3,
                     ),
                   ),
-                  child: const CircleAvatar(
-                    radius: 45,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/meal.jpg',
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -284,8 +289,13 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           width: 3,
                         ),
                       ),
-                      child: const CircleAvatar(
-                        radius: 45,
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/path_to_your_image.png',
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -380,6 +390,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       ),
                       Container(
                         height: 1,
+                        width:MediaQuery.of(context).size.width*0.9,
                         color: Colors.white,
                       ),
                     ],
@@ -533,7 +544,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         title: Text(
                           profile.nickname,
                           style: const TextStyle(
-                            fontSize: 24,
+                            fontSize: 28,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -556,10 +567,11 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                               ]
                             : null,
                       ),
-                      Container(
+                      Center(child:Container(
                         height: 1,
+                        width:MediaQuery.of(context).size.width*0.95,
                         color: Colors.white,
-                      ),
+                      )),
                     ],
                   ),
                 ),

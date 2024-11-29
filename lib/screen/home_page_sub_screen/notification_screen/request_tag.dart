@@ -68,19 +68,45 @@ class _RequestTagState extends State<RequestTag>
     return isLoading
         ? const RequestSkeletonListRandomLength()
         : RefreshIndicator(
-            child: ListView(
-              children: [
-                for (var element in haveApplicantEvents)
-                  ApplyDroper(applicantListReceived: element),
-                if (haveApplicantEvents.isEmpty)
-                  const Center(
-                    child: Text(
-                      "Nobody Apply",
-                      style: TextStyle(color: Colors.black26),
+            child: haveApplicantEvents.isEmpty 
+                ? Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min, // 讓內容根據內容大小適配
+                        children: [
+                          Image.asset(
+                            'assets/No_Event_space.png', // 替換為你的 PNG 圖片路徑
+                            width: MediaQuery.of(context).size.width * 0.9, // 寬度設置為屏幕的 90%
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            fit: BoxFit.contain, // 確保圖片不會變形
+                          ),
+                          const SizedBox(height: 16), // 圖片與文字之間的間距
+                          const Text(
+                            "Nobody Apply. Please wait...",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center, // 確保文字居中
+                          ),
+                        ],
+                      ),
                     ),
+                  )
+                : ListView(
+                    children: [
+                      for (var element in haveApplicantEvents)
+                        ApplyDroper(applicantListReceived: element),
+                      if (haveApplicantEvents.isEmpty)
+                        const Center(
+                          child: Text(
+                            "Nobody Apply",
+                            style: TextStyle(color: Colors.black26),
+                          ),
+                        ),
+                    ],
                   ),
-              ],
-            ),
             onRefresh: () async {
               haveApplicantEvents.clear();
               await getApplicantList();

@@ -86,18 +86,48 @@ class _MyRatPreviewTagState extends State<MyRatPreviewTag>
         pages = 0;
         myReferenceList.clear();
         await getReferenceList();
-        return;
       },
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: _scrollController,
-        children: [
-          for (var element in myReferenceList) ...[
-            MyRatingCard(myReference: element)
+      child: myReferenceList.isNotEmpty || isLoading
+          ? ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: myReferenceList.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < myReferenceList.length) {
+                  return MyRatingCard(myReference: myReferenceList[index]);
+                } else {
+                  return const eventCardSkeletonList();
+                }
+              },
+            )
+          : _buildEmptyState(),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/No_Event_space.png',
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.35,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "You haven’t get any rate from others.",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
-          if (isLoading) ...[const eventCardSkeletonList()],
-          if (noMoreData) ...[const NoMoreData()],
-        ],
+        ),
       ),
     );
   }
