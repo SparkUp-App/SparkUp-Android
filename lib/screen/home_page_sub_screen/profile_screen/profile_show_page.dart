@@ -150,20 +150,25 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 3,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteMap.levelPage);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3,
+                      ),
                     ),
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/meal.jpg',
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/member/Nebulas.png',
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -291,7 +296,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/path_to_your_image.png',
+                          'assets/member/Nebulas.png',
                           width: 90,
                           height: 90,
                           fit: BoxFit.cover,

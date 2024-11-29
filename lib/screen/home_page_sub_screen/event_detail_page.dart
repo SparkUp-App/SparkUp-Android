@@ -399,7 +399,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
-                          "Hold By:AAAAA", // 使用隨機��成的空白字符
+                          "Hold By:AAAAA", // 使用隨機生成的空白字符
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -796,42 +796,47 @@ Widget detailContentSkeleton() {
                 ],
               ),
             )),
-        const Divider(
-          thickness: 1,
-          color: Colors.grey,
-        ),
-        Row(
-          children: [
-            Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      hintText: "Write a comment...",
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
-                          color: Colors.deepOrange,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(color: Colors.grey)),
-                    ),
-                    cursorColor: Colors.deepOrange,
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.0), // 調整為更圓潤
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    hintText: "  Write a comment...",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    border: InputBorder.none, // 移除邊框
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12.0), // 調整輸入框高度
                   ),
-                )),
-            if (sendingMessage)
-              const CircularProgressIndicator()
-            else
-              IconButton(
-                onPressed: () => sendingProcess(),
-                icon: const Icon(Icons.send),
-                color: Colors.deepOrange,
-              )
-          ],
+                  cursorColor: Colors.deepOrange,
+                ),
+              ),
+              sendingMessage
+                  ? const CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      color: Colors.deepOrange,
+                    )
+                  : IconButton(
+                      onPressed: () => sendingProcess(),
+                      icon: const Icon(Icons.send),
+                      color: Colors.deepOrange,
+                    ),
+            ],
+          ),
         )
       ],
     );
@@ -851,6 +856,7 @@ class _CommentBlockState extends State<CommentBlock> {
   late String timeAfter;
   bool sendingLike = false;
   bool deleting = false;
+  bool _isLongPressed = false;
 
   @override
   void initState() {
@@ -933,137 +939,135 @@ class _CommentBlockState extends State<CommentBlock> {
     deleting = false;
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-      child: widget.comment.deleted
-          ? Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    child: const Center(
-                      child: Text(
-                        "Comment Has Been Deleted",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
+return Container(
+  margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+  child: widget.comment.deleted
+      ? Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: const Center(
+                  child: Text(
+                    "Comment Has Been Deleted",
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(5.0),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
+              ),
+            ),
+          ],
+        )
+      : GestureDetector(
+          onLongPress: widget.comment.userId == Network.manager.userId 
+            ? () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('刪除評論'),
+                    content: const Text('您確定要刪除此評論嗎？'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('取消'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          pressDeleteProcess();
+                        },
+                        child: const Text('確定'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            : null,
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.all(5.0),
-                  child: const Icon(Icons.circle, color: Colors.black),
-                ),
-Text(
-                          widget.comment.userNickName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                          ),
-                        ),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(5.0),
+                                  child: const Icon(Icons.circle, color: Colors.black),
+                                ),
+                                Text(
+                                  widget.comment.userNickName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            
+                            const SizedBox(height: 4),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+                              child: Text(
+                                widget.comment.content,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+                              child: Text(
+                                "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes",
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ),
                           ],
                         ),
-                        
-                        const SizedBox(height: 4),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
-                          child: Text(
-                          widget.comment.content,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        ),
-                        const SizedBox(height: 4),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
-                          child: Text(
-                          "F${widget.comment.floor} $timeAfter ${widget.comment.likes} likes",
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        ),
-                        
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  child: IconButton(
-                    onPressed: () => pressLikedProcess(),
-                    icon: Icon(
-                      widget.comment.liked
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: widget.comment.liked
-                          ? Colors.red
-                          : Colors.grey,
-                    ),
-                  ),
-                ),
-                if (widget.comment.userId == Network.manager.userId)
-                  Container(
-                    margin: const EdgeInsets.all(4.0),
-                    child: GestureDetector(
-                      onLongPress: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('刪除評論'),
-                            content: const Text('您確定要刪除此評論嗎？'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('取消'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  pressDeleteProcess();
-                                },
-                                child: const Text('確定'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      child: Icon(
-                        
-                        Icons.delete, color: Colors.red,
                       ),
-                    ),
+                      Center(
+                        child: IconButton(
+                          onPressed: () => pressLikedProcess(),
+                          icon: Icon(
+                            widget.comment.liked
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: widget.comment.liked
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-              ],
-            ),
-    );
+                ),
+              ),
+            ],
+          ),
+        ),
+);
   }
 }
 
