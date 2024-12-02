@@ -563,9 +563,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               const SystemMessage(
                                                   content:
                                                       "Delete Post Successful"));
-                                      bool callParentWidgetRefresh = true;
-                                      Navigator.pop(this.context,
-                                          callParentWidgetRefresh);
+                                      prePageReload = true;
+                                      Navigator.pop(
+                                          this.context, prePageReload);
                                     } else {
                                       showDialog(
                                           context: this.context,
@@ -638,7 +638,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                 pinned: true,
                 backgroundColor: const Color.fromARGB(255, 245, 174, 128),
                 leading: IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context, prePageReload),
                   icon: const Icon(
                     Icons.arrow_back_ios,
                     size: 20.0,
