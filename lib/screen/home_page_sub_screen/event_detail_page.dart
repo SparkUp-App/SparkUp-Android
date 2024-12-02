@@ -550,7 +550,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               const SystemMessage(
                                                   content:
                                                       "Delete Post Successful"));
-                                      Navigator.pop(this.context);
+                                      bool callParentWidgetRefresh = true;
+                                      Navigator.pop(this.context,
+                                          callParentWidgetRefresh);
                                     } else {
                                       showDialog(
                                           context: this.context,
