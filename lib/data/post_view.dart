@@ -1,3 +1,5 @@
+import 'package:spark_up/data/base_post.dart';
+
 class PostView {
   late int postId;
   late int userId;
@@ -69,6 +71,23 @@ class PostView {
       comments: data['comments'] as int,
       applicants: data['applicants'] as int,
       applicationStatus: data['application_status'],
+    );
+  }
+
+  BasePost toBasePost() {
+    return BasePost(
+      userId: userId,
+      type: type,
+      title: title,
+      content: content,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      numberOfPeopleRequired: numberOfPeopleRequired,
+      location: location,
+      skills: skills,
+      personalities: personalities,
+      languages: languages,
+      attributes: attributes,
     );
   }
 }
