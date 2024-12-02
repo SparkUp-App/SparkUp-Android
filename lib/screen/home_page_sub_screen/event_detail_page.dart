@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:spark_up/route.dart';
 import 'dart:math';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
@@ -518,6 +519,15 @@ class _EventDetailPageState extends State<EventDetailPage>
                                 title: 'Edit',
                                 onTap: () async {
                                   toggleMenu();
+                                  final edited = await Navigator.pushNamed(
+                                    context,
+                                    RouteMap.eventEditPage,
+                                    arguments: postData,
+                                  );
+                                  if (edited == true) {
+                                    prePageReload = true;
+                                    //Navigator.pop(context, prePageReload);
+                                  }
                                 },
                               ),
                               _buildMenuItem(
