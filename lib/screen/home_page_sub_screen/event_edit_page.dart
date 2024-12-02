@@ -18,6 +18,7 @@ class EventEditPage extends StatefulWidget {
 class _EventEditPageState extends State<EventEditPage> {
   late BasePost postData;
   bool processing = false;
+  bool prePageReload = false;
 
   Map<String, dynamic> editData = {};
   Map<String, TextEditingController> textControllers = {};
@@ -64,7 +65,7 @@ class _EventEditPageState extends State<EventEditPage> {
                 Navigator.pop(this.context);
               }
             } else {
-              Navigator.pop(this.context);
+              Navigator.pop(this.context, (prePageReload, postData));
             }
           },
         ),
@@ -113,9 +114,10 @@ class _EventEditPageState extends State<EventEditPage> {
                 color: const Color(0xFFF5A278),
                 borderRadius: BorderRadius.circular(50)),
             child: processing
-                ? const CircularProgressIndicator(
+                ? const Center(
+                    child: CircularProgressIndicator(
                     color: Colors.white,
-                  )
+                  ))
                 : TextButton(
                     onPressed: () async {
                       if (processing) return;
@@ -150,7 +152,9 @@ class _EventEditPageState extends State<EventEditPage> {
                               builder: (context) => const SystemMessage(
                                     content: "Save Change Success",
                                   ));
-                          Navigator.pop(this.context);
+                          bool prePageReload = true;
+                          Navigator.pop(
+                              this.context, (prePageReload, updatePost));
                         } else {
                           showDialog(
                               context: context,

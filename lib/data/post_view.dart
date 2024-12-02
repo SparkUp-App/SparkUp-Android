@@ -90,4 +90,18 @@ class PostView {
       attributes: attributes,
     );
   }
+
+  void updateFromBasePost(BasePost postData) {
+    type = postData.type;
+    title = postData.title;
+    content = postData.content;
+    eventStartDate = postData.eventStartDate;
+    eventEndDate = postData.eventEndDate;
+    numberOfPeopleRequired = postData.numberOfPeopleRequired;
+    location = postData.location;
+    skills = postData.skills;
+    personalities = postData.personalities;
+    languages = postData.languages;
+    attributes = postData.attributes;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/confirm_dialog.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
+import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/data/post_view.dart';
 import 'package:spark_up/network/network.dart';
@@ -519,14 +520,16 @@ class _EventDetailPageState extends State<EventDetailPage>
                                 title: 'Edit',
                                 onTap: () async {
                                   toggleMenu();
-                                  final edited = await Navigator.pushNamed(
+                                  final edited = (await Navigator.pushNamed(
                                     context,
                                     RouteMap.eventEditPage,
                                     arguments: postData,
-                                  );
-                                  if (edited == true) {
+                                  ) as (bool, BasePost)?);
+
+                                  if (edited != null && edited.$1 == true) {
                                     prePageReload = true;
-                                    //Navigator.pop(context, prePageReload);
+                                    postData.updateFromBasePost(edited.$2);
+                                    setState(() {});
                                   }
                                 },
                               ),
