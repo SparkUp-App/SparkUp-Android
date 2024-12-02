@@ -5,6 +5,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
+
 class HoldEventTab extends StatefulWidget {
   const HoldEventTab({super.key, required this.userId});
 
@@ -14,7 +15,8 @@ class HoldEventTab extends StatefulWidget {
   State<HoldEventTab> createState() => _HoldEventTadState();
 }
 
-class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClientMixin{
+class _HoldEventTadState extends State<HoldEventTab>
+    with AutomaticKeepAliveClientMixin {
   late List<ListReceivePost> postList = [];
   int page = 1;
   int perPage = 20;
@@ -59,6 +61,14 @@ class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClie
     setState(() {});
   }
 
+  void refresh() {
+    if (isLoading) return;
+    page = 1;
+    isEnd = false;
+    postList.clear();
+    getMoreData();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -74,9 +84,11 @@ class _HoldEventTadState extends State<HoldEventTab> with AutomaticKeepAliveClie
         },
         child: ListView(
           children: [
-            for (var element in postList) ...[eventCard(element, context)],
-            if (isLoading) eventCardSkeletonList(),
-            if (isEnd) NoMoreData(),
+            for (var element in postList) ...[
+              eventCard(element, context, refresh)
+            ],
+            if (isLoading) const eventCardSkeletonList(),
+            if (isEnd) const NoMoreData(),
           ],
         ),
       ),

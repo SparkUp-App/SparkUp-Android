@@ -1,3 +1,5 @@
+import 'package:spark_up/data/base_post.dart';
+
 class PostView {
   late int postId;
   late int userId;
@@ -70,5 +72,36 @@ class PostView {
       applicants: data['applicants'] as int,
       applicationStatus: data['application_status'],
     );
+  }
+
+  BasePost toBasePost() {
+    return BasePost(
+      userId: userId,
+      type: type,
+      title: title,
+      content: content,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      numberOfPeopleRequired: numberOfPeopleRequired,
+      location: location,
+      skills: skills,
+      personalities: personalities,
+      languages: languages,
+      attributes: attributes,
+    );
+  }
+
+  void updateFromBasePost(BasePost postData) {
+    type = postData.type;
+    title = postData.title;
+    content = postData.content;
+    eventStartDate = postData.eventStartDate;
+    eventEndDate = postData.eventEndDate;
+    numberOfPeopleRequired = postData.numberOfPeopleRequired;
+    location = postData.location;
+    skills = postData.skills;
+    personalities = postData.personalities;
+    languages = postData.languages;
+    attributes = postData.attributes;
   }
 }

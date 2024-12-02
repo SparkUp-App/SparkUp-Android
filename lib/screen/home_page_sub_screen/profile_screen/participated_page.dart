@@ -125,7 +125,7 @@ class _ParticipatedPageState extends State<ParticipatedPage> {
             controller: scrollController,
             children: [
               for (var element in receivedPostList) ...[
-                eventCard(element, context)
+                eventCard(element, context, () {})
               ],
               if (isLoading) const eventCardSkeletonList(),
               if (noMoreData) const Center(child: Text("No More Data"))

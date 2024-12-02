@@ -81,18 +81,17 @@ class _BookMarkTagState extends State<BookMarkTag>
         },
         child: RefreshIndicator(
           onRefresh: refresh,
-          child: 
-        ListView(
-          children: [
-            for (var element in postList) ...[eventCard(element, context)],
-            if (isLoading)
-              const Center(
-                child: EventCardSkeletonListRandomLength()
-              ),
-            if (isEnd) NoMoreData(),
-          ],
+          child: ListView(
+            children: [
+              for (var element in postList) ...[
+                eventCard(element, context, refresh)
+              ],
+              if (isLoading)
+                const Center(child: EventCardSkeletonListRandomLength()),
+              if (isEnd) NoMoreData(),
+            ],
+          ),
         ),
-        ), 
       ),
     );
   }

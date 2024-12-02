@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/confirm_dialog.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
+import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/data/comment.dart';
 import 'package:spark_up/data/post_view.dart';
 import 'package:spark_up/network/network.dart';
@@ -11,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/preview_detail_data_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:spark_up/route.dart';
 import 'dart:math';
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
@@ -35,6 +38,7 @@ class _EventDetailPageState extends State<EventDetailPage>
   bool gettingComment = false;
   bool noMoreComment = false;
   bool prePageReload = false;
+  bool deletingPost = false;
 
   late PostView postData;
   late TabController tabController;
@@ -516,43 +520,63 @@ class _EventDetailPageState extends State<EventDetailPage>
                                 title: 'Edit',
                                 onTap: () async {
                                   toggleMenu();
-                                  // bool result = await confirmDialog(
-                                  //     context,
-                                  //     "You sure to delete post:",
-                                  //     postData.title);
+                                  final edited = (await Navigator.pushNamed(
+                                    context,
+                                    RouteMap.eventEditPage,
+                                    arguments: postData,
+                                  ) as (bool, BasePost)?);
 
-                                  // if (result && context.mounted) {
-                                  //   final result = await loadingIndicator(
-                                  //       Network.manager.sendRequest(
-                                  //           method: RequestMethod.post,
-                                  //           path: PostPath.delete,
-                                  //           data: {
-                                  //             "user_id": Network.manager.userId,
-                                  //             "post_id": widget.postId
-                                  //           }),
-                                  //       context);
-                                  //   if (context.mounted) {
-                                  //     if (result.$1) {
-                                  //       prePageReload = true;
-                                  //       Navigator.pop(context, prePageReload);
-                                  //     } else {
-                                  //       showDialog(
-                                  //           context: context,
-                                  //           builder: (context) =>
-                                  //               const SystemMessage(
-                                  //                   content:
-                                  //                       "Something Went Wrong\n Please Try Again Later"));
-                                  //     }
-                                  //   }
-                                  // }
+                                  if (edited != null && edited.$1 == true) {
+                                    prePageReload = true;
+                                    postData.updateFromBasePost(edited.$2);
+                                    setState(() {});
+                                  }
                                 },
                               ),
                               _buildMenuItem(
                                 icon: SparkIcons.trash,
                                 title: 'Delete',
-                                onTap: () {
+                                onTap: () async {
                                   toggleMenu();
-                                  // Remove Post
+                                  bool wantDelete = await confirmDialog(
+                                      context,
+                                      "You sure to delete post:",
+                                      postData.title);
+
+                                  if (wantDelete) {
+                                    deletingPost = true;
+                                    setState(() {});
+
+                                    final response = await Network.manager
+                                        .sendRequest(
+                                            method: RequestMethod.post,
+                                            path: PostPath.delete,
+                                            data: {
+                                          "user_id": Network.manager.userId,
+                                          "post_id": postData.postId
+                                        });
+
+                                    if (response["status"] == "success") {
+                                      await showDialog(
+                                          context: this.context,
+                                          builder: (context) =>
+                                              const SystemMessage(
+                                                  content:
+                                                      "Delete Post Successful"));
+                                      prePageReload = true;
+                                      Navigator.pop(
+                                          this.context, prePageReload);
+                                    } else {
+                                      showDialog(
+                                          context: this.context,
+                                          builder: (context) => const SystemMessage(
+                                              content:
+                                                  "Delet Post Falied\n Pleas Try Again Later"));
+                                    }
+
+                                    deletingPost = false;
+                                    setState(() {});
+                                  }
                                 },
                               ),
                             ],
@@ -605,214 +629,234 @@ class _EventDetailPageState extends State<EventDetailPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        controller: scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-              leading: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 20.0,
-                  color: Colors.white,
+      body: Stack(children: [
+        NestedScrollView(
+          controller: scrollController,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                pinned: true,
+                backgroundColor: const Color.fromARGB(255, 245, 174, 128),
+                leading: IconButton(
+                  onPressed: () => Navigator.pop(context, prePageReload),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20.0,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              actions: initialing
-                  ? []
-                  : [
-                      IconButton(
-                        onPressed: () => pressLikedProcess(),
-                        icon: Icon(
-                          postData.liked
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: const Color.fromARGB(255, 233, 113, 153),
-                          size: 24.0,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: pressBookMarkedProcess,
-                        icon: Icon(
-                          postData.bookmarked
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                        ),
-                        color: Colors.white,
-                      ),
-                      if (postData.userId == Network.manager.userId)
+                actions: initialing
+                    ? []
+                    : [
                         IconButton(
-                            onPressed: () => toggleMenu(),
-                            icon: const SparkIcon(
-                              icon: SparkIcons.more,
-                              color: Colors.white,
-                            ))
-                    ],
-              expandedHeight: 220.0,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  color: const Color.fromARGB(255, 245, 174, 128),
-                  padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
-                  child: initialing
-                      ? SkeletonLoader()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                "#${postData.type}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              postData.title,
-                              style: const TextStyle(
-                                fontSize: 24.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.white,
-                                decorationThickness: 2,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // 左側資訊
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Hold by: ',
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        Text(
-                                          postData.nickname,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
-                                      style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // 右側統計
-                                Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.favorite,
-                                          color: Colors.white,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          "${postData.likes}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.chat_bubble_outline,
-                                          color: Colors.white,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          "${postData.comments}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.person_outline,
-                                          color: Colors.white,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          "${postData.applicants ?? 0}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                          onPressed: () => pressLikedProcess(),
+                          icon: Icon(
+                            postData.liked
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: const Color.fromARGB(255, 233, 113, 153),
+                            size: 24.0,
+                          ),
                         ),
+                        IconButton(
+                          onPressed: pressBookMarkedProcess,
+                          icon: Icon(
+                            postData.bookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border,
+                          ),
+                          color: Colors.white,
+                        ),
+                        if (postData.userId == Network.manager.userId)
+                          IconButton(
+                              onPressed: () => toggleMenu(),
+                              icon: const SparkIcon(
+                                icon: SparkIcons.more,
+                                color: Colors.white,
+                              ))
+                      ],
+                expandedHeight: 220.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    color: const Color.fromARGB(255, 245, 174, 128),
+                    padding: const EdgeInsets.fromLTRB(30, 90, 30, 30),
+                    child: initialing
+                        ? SkeletonLoader()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  "#${postData.type}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                postData.title,
+                                style: const TextStyle(
+                                  fontSize: 24.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.white,
+                                  decorationThickness: 2,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // 左側資訊
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            'Hold by: ',
+                                            style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Text(
+                                            postData.nickname,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // 右側統計
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.favorite,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "${postData.likes}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.chat_bubble_outline,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "${postData.comments}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.person_outline,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "${postData.applicants ?? 0}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+                bottom: TabBar(
+                  controller: tabController,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white70,
+                  indicatorColor: Colors.white,
+                  indicatorWeight: 3,
+                  tabs: const [
+                    Tab(text: "Overview"),
+                    Tab(text: "Comments"),
+                  ],
                 ),
               ),
-              bottom: TabBar(
-                controller: tabController,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white70,
-                indicatorColor: Colors.white,
-                indicatorWeight: 3,
-                tabs: const [
-                  Tab(text: "Overview"),
-                  Tab(text: "Comments"),
-                ],
+            ];
+          },
+          body: TabBarView(
+            controller: tabController,
+            children: !initialing
+                ? [
+                    detailContent(),
+                    commentContent(),
+                  ]
+                : [
+                    detailContentSkeleton(),
+                    detailContentSkeleton(),
+                  ],
+          ),
+        ),
+        // Deleting Load
+        if (deletingPost) ...[
+          Positioned.fill(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 3.0,
+                  color: Color(0xFFF77D43),
+                ),
               ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: tabController,
-          children: !initialing
-              ? [
-                  detailContent(),
-                  commentContent(),
-                ]
-              : [
-                  detailContentSkeleton(),
-                  detailContentSkeleton(),
-                ],
-        ),
-      ),
+          ),
+        ]
+      ]),
     );
   }
 
