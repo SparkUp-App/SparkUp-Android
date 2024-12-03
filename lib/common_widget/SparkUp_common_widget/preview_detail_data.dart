@@ -181,9 +181,8 @@ class InfoPreviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var entry in attributes!.entries)
-              
+              if (entry.value != null && entry.value.toString().isNotEmpty) 
                 _buildAttributeCard(entry.key, entry.value),
-              
           ],
         ),
         ),

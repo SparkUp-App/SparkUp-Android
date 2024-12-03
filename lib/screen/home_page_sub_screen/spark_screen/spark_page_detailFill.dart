@@ -42,6 +42,34 @@ class _NextPageState extends State<NextPage> {
     super.initState();
     basePost.type = widget.selectedEventType;
     basePost.numberOfPeopleRequired = 4;
+    switch (widget.selectedEventType) { 
+    case 'Sport'://運動標籤就加運動的templete
+      break;
+    case 'Study'://讀書標籤就加讀書的templete
+      break;
+    case 'Competition':
+        basePost.attributes["Rules"] = "";
+        basePost.attributes["Requirements of Participants"] = "";
+        basePost.attributes["Entry Fee"] = "";
+        basePost.attributes["Prize"] = [""];
+      break;
+    case 'Roommate':
+      break;
+    case 'Social':
+      break;
+    case 'Meal':
+      break;
+    case 'Speech':
+      break;
+    case  'Travel':
+      break;
+    case  'Parade':
+      break;
+    case  'Exhibition':
+      break;
+    default:
+      break;
+  }
   }
 
   @override

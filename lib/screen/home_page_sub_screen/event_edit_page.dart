@@ -7,6 +7,7 @@ import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 
@@ -93,145 +94,200 @@ List<Widget> _buildEditFields() {
 
   // Add non-attribute fields
   editData.forEach((key, value) {
-    if (key != "attributes"&&key!="user_id"&&key!="type") {
       if (key== "event_start_date"||key== "event_end_date") {
         // Parse the initial date string to DateTime
-        DateTime initialDate = DateTime.tryParse(value.toString()) ?? DateTime.now();
-        fields.add(_buildDateTimePicker(
-          _formatLabel(key),
-          initialDate,
-          (newDate) {
+        DateTime initialDate = DateTime.parse(value.toString()).toLocal();
+        fields.add(_buildDatePicker(
+          label: _formatLabel(key),
+          date: initialDate,
+          onDateChanged: (newDate) {
             setState(() {
               // Update the editData with the new date in ISO format
               editData[key] = newDate.toIso8601String();
             });
           },
         ));
-      } else {
-        fields.add(_createTextField(key, value.toString()));
+
+        // Add time picker for start and end dates
+        fields.add(_buildTimePicker(
+          label: "${_formatLabel(key)} Time",
+          time: TimeOfDay.fromDateTime(initialDate),
+          onTimeChanged: (newTime) {
+            setState(() {
+              DateTime updatedDateTime = DateTime(
+                initialDate.year,
+                initialDate.month,
+                initialDate.day,
+                newTime.hour,
+                newTime.minute,
+              );
+              editData[key] = updatedDateTime.toIso8601String();
+            });
+          },
+          context: context,
+        ));
+      } else if(key=="title"){
+        fields.add(Textfield(
+            label: key,
+            hintLabel: "Enter ${key} Here",
+            value:  editData[key].toString(),
+            onChanged: (newValue) => setState(() =>  editData[key] = newValue ?? ""),
+            isRequired: true,
+          )
+        );
       }
-    }
+      else if(key=="number_of_people_required"){
+        fields.add(intCounterBox(
+            label: "Number of people",
+            isRequired: true,
+            minValue: 1,
+            maxValue: 100,
+            initialValue: editData[key].toDouble(),
+            onChanged: (newValue) {
+              editData[key]  = newValue.toInt();
+            },
+          ),
+        );
+      }
   });
 
   // Add attribute fields
   (editData["attributes"] ?? {}).forEach((key, value) {
-    if (key.toUpperCase() == "EVENT START DATE") {
-      DateTime initialDate = DateTime.tryParse(value.toString()) ?? DateTime.now();
-      fields.add(_buildDateTimePicker(
-        _formatLabel(key),
-        initialDate,
-        (newDate) {
-          setState(() {
-            editData["attributes"][key] = newDate.toIso8601String();
-          });
-        },
-      ));
-    } else {
-      fields.add(_createTextField(key, value.toString()));
-    }
+      fields.add(
+        Textfield(
+            label: key,
+            hintLabel: "Enter ${key} Here",
+            value:  value.toString(),
+            onChanged: (newValue) => setState(() =>  editData["attributes"][key] = newValue ?? ""),
+            isRequired: true,
+          )
+        );
+      
+
   });
 
   return fields;
 }
-
-
-  Widget _createTextField(String key, String initialValue) {
-    return Textfield(
-      label: _formatLabel(key),
-      hintLabel: "Enter $key",
-      value: initialValue,
-      onChanged: (value) {
-        setState(() {
-          if (editData["attributes"] != null && editData["attributes"].containsKey(key)) {
-            editData["attributes"][key] = value;
-          } else {
-            editData[key] = value;
-          }
-        });
-      },
-      maxLine: key.toLowerCase().contains('description') ? 3 : 1,
-    );
-  }
 
   String _formatLabel(String key) {
     // Implement your formatting logic here
     return key.replaceAll('_', ' ').toUpperCase();
   }
 
-  Widget _buildSaveButton() {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.all(8),
-      height: 55,
-      width: MediaQuery.of(context).size.width * 0.6,
-      decoration: BoxDecoration(
-          color: const Color(0xFFF5A278),
-          borderRadius: BorderRadius.circular(50)),
-      child: processing
-          ? const Center(
-              child: CircularProgressIndicator(
-              color: Colors.white,
-            ))
-          : TextButton(
-              onPressed: () async {
-                if (processing) return;
-                // Some Content Limit Judge
+Widget _buildSaveButton() {
+  return  processing
+        ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Processing...",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                )
+        : Container(
+    margin: const EdgeInsets.all(8),
+    padding: const EdgeInsets.all(8),
+    height: 55,
+    width: MediaQuery.of(context).size.width * 0.6,
+    decoration: BoxDecoration(
+        color: const Color(0xFFF5A278),
+        borderRadius: BorderRadius.circular(50)),
+    child:TextButton(
+            onPressed: () async {
+              if (processing) return;
+              if (editData['title'] == null || editData['title'].toString().trim().isEmpty) { //偵錯機制
+                await showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                    content: "Title cannot be empty",
+                  ),
+                );
+                return;
+              }
 
-                // Have Change Judge
-                if (!changeJudge()) {
+              //偵錯機制
+              if (editData['event_start_date'] != null && editData['event_end_date'] != null) {
+                DateTime startDate = DateTime.parse(editData['event_start_date']);
+                DateTime endDate = DateTime.parse(editData['event_end_date']);
+
+                if (startDate.isAfter(endDate)) {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => const SystemMessage(
+                      content: "Start date cannot be later than end date",
+                    ),
+                  );
+                  return;
+                }
+              }
+
+              // 確認是否變更
+              if (!changeJudge()) {
+                await showDialog(
+                    context: context,
+                    builder: (context) => const SystemMessage(
+                        content: "No change need to be saved"));
+                return;
+              }
+
+              // 保存更改
+              processing = true;
+              setState(() {});
+
+              BasePost updatePost = BasePost.initfromData(editData);
+
+              final response = await Network.manager.sendRequest(
+                  method: RequestMethod.post,
+                  path: PostPath.update,
+                  pathMid: ["${widget.postView.postId}"],
+                  data: updatePost.toMap);
+
+              if (context.mounted) {
+                if (response["status"] == "success") {
+                  await showDialog(
+                      context: context,
+                      builder: (context) => const SystemMessage(
+                            content: "Save Change Success",
+                          ));
+                  bool prePageReload = true;
+                  Navigator.pop(
+                      this.context, (prePageReload, updatePost));
+                } else {
                   showDialog(
                       context: context,
                       builder: (context) => const SystemMessage(
-                          content: "No change need to be saved"));
-                  return;
+                            content:
+                                "Save Change Failed\n Please Try Again Later",
+                          ));
                 }
-                ;
+              }
 
-                // Save Change
-                processing = true;
-                setState(() {});
-
-                BasePost updatePost = BasePost.initfromData(editData);
-
-                final response = await Network.manager.sendRequest(
-                    method: RequestMethod.post,
-                    path: PostPath.update,
-                    pathMid: ["${widget.postView.postId}"],
-                    data: updatePost.toMap);
-
-                if (context.mounted) {
-                  if (response["status"] == "success") {
-                    await showDialog(
-                        context: context,
-                        builder: (context) => const SystemMessage(
-                              content: "Save Change Success",
-                            ));
-                    bool prePageReload = true;
-                    Navigator.pop(
-                        this.context, (prePageReload, updatePost));
-                  } else {
-                    showDialog(
-                        context: context,
-                        builder: (context) => const SystemMessage(
-                              content:
-                                  "Save Change Failed\n Please Try Again Later",
-                            ));
-                  }
-                }
-
-                processing = false;
-                setState(() {});
-              },
-              child: const Text(
-                "Save Changes",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold),
-              ),
+              processing = false;
+              setState(() {});
+            },
+            child: const Text(
+              "Save Changes",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold),
             ),
-    );
-  }
+          ),
+  );
+}
 
   bool changeJudge() {
     for (var element in editData.entries) {
@@ -242,15 +298,155 @@ List<Widget> _buildEditFields() {
     return false;
   }
 
-  Widget _buildDateTimePicker(String label, DateTime initialDate, Function(DateTime) onDateChanged) {
-    return Datepicker(
-      label: label,
-      value: initialDate.toIso8601String().split('T')[0],
-      onChanged: (value) {
-        if (value != null) {
-          onDateChanged(DateTime.parse(value));
-        }
-      },
-    );
-  }
+Widget _buildDatePicker({
+  required String label,
+  required DateTime date,
+  required Function(DateTime) onDateChanged,
+}) {
+  // 創建一個 controller 並設置初始值
+  final TextEditingController controller = TextEditingController(
+    text: "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}"
+  );
+
+  return Container(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "$label *",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFFE9765B),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 2.0),
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: InkWell(
+                onTap: () async {
+                  DateTime? selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: date,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(9999),
+                  );
+                  if (selectedDate != null) {
+                    controller.text = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+                    onDateChanged(selectedDate);
+                  }
+                },
+                child: IgnorePointer(
+                  child: TextField(
+                    controller: controller,  // 使用我們創建的 controller
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      prefixIconColor: Colors.black26,
+                      hintText: "yyyy-mm-dd",
+                      hintStyle: const TextStyle(
+                        color: Colors.black26,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildTimePicker({
+  required String label,
+  required TimeOfDay time,
+  required Function(TimeOfDay) onTimeChanged,
+  required BuildContext context,
+}) {
+  final TextEditingController controller = TextEditingController(
+    text: time.format(context)
+  );
+
+  return Container(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "$label *",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFFE9765B),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 2.0),
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: InkWell(
+                onTap: () async {
+                  TimeOfDay? selectedTime = await showTimePicker(
+                    context: context,
+                    initialTime: time,
+                  );
+                  if (selectedTime != null) {
+                    controller.text = selectedTime.format(context);
+                    onTimeChanged(selectedTime);
+                  }
+                },
+                child: IgnorePointer(
+                  child: TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      prefixIconColor: Colors.black26,
+                      hintText: "hh:mm",
+                      hintStyle: const TextStyle(
+                        color: Colors.black26,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 }
