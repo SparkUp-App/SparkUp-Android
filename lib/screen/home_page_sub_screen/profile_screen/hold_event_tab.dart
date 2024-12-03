@@ -107,16 +107,13 @@ class _HoldEventTadState extends State<HoldEventTab>
       ],
     ),
   ),
-)
-
-        
-      
+  )   
     : ListView.builder(
         itemCount: postList.length + (isLoading ? 1 : 0) + (isEnd ? 1 : 0), // 計算總項目數
         itemBuilder: (context, index) {
           if (index < postList.length) {
             // 顯示普通的 eventCard
-            return eventCard(postList[index], context);
+            return eventCard(postList[index], context, refresh);
           } else if (isLoading && index == postList.length) {
             // 加載中顯示骨架屏
             return eventCardSkeletonList();
