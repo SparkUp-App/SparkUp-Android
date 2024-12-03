@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_dropdown.dart';
 import 'package:spark_up/const_variable.dart';
 
 List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setState) {
@@ -21,16 +22,18 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
       content: Column(
         children: [
           NoteCard(message: 'Please give us an introduction about your place.'),
-          Dropdown(
-            label: 'Type',
-            value: basePost.attributes["Type"] ?? "",
-            options: liveList,
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Type"] = newValue ?? "";
-              });
-            },
-          ),
+          CustomDropdown(
+              label: 'Type',
+              value: basePost.attributes["Type"],
+              options: liveList,
+              onChanged: (newValue) {
+                setState(() {
+                  basePost.attributes["Type"] = newValue;
+                  print(newValue);
+                });
+              },
+              isRequired: true,
+            ),
           Textfield(
             label: 'Address',
             hintLabel: 'Please desribe the Address',
@@ -73,16 +76,17 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           NoteCard(message: "What kind of roommate are you looking for ?"),
-          Dropdown(
-            label: 'Gender',
-            value: basePost.attributes["Gender"] ?? "",
-            options: liveGenderList,
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Gender"] = newValue ?? "";
-              });
-            },
-          ),
+          CustomDropdown(
+              label: 'Gender',
+              value: basePost.attributes["Gender"],
+              options: genderList,
+              onChanged: (newValue) {
+                setState(() {
+                  basePost.attributes["Gender"] = newValue;
+                });
+              },
+              isRequired: true,
+            ),
           Textfield(
             label: 'Personality',
             hintLabel: 'Enter Personality',

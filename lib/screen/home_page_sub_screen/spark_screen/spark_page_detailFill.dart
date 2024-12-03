@@ -66,6 +66,8 @@ class _NextPageState extends State<NextPage> {
     case  'Parade':
       break;
     case  'Exhibition':
+      basePost.attributes["Introduction"] = "";
+      basePost.attributes["Ticket price"] = "";
       break;
     default:
       break;

@@ -153,6 +153,9 @@ List<Widget> _buildEditFields() {
 
   // Add attribute fields
   (editData["attributes"] ?? {}).forEach((key, value) {
+      print(key);
+      print(value.runtimeType);
+      //String , List<dynamic> , Map<String, dynamic>
       fields.add(
         Textfield(
             label: key,
