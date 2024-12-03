@@ -18,8 +18,7 @@ class TorateTag extends StatefulWidget {
   State<TorateTag> createState() => _TorateTagState();
 }
 
-class _TorateTagState extends State<TorateTag>
-    with AutomaticKeepAliveClientMixin {
+class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
   bool noMoreData = false;
   int page = 1, pages = 0, perPage = 20;
@@ -29,17 +28,13 @@ class _TorateTagState extends State<TorateTag>
   @override
   void initState() {
     super.initState();
-
     referenceableList = [];
     getReferenceableList();
-    _scrollController.addListener(
-      () {
-        if (_scrollController.offset ==
-            _scrollController.position.maxScrollExtent) {
-          getReferenceableList();
-        }
-      },
-    );
+    _scrollController.addListener(() {
+      if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+        getReferenceableList();
+      }
+    });
   }
 
   @override
@@ -57,26 +52,29 @@ class _TorateTagState extends State<TorateTag>
     setState(() {});
 
     final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: ReferencePath.referenceableList,
-        pathMid: ["${Network.manager.userId}"],
-        data: {"page": page, "per_page": perPage});
+      method: RequestMethod.post,
+      path: ReferencePath.referenceableList,
+      pathMid: ["${Network.manager.userId}"],
+      data: {"page": page, "per_page": perPage},
+    );
 
     if (context.mounted) {
       if (response["status"] == "success") {
         referenceableList.addAll(
-            (response["data"]["referenceable_users"] as List<dynamic>)
-                .map((element) => ReferenceListReceived.initfromData(element))
-                .toList());
+          (response["data"]["referenceable_users"] as List<dynamic>)
+              .map((element) => ReferenceListReceived.initfromData(element))
+              .toList(),
+        );
         page++;
         pages = response["data"]["pages"];
         noMoreData = page > pages;
       } else {
         showDialog(
-            context: context,
-            builder: (context) => const SystemMessage(
-                  content: "Something Went Wrong Pleas Try Againg Later",
-                ));
+          context: context,
+          builder: (context) => const SystemMessage(
+            content: "Something Went Wrong Please Try Again Later",
+          ),
+        );
       }
     }
 
@@ -87,33 +85,24 @@ class _TorateTagState extends State<TorateTag>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return RefreshIndicator(
+    if (!referenceableList.isEmpty||isLoading) {
+      return RefreshIndicator(
         child: SingleChildScrollView(
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
-          child: (referenceableList.isEmpty && page > 1)
-              ? Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: const Text(
-                    "No Reference Need Submit",
-                    style: TextStyle(color: Colors.black26),
-                  ),
-                )
-              : Column(
-                  children: [
-                    for (var element in referenceableList) ...[
-                      RateCard(referenceListReceived: element),
-                    ],
-                    if (noMoreData && referenceableList.isNotEmpty) ...[
-                      const Center(child: NoMoreData()),
-                    ],
-                    if (isLoading) ...[
-                      const eventCardSkeletonList(),
-                    ]
-                  ],
-                ),
+          child: Column(
+            children: [
+              for (var element in referenceableList) ...[
+                RateCard(referenceListReceived: element),
+              ],
+              if (noMoreData && referenceableList.isNotEmpty) ...[
+                const Center(child: NoMoreData()),
+              ],
+              if (isLoading) ...[
+                const eventCardSkeletonList(),
+              ],
+            ],
+          ),
         ),
         onRefresh: () async {
           if (isLoading) return;
@@ -122,7 +111,36 @@ class _TorateTagState extends State<TorateTag>
           noMoreData = false;
           await getReferenceableList();
           return;
-        });
+        },
+      );
+    } else {
+      return Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/No_Event_space.png',
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.35,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "You can't rate any other person before you finish the event.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+      
+    }
   }
 }
 
@@ -138,7 +156,7 @@ class RateCard extends StatefulWidget {
 class _RateCardState extends State<RateCard> {
   int rate = 0;
   bool isLoading = false;
-  bool rateCoplete = false;
+  bool rateComplete = false;
   bool rateAlert = false;
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _commentFocus = FocusNode();
@@ -146,7 +164,6 @@ class _RateCardState extends State<RateCard> {
   @override
   void initState() {
     super.initState();
-
     _commentFocus.addListener(() {
       setState(() {});
     });
@@ -164,28 +181,31 @@ class _RateCardState extends State<RateCard> {
     setState(() {});
 
     final response = await Network.manager.sendRequest(
-        method: RequestMethod.post,
-        path: ReferencePath.create,
-        data: {
-          "from_user_id": Network.manager.userId,
-          "to_user_id": widget.referenceListReceived.userId,
-          "post_id": widget.referenceListReceived.postId,
-          "rating": rate,
-          "content": _commentController.text
-        });
+      method: RequestMethod.post,
+      path: ReferencePath.create,
+      data: {
+        "from_user_id": Network.manager.userId,
+        "to_user_id": widget.referenceListReceived.userId,
+        "post_id": widget.referenceListReceived.postId,
+        "rating": rate,
+        "content": _commentController.text,
+      },
+    );
 
     if (context.mounted) {
       if (response["status"] == "success") {
         showDialog(
-            context: context,
-            builder: (context) =>
-                const SystemMessage(content: "Rate Successful"));
-        rateCoplete = true;
+          context: context,
+          builder: (context) => const SystemMessage(content: "Rate Successful"),
+        );
+        rateComplete = true;
       } else {
         showDialog(
-            context: context,
-            builder: (context) => const SystemMessage(
-                content: "Something Went Wrong\nPleas Try Again Later"));
+          context: context,
+          builder: (context) => const SystemMessage(
+            content: "Something Went Wrong\nPlease Try Again Later",
+          ),
+        );
       }
     }
 
@@ -229,37 +249,37 @@ class _RateCardState extends State<RateCard> {
               const SizedBox(height: 10.0),
               if (rateAlert) ...[
                 Container(
-                    margin: const EdgeInsets.only(left: 10.0),
-                    child: const Text(
-                      "* At Least 1 Star Score",
-                      style: TextStyle(color: Colors.red),
-                    ))
+                  margin: const EdgeInsets.only(left: 10.0),
+                  child: const Text(
+                    "* At Least 1 Star Score",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
               ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(5, (index) {
                   return IconButton(
-                      padding: const EdgeInsets.all(0.0),
-                      onPressed: () {
-                        if (isLoading || rateCoplete) return;
-                        setState(() {
-                          rateAlert = false;
-                          rate = index + 1;
-                        });
-                      },
-                      icon: SparkIcon(
-                        icon: SparkIcons.star,
-                        size: 35.0,
-                        color: index < rate
-                            ? const Color(0xffF77D43)
-                            : const Color(0xffFFFFFF).withOpacity(0.7),
-                      ));
+                    padding: const EdgeInsets.all(0.0),
+                    onPressed: () {
+                      if (isLoading || rateComplete) return;
+                      setState(() {
+                        rateAlert = false;
+                        rate = index + 1;
+                      });
+                    },
+                    icon: SparkIcon(
+                      icon: SparkIcons.star,
+                      size: 35.0,
+                      color: index < rate
+                          ? const Color(0xffF77D43)
+                          : const Color(0xffFFFFFF).withOpacity(0.7),
+                    ),
+                  );
                 }),
               ),
-              const SizedBox(
-                height: 10.0,
-              ),
+              const SizedBox(height: 10.0),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,7 +295,7 @@ class _RateCardState extends State<RateCard> {
                         onTapOutside: (event) => _commentFocus.unfocus(),
                         onSubmitted: (value) => _commentFocus.unfocus(),
                         focusNode: _commentFocus,
-                        enabled: !(isLoading || rateCoplete),
+                        enabled: !(isLoading || rateComplete),
                         controller: _commentController,
                         maxLines: 3,
                         decoration: const InputDecoration(
@@ -288,7 +308,7 @@ class _RateCardState extends State<RateCard> {
                     ),
                   ),
                   const SizedBox(width: 25.0),
-                  if (!rateCoplete && !_commentFocus.hasFocus)
+                  if (!rateComplete && !_commentFocus.hasFocus)
                     SizedBox(
                       height: 35.0,
                       width: 100.0,
@@ -317,8 +337,9 @@ class _RateCardState extends State<RateCard> {
                             : const Text(
                                 'Rate',
                                 style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w400),
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                       ),
                     ),

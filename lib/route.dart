@@ -17,6 +17,7 @@ import "package:spark_up/screen/initial_profile_create/initial_profileData_basic
 import "package:spark_up/screen/initial_profile_create/initial_profileData_eventType.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/edit_profile_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
+import "package:spark_up/screen/home_page_sub_screen/profile_screen/level_show_page.dart";
 
 class RouteMap {
   //Regist Path for page
@@ -34,6 +35,7 @@ class RouteMap {
   static const participatedPage = "/participatedPage";
   static const ratingPage = "/ratingPage";
   static const profileShowPage = "/profileShowPage";
+  static const levelPage = "/levelShowPage";
   static const chatPage = "/chatPage";
   static const memberlistPage = "/memberListPage";
   //Bind page to Path
@@ -77,6 +79,7 @@ class RouteMap {
           ModalRoute.of(context)!.settings.arguments as (int, bool);
       return ProfileShowPage(userId: userId, editable: editable);
     },
+    levelPage: (context) => const levelShowPage(),
     chatPage: (context) {
       int postId;
       String postName;
