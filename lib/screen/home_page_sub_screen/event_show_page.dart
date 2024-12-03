@@ -283,7 +283,7 @@ class _EventShowPageState extends State<EventShowPage>
                           ),
                         ),
                       ),
-                      if(!filterMode)
+                      if (!filterMode)
                         TabBar(
                           controller: _tabController,
                           labelColor: Colors.white,
@@ -296,19 +296,19 @@ class _EventShowPageState extends State<EventShowPage>
                             Tab(text: 'For You'),
                           ],
                         ),
-                      if(filterMode) const Center(
-                        child: SizedBox(
+                      if (filterMode)
+                        const Center(
+                            child: SizedBox(
                           height: 35,
                           child: Text(
-                          "Choose the tag you want to search",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            "Choose the tag you want to search",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        )
-                      ),
+                        )),
                     ],
                   ),
                 ),
@@ -508,7 +508,7 @@ class _HotContentState extends State<HotContent>
               controller: scrollController,
               children: [
                 for (var element in receivedPostList) ...[
-                  eventCard(element, context)
+                  eventCard(element, context, refresh)
                 ],
                 if (isLoading) const eventCardSkeletonList(),
                 if (noMoreData) const Center(child: Text("No More Data"))
@@ -657,7 +657,7 @@ class _ForYouContentState extends State<ForYouContent>
               controller: scrollController,
               children: [
                 for (var element in receivedPostList) ...[
-                  eventCard(element, context)
+                  eventCard(element, context, refresh)
                 ],
                 if (isLoading) const eventCardSkeletonList(),
                 if (noMoreData)
@@ -770,93 +770,87 @@ class _FilterPageState extends State<FilterPage> {
       builder: (context, selectType, child) {
         return Container(
           color: Colors.black.withOpacity(0.3),
-            child: Scaffold(
-              backgroundColor: Colors.white.withOpacity(0.95),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: [
-                              eventTypeContainer("Competition",
-                                  'assets/event/competition.jpg'),
-                              const SizedBox(height: 20),
-                              eventTypeContainer("Roommate",
-                                  'assets/event/roommates.jpg'),
-                            ],
-                          ),
+          child: Scaffold(
+            backgroundColor: Colors.white.withOpacity(0.95),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            eventTypeContainer(
+                                "Competition", 'assets/event/competition.jpg'),
+                            const SizedBox(height: 20),
+                            eventTypeContainer(
+                                "Roommate", 'assets/event/roommates.jpg'),
+                          ],
                         ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: [
-                              eventTypeContainer(
-                                  "Sport", 'assets/event/sports.jpg'),
-                              const SizedBox(height: 20),
-                              eventTypeContainer(
-                                  "Study", 'assets/event/study.jpg'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            eventTypeContainer(
+                                "Sport", 'assets/event/sports.jpg'),
+                            const SizedBox(height: 20),
+                            eventTypeContainer(
+                                "Study", 'assets/event/study.jpg'),
+                          ],
                         ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: [
-                              eventTypeContainer(
-                                  "Social", 'assets/event/social.jpg'),
-                              const SizedBox(height: 20),
-                              eventTypeContainer(
-                                  "Travel", 'assets/event/travel.jpg'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            eventTypeContainer(
+                                "Social", 'assets/event/social.jpg'),
+                            const SizedBox(height: 20),
+                            eventTypeContainer(
+                                "Travel", 'assets/event/travel.jpg'),
+                          ],
                         ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: [
-                              eventTypeContainer(
-                                  "Meal", 'assets/event/meal.jpg'),
-                              const SizedBox(height: 20),
-                              eventTypeContainer(
-                                  "Speech", 'assets/event/speech.jpg'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            eventTypeContainer("Meal", 'assets/event/meal.jpg'),
+                            const SizedBox(height: 20),
+                            eventTypeContainer(
+                                "Speech", 'assets/event/speech.jpg'),
+                          ],
                         ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: [
-                              eventTypeContainer(
-                                  "Parade", 'assets/event/parade.jpg'),
-                              const SizedBox(height: 20),
-                              eventTypeContainer("Exhibition",
-                                  'assets/event/exhibition.jpg'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            eventTypeContainer(
+                                "Parade", 'assets/event/parade.jpg'),
+                            const SizedBox(height: 20),
+                            eventTypeContainer(
+                                "Exhibition", 'assets/event/exhibition.jpg'),
+                          ],
                         ),
-                        const SizedBox(height: 120),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 120),
+                    ],
                   ),
+                ),
               ),
             ),
-            ),
+          ),
         );
       },
     );

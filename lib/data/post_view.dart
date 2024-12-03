@@ -1,5 +1,8 @@
-class PostView{
+import 'package:spark_up/data/base_post.dart';
+
+class PostView {
   late int postId;
+  late int userId;
   late String nickname;
   late String type;
   late String title;
@@ -22,6 +25,7 @@ class PostView{
 
   PostView({
     required this.postId,
+    required this.userId,
     required this.nickname,
     required this.type,
     required this.title,
@@ -46,11 +50,13 @@ class PostView{
   factory PostView.initfromData(Map<String, dynamic> data) {
     return PostView(
       postId: data['id'] as int,
+      userId: data['user_id'] as int,
       nickname: data['nickname'] as String,
       type: data['type'] as String,
       title: data['title'] as String,
       content: data['content'] as String,
-      eventStartDate: DateTime.parse(data['event_start_date'] as String).toLocal(),
+      eventStartDate:
+          DateTime.parse(data['event_start_date'] as String).toLocal(),
       eventEndDate: DateTime.parse(data['event_end_date'] as String).toLocal(),
       numberOfPeopleRequired: data['number_of_people_required'] as int,
       location: data['location'] as String,
@@ -66,5 +72,36 @@ class PostView{
       applicants: data['applicants'] as int,
       applicationStatus: data['application_status'],
     );
+  }
+
+  BasePost toBasePost() {
+    return BasePost(
+      userId: userId,
+      type: type,
+      title: title,
+      content: content,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      numberOfPeopleRequired: numberOfPeopleRequired,
+      location: location,
+      skills: skills,
+      personalities: personalities,
+      languages: languages,
+      attributes: attributes,
+    );
+  }
+
+  void updateFromBasePost(BasePost postData) {
+    type = postData.type;
+    title = postData.title;
+    content = postData.content;
+    eventStartDate = postData.eventStartDate;
+    eventEndDate = postData.eventEndDate;
+    numberOfPeopleRequired = postData.numberOfPeopleRequired;
+    location = postData.location;
+    skills = postData.skills;
+    personalities = postData.personalities;
+    languages = postData.languages;
+    attributes = postData.attributes;
   }
 }

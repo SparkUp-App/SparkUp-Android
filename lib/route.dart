@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
+import "package:spark_up/chat/chat_page.dart";
+import "package:spark_up/chat/member_list_page.dart";
+import "package:spark_up/data/post_view.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/screen/home_page_sub_screen/event_detail_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/event_edit_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/participated_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/rating_page.dart";
@@ -24,6 +28,7 @@ class RouteMap {
   static const eventTypeProfilePage = "/eventTypeProfilePage";
   static const detailProfilePage = "/detailProfilePage";
   static const eventDetailePage = "/eventDetailPage";
+  static const eventEditPage = "/eventEditPage";
   static const editProfile = "/profile_page";
   static const sparkUpEventTypeSelect = "/sparkPageEventTypeDecide";
   static const logoutPage = "/logoutPage";
@@ -31,6 +36,8 @@ class RouteMap {
   static const ratingPage = "/ratingPage";
   static const profileShowPage = "/profileShowPage";
   static const levelPage = "/levelShowPage";
+  static const chatPage = "/chatPage";
+  static const memberlistPage = "/memberListPage";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage: (context) => const LoginPage(),
@@ -43,6 +50,13 @@ class RouteMap {
     eventDetailePage: (context) {
       int postId = ModalRoute.of(context)!.settings.arguments as int;
       return EventDetailPage(postId: postId);
+    },
+    eventEditPage: (context) {
+      PostView postView =
+          ModalRoute.of(context)!.settings.arguments as PostView;
+      return EventEditPage(
+        postView: postView,
+      );
     },
     sparkUpEventTypeSelect: (context) => const sparkPageEventTypeDecide(),
     editProfile: (context) {
@@ -66,5 +80,17 @@ class RouteMap {
       return ProfileShowPage(userId: userId, editable: editable);
     },
     levelPage: (context) => const levelShowPage(),
+    chatPage: (context) {
+      int postId;
+      String postName;
+      (postId, postName) =
+          ModalRoute.of(context)!.settings.arguments as (int, String);
+      return ChatPage(postId: postId, postName: postName);
+    },
+    memberlistPage: (context) {
+      int postId;
+      postId = ModalRoute.of(context)!.settings.arguments as int;
+      return MemberListPage(postId: postId);
+    }
   };
 }

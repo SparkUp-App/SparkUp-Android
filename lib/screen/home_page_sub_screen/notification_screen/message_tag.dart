@@ -1,5 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spark_up/chat/chat_room_manager.dart';
+import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/data/list_rooms_received.dart';
+import 'package:spark_up/route.dart';
 
 class MessageTag extends StatefulWidget {
   const MessageTag({super.key});
@@ -10,92 +13,146 @@ class MessageTag extends StatefulWidget {
 
 class _MessageTagState extends State<MessageTag>
     with AutomaticKeepAliveClientMixin {
-  List<ValueNotifier<int>> dataList = [
-    ValueNotifier<int>(1),
-    ValueNotifier<int>(2)
-  ];
+  final ScrollController _scrollController = ScrollController();
 
   @override
   bool get wantKeepAlive => true;
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            for (var data in dataList) ...[
-              chatRoomCard(data),
-            ],
-            Center(
-              child: ElevatedButton(
-                onPressed: () => dataList[0].value = dataList[0].value + 1,
-                child: const Icon(Icons.add),
-              ),
-            )
-          ],
-        ));
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.offset ==
+          _scrollController.position.maxScrollExtent) {
+        ChatRoomManager.manager.getData();
+      }
+    });
   }
 
-  Widget chatRoomCard(ValueListenable<int> valueListenable) {
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.removeListener(() {
+      if (_scrollController.offset ==
+          _scrollController.position.maxScrollExtent) {
+        ChatRoomManager.manager.getData();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return ValueListenableBuilder(
-        valueListenable: valueListenable,
-        builder: (context, value, child) {
-          return Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-              width: double.infinity,
-              height: 100,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFADADAD)))),
-              child: Stack(children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      child: Text(
-                        "Event Title",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20.0),
-                      child: const Text(
-                        "Rebecca: Say Something",
-                        style: TextStyle(
-                            color: Color(0xFF4B4B4B),
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "$value mins ago",
-                        style: const TextStyle(
-                            color: Color(0xFF7F7E7E),
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.normal),
-                      ),
-                    ),
+      valueListenable: ChatRoomManager.manager.isLoading,
+      builder: (context, isLoading, child) {
+        return RefreshIndicator(
+          onRefresh: ChatRoomManager.manager.refresh,
+          child: ValueListenableBuilder(
+            valueListenable: ChatRoomManager.manager.roomList,
+            builder: (context, value, child) {
+              return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                children: [
+                  for (var chatRoom in ChatRoomManager
+                      .manager.roomList.value) ...[chatRoomCard(chatRoom)],
+                  if (isLoading) ...[const eventCardSkeletonList()],
+                  if (ChatRoomManager.manager.error) ...[
+                    const Center(
+                      child:
+                          Text("Something Went Wrong\n Please Try Again Later"),
+                    )
                   ],
-                ),
-                const Positioned(
-                    right: 10.0,
-                    child: Icon(
-                      Icons.circle,
-                      size: 10.0,
-                      color: Colors.red,
-                    ))
-              ]));
-        });
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget chatRoomCard(ChatListReceived chatRoom) {
+    return GestureDetector(
+        onTap: () async {
+          await Navigator.of(context).pushNamed(RouteMap.chatPage,
+              arguments: (chatRoom.postId, chatRoom.postName));
+          setState(() {});
+        },
+        child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            width: double.infinity,
+            height: 100,
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(bottom: BorderSide(color: Color(0xFFADADAD)))),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            chatRoom.postName,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        if (chatRoom.latestMessage != null) ...[
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              "${chatRoom.latestMessage!.senderName}: ${chatRoom.latestMessage!.content}",
+                              style: const TextStyle(
+                                  color: Color(0xFF4B4B4B),
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: const Text(
+                              "temp mins ago",
+                              style: TextStyle(
+                                  color: Color(0xFF7F7E7E),
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (chatRoom.unreadCount != 0) ...[
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Icon(
+                          Icons.circle,
+                          size: 25.0,
+                          color: Colors.red,
+                        ),
+                        Text(
+                          chatRoom.unreadCount > 99
+                              ? "99+"
+                              : "${chatRoom.unreadCount}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.0,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )
+                  ]
+                ])));
   }
 }
 

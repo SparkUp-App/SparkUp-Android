@@ -2,7 +2,11 @@ class ChatListReceived {
   late int postId;
   late String postName;
   late int unreadCount;
-  late LatestMessage latestMessage;
+  late LatestMessage? latestMessage;
+
+  void setunreadCount(int value) {
+    unreadCount = value;
+  }
 
   ChatListReceived({
     required this.postId,
@@ -16,7 +20,9 @@ class ChatListReceived {
         postId: data["post_id"],
         postName: data["name"],
         unreadCount: data["unread_count"],
-        latestMessage: LatestMessage.initfromData(data["latest_message"]));
+        latestMessage: data["latest_message"] == null
+            ? null
+            : LatestMessage.initfromData(data["latest_message"]));
   }
 }
 
