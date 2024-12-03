@@ -51,7 +51,7 @@ class _NextPageState extends State<NextPage> {
         basePost.attributes["Rules"] = "";
         basePost.attributes["Requirements of Participants"] = "";
         basePost.attributes["Entry Fee"] = "";
-        basePost.attributes["Prize"] = [""];
+        basePost.attributes["Prize"] = <String>[];
       break;
     case 'Roommate':
       break;

@@ -180,9 +180,29 @@ class InfoPreviewCard extends StatelessWidget {
         child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var entry in attributes!.entries)
-              if (entry.value != null && entry.value.toString().isNotEmpty) 
-                _buildAttributeCard(entry.key, entry.value),
+            Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: attributes!.entries
+      .where((entry) {
+        print(entry);
+        print(entry.value.runtimeType);
+
+        // 1. entry.value 不為 null
+        if (entry.value == null) return false;
+
+        // 2. 如果 entry.value 是 String，則不為空字符串
+        if (entry.value is String && entry.value.isEmpty) return false;
+
+        // 3. 如果 entry.value 是 List<String>，則不為空列表
+        if (entry.value is List<dynamic> && entry.value.isEmpty) return false;
+
+        // 添加其他類型的檢查（如果需要）
+        return true;
+      })
+      .map((entry) => _buildAttributeCard(entry.key, entry.value))
+      .toList(),
+),
+
           ],
         ),
         ),
