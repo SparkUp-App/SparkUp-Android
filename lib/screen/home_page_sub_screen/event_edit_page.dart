@@ -162,7 +162,6 @@ List<Widget> _buildEditFields() {
             hintLabel: "Enter ${key} Here",
             value:  value.toString(),
             onChanged: (newValue) => setState(() =>  editData["attributes"][key] = newValue ?? ""),
-            isRequired: true,
           )
         );
       
