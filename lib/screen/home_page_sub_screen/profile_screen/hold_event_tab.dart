@@ -82,8 +82,9 @@ class _HoldEventTadState extends State<HoldEventTab>
           }
           return true;
         },
-        child: postList.isEmpty
-    ?  Center(
+        child: isLoading?
+        eventCardSkeletonList()
+        :postList.isEmpty?Center(
   child: SingleChildScrollView(
     child: Column(
       mainAxisSize: MainAxisSize.min, // 讓內容根據內容大小適配
@@ -107,20 +108,13 @@ class _HoldEventTadState extends State<HoldEventTab>
       ],
     ),
   ),
-)
-
-        
-      
-    : ListView.builder(
+  )    :ListView.builder(
         itemCount: postList.length + (isLoading ? 1 : 0) + (isEnd ? 1 : 0), // 計算總項目數
         itemBuilder: (context, index) {
           if (index < postList.length) {
             // 顯示普通的 eventCard
-            return eventCard(postList[index], context);
-          } else if (isLoading && index == postList.length) {
-            // 加載中顯示骨架屏
-            return eventCardSkeletonList();
-          } else if (isEnd && index == postList.length + (isLoading ? 1 : 0)) {
+            return eventCard(postList[index], context, refresh);
+          }  else if (isEnd && index == postList.length + (isLoading ? 1 : 0)) {
             // 已加載到底時顯示 "沒有更多數據"
             return const NoMoreData();
           }

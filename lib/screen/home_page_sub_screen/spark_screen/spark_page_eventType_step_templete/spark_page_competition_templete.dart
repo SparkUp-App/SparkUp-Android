@@ -11,6 +11,7 @@ import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextF
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 
 List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function setState) {
+  
   return [
     Step(
       title: const SizedBox.shrink(),

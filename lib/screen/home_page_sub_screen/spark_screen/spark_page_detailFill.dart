@@ -42,6 +42,79 @@ class _NextPageState extends State<NextPage> {
     super.initState();
     basePost.type = widget.selectedEventType;
     basePost.numberOfPeopleRequired = 4;
+    switch (widget.selectedEventType) { 
+    case 'Sport'://運動標籤就加運動的templete
+     basePost.attributes["Sports Rule"] ="";
+      basePost.attributes["Winning Prize"]="";
+      basePost.attributes["Entry Fee"] ="";
+      basePost.attributes["Requirements of Participants"] ="";
+      break;
+    case 'Study'://讀書標籤就加讀書的templete
+      basePost.attributes["Kind of study topic"]="";
+      basePost.attributes["Introduce the Topic"] ="";
+      basePost.attributes["Participation Guidelines"]="";
+      basePost.attributes["Entry Fee"] ="";
+      break;
+    case 'Competition':
+        basePost.attributes["Rules"] = "";
+        basePost.attributes["Requirements of Participants"] = "";
+        basePost.attributes["Entry Fee"] = "";
+        basePost.attributes["Prize"] = <String>[];
+      break;
+    case 'Roommate':
+      basePost.attributes["Type"]="";
+      basePost.attributes["Address"]="";
+      basePost.attributes["Furniture and Equipment"] = <String>[];
+      basePost.attributes["Amenities"] = <String>[];
+      basePost.attributes["Gender"]="";
+      basePost.attributes["Personality"]="";
+      basePost.attributes["lifestyle"]="";
+      basePost.attributes["Your contact information"]="";
+      basePost.attributes["Move-in date"]="";
+      basePost.attributes["Security deposit"]="";
+      basePost.attributes["Rent(monthly)"]="";
+      basePost.attributes["MISC"] = <String,String>{};
+      break;
+    case 'Social':
+      basePost.attributes["Your activity"]="";
+      basePost.attributes["Activity Schedule"] ="";
+      basePost.attributes["Requirements for Participants"]="";
+      basePost.attributes["Entry fee"] ="";
+      break;
+    case 'Meal':
+      basePost.attributes["Restaurant name"] = "";
+      basePost.attributes["Signature dishes"] = "";
+      basePost.attributes["Link of the restaurant"]= "";
+      basePost.attributes["Intro of the restaurant"]="";  
+      basePost.attributes["Participation guidelines"] ="";
+      basePost.attributes["Price"]="";
+      break;
+    case 'Speech':
+      basePost.attributes["Topic"]="";
+      basePost.attributes["Speaker"]="";
+      basePost.attributes["Introduce the Topic"]="";
+      basePost.attributes["Entry fee"]="";
+      basePost.attributes["Requirements for Participants"]="";
+      break;
+    case  'Travel':
+      basePost.attributes["Introduce"]="";
+      basePost.attributes["Price"]="";
+      basePost.attributes["Participation guidelines"]="";
+      basePost.attributes["Itinerary"]=<String, List<String>>{};
+      break;
+    case  'Parade':
+    basePost.attributes["Introduce"] ="";
+    basePost.attributes["Address"] ="";
+    basePost.attributes["Parade route"] =<String>[];
+    basePost.attributes["Participation guidelines"]="";
+      break;
+    case  'Exhibition':
+      basePost.attributes["Introduction"] = "";
+      basePost.attributes["Ticket price"] = "";
+      break;
+    default:
+      break;
+  }
   }
 
   @override
