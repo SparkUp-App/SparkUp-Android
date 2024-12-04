@@ -196,6 +196,11 @@ class InfoPreviewCard extends StatelessWidget {
         // 3. 如果 entry.value 是 List<String>，則不為空列表
         if (entry.value is List<dynamic> && entry.value.isEmpty) return false;
 
+        if (entry.value is List<String> && entry.value.isEmpty) return false;
+        
+        if (entry.value is Map<String, dynamic> && (entry.value as Map<String, dynamic>).isEmpty) return false;
+
+        if (entry.value is Map<String, String> && (entry.value as Map<String, String>).isEmpty) return false;
         // 添加其他類型的檢查（如果需要）
         return true;
       })

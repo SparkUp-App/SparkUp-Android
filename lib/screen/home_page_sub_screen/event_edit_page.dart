@@ -10,6 +10,8 @@ import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextFi
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_int_counter.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextFieldMap.dart';
+
 
 class EventEditPage extends StatefulWidget {
   const EventEditPage({super.key, required this.postView});
@@ -156,7 +158,7 @@ List<Widget> _buildEditFields() {
       print(key);
       print(value.runtimeType);
       //String , List<dynamic> , Map<String, dynamic>
-      fields.add(
+      if(value.runtimeType==String)fields.add(
         Textfield(
             label: key,
             hintLabel: "Enter ${key} Here",
@@ -164,8 +166,73 @@ List<Widget> _buildEditFields() {
             onChanged: (newValue) => setState(() =>  editData["attributes"][key] = newValue ?? ""),
           )
         );
-      
+        else if (value.runtimeType == List<dynamic>) {
+          // 将 value 转换为 List<String>
+          List<String> stringList = (value as List<dynamic>).cast<String>();
 
+          // 添加大括号 {} 包裹语句块
+          fields.add(
+            MultiInput(
+              label: key,
+              hintLabel: 'Enter ${key} Here',
+              values: stringList, // 使用转换后的 List<String>
+              onChanged: (newValue) {
+                setState(() {
+                  editData["attributes"][key] = newValue;
+                });
+              },
+            ), // 移除这里的多余逗号
+          );
+        }
+        else if (value.runtimeType == List<String>) {
+          // 添加大括号 {} 包裹语句块
+          fields.add(
+            MultiInput(
+              label: key,
+              hintLabel: 'Enter ${key} Here',
+              values: value, // 使用转换后的 List<String>
+              onChanged: (newValue) {
+                setState(() {
+                  editData["attributes"][key] = newValue;
+                });
+              },
+            ), // 移除这里的多余逗号
+          );
+        }
+        else if (value.runtimeType == Map<String, dynamic>) {
+          // 将 Map<String, dynamic> 转换为 Map<String, String>
+          Map<String, String> stringMap = (value as Map<String, dynamic>).map(
+            (key, dynamicValue) => MapEntry(key, dynamicValue.toString()),
+          );
+          fields.add(
+            DoubleTextFieldToMakeMap(
+              label: key, 
+              firstHintLabel: "Item", 
+              secondHintLabel: "Amount", 
+              values: stringMap, 
+              onChanged:(newValues) {
+                setState(() {
+                  editData["attributes"][key] = newValues;
+                });
+              },
+            )
+          );
+        }
+        else if (value.runtimeType == Map<String, String>) {
+          fields.add(
+            DoubleTextFieldToMakeMap(
+              label: key, 
+              firstHintLabel: "Item", 
+              secondHintLabel: "Amount", 
+              values: value, 
+              onChanged:(newValues) {
+                setState(() {
+                  editData["attributes"][key] = newValues;
+                });
+              },
+            )
+          );
+        }
   });
 
   return fields;
@@ -297,7 +364,8 @@ Widget _buildSaveButton() {
         return true;
       }
     }
-    return false;
+    //return false;
+    return true;
   }
 
 Widget _buildDatePicker({
