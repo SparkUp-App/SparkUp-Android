@@ -594,6 +594,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                             color: const Color(0xFFF7AF8B),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
+                              physics: AlwaysScrollableScrollPhysics(),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 8),
                               itemCount: profile.interestTypes.length,
