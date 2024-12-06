@@ -16,7 +16,7 @@ void main() async {
   noProfile = result[1];
 
   if (userId != null) Network.manager.userId = int.parse(userId!);
-  if(noProfile == "Yes"){
+  if (noProfile == "Yes") {
     Profile.manager = Profile.initfromDefault();
   }
   runApp(const ImagePrecacheWrapper());
@@ -88,10 +88,12 @@ class _ImagePrecacheWrapperState extends State<ImagePrecacheWrapper> {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: navigatorKey,
         title: "SparkUp",
         debugShowCheckedModeBanner: false,
         routes: RouteMap.routes,
