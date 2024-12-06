@@ -61,7 +61,8 @@ class _MyRatPreviewTagState extends State<MyRatPreviewTag>
         myReferenceList.addAll((response["data"]["events"] as List<dynamic>)
             .map((element) => MyReferenceListReceived.initfromData(element))
             .toList());
-        page = response["data"]["page"]++;
+        page = response["data"]["page"];
+        page++;
         pages = response["data"]["pages"];
         noMoreData = page > pages;
       } else {
@@ -147,7 +148,7 @@ class MyRatingCard extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color:Color.fromARGB(255, 252, 164, 140),
+            color: Color.fromARGB(255, 252, 164, 140),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
             boxShadow: [
               BoxShadow(
@@ -204,20 +205,14 @@ class MyRatingCard extends StatelessWidget {
                   children: [
                     _buildInfoRow(Icons.person, 'Host: templately no data'),
                     const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.calendar_today,
-                      'Date: ${_formatDate(myReference.event.eventStartDate)} - ${_formatDate(myReference.event.eventEndDate)}'
-                    ),
+                    _buildInfoRow(Icons.calendar_today,
+                        'Date: ${_formatDate(myReference.event.eventStartDate)} - ${_formatDate(myReference.event.eventEndDate)}'),
                     const SizedBox(height: 12),
                     _buildInfoRow(
-                      Icons.category,
-                      'Type: ${myReference.event.type}'
-                    ),
+                        Icons.category, 'Type: ${myReference.event.type}'),
                     const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.location_on,
-                      'Location: ${myReference.event.location}'
-                    ),
+                    _buildInfoRow(Icons.location_on,
+                        'Location: ${myReference.event.location}'),
                   ],
                 ),
               ),
@@ -341,7 +336,6 @@ class MyRatingCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              
               Row(
                 children: [
                   const Icon(
@@ -378,9 +372,9 @@ class MyRatingCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 252, 164, 140),
                   borderRadius: BorderRadius.circular(20),
@@ -390,7 +384,6 @@ class MyRatingCard extends StatelessWidget {
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
-                    
                   ],
                 ),
                 child: Row(
@@ -405,7 +398,8 @@ class MyRatingCard extends StatelessWidget {
                             size: 25.0,
                             color: Color(0xFFFFF3E0),
                           );
-                        } else if (index == myReference.event.averageRating.floor() &&
+                        } else if (index ==
+                                myReference.event.averageRating.floor() &&
                             myReference.event.averageRating % 1 != 0) {
                           return Stack(
                             children: [
@@ -417,7 +411,8 @@ class MyRatingCard extends StatelessWidget {
                               ClipRect(
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  widthFactor: myReference.event.averageRating % 1,
+                                  widthFactor:
+                                      myReference.event.averageRating % 1,
                                   child: const SparkIcon(
                                     icon: SparkIcons.star,
                                     size: 25.0,
@@ -438,7 +433,8 @@ class MyRatingCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
