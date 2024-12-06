@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/route.dart';
@@ -14,6 +15,8 @@ void main() async {
   ]);
   userId = result[0];
   noProfile = result[1];
+
+  await BackgroundNotificationService.manager.init();
 
   if (userId != null) Network.manager.userId = int.parse(userId!);
   if (noProfile == "Yes") {
