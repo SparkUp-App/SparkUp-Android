@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
 import 'package:spark_up/chat/data/rejected_message.dart';
@@ -149,6 +150,9 @@ class ChatRoomManager {
               duration: const Duration(seconds: 3),
             ));
           }
+
+          // App Background Notification
+          BackgroundNotificationService.manager.handleIncomingMessage(message);
         }
 
         roomList.value.removeAt(i);
@@ -201,6 +205,10 @@ class ChatRoomManager {
         duration: const Duration(seconds: 3),
       ));
     }
+
+    // Bakcground Notification
+    BackgroundNotificationService.manager
+        .handleIncomingApprovedMessage(message);
   }
 
   void socketRejectedCallback(RejectedMessage message) {
@@ -246,5 +254,9 @@ class ChatRoomManager {
         duration: const Duration(seconds: 3),
       ));
     }
+
+    // Bakcground Notification
+    BackgroundNotificationService.manager
+        .handleIncomingRejectedMessage(message);
   }
 }
