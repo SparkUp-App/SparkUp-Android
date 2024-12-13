@@ -44,34 +44,34 @@ class BackgroundNotificationService {
   }
 
   Future<void> showNotification({
-    required String title,
     required String body,
+    required ChannelCategory category,
     String? payload,
   }) async {
     // Android notification details
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      channelDescription: 'your channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(category.channelName, category.channelTitle,
+            channelDescription: category.channelDescription,
+            importance: Importance.max,
+            priority: Priority.high,
+            groupKey: category.channelName,
+            setAsGroupSummary: true,
+            groupAlertBehavior: GroupAlertBehavior.all);
 
     // iOS notification details
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
         DarwinNotificationDetails();
 
     // Notification details
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
 
     // Show the notification
     await flutterLocalNotificationsPlugin.show(
-      0, // notification id
-      title,
+      DateTime.now().millisecondsSinceEpoch.remainder(100000),
+      category.channelTitle,
       body,
       platformChannelSpecifics,
       payload: payload,
@@ -81,28 +81,64 @@ class BackgroundNotificationService {
   // New Message Call Back Function
   void handleIncomingMessage(ChatMessage message) {
     showNotification(
-      title: 'New Message',
-      body: "${message.senderName}: ${message.content}",
-    );
+        body: "${message.senderName}: ${message.content}",
+        category: ChannelCategory.message);
   }
 
   void handleIncomingApprovedMessage(ApprovedMessage message) {
     showNotification(
-      title: 'Approved Message',
-      body:
-          "${message.hostNickName} approved your apply in ${message.postTitle}",
-    );
+        body:
+            "${message.hostNickName} approved your apply in ${message.postTitle}",
+        category: ChannelCategory.approved);
   }
 
   void handleIncomingRejectedMessage(RejectedMessage message) {
     showNotification(
-      title: 'Rejected Message',
-      body:
-          "${message.hostNickName} rejected your apply in ${message.postTitle}",
-    );
+        body:
+            "${message.hostNickName} rejected your apply in ${message.postTitle}",
+        category: ChannelCategory.rejected);
   }
 
   void dispose() {
     selectNotificationSubject.close();
+  }
+}
+
+enum ChannelCategory {
+  message,
+  approved,
+  rejected;
+
+  String get channelName {
+    switch (this) {
+      case ChannelCategory.message:
+        return 'new_message_channel';
+      case ChannelCategory.approved:
+        return 'approved_channel';
+      case ChannelCategory.rejected:
+        return 'rejected_channel';
+    }
+  }
+
+  String get channelDescription {
+    switch (this) {
+      case ChannelCategory.message:
+        return 'New Message Channel';
+      case ChannelCategory.approved:
+        return 'Approved Message Channel';
+      case ChannelCategory.rejected:
+        return 'Rejected Message Channel';
+    }
+  }
+
+  String get channelTitle {
+    switch (this) {
+      case ChannelCategory.message:
+        return 'New Message';
+      case ChannelCategory.approved:
+        return 'Approved Message';
+      case ChannelCategory.rejected:
+        return 'Rejected Message';
+    }
   }
 }
