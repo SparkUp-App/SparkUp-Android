@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
-import 'package:spark_up/common_widget/no_more_data.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/my_reference_list_received.dart';
@@ -61,7 +60,8 @@ class _MyRatPreviewTagState extends State<MyRatPreviewTag>
         myReferenceList.addAll((response["data"]["events"] as List<dynamic>)
             .map((element) => MyReferenceListReceived.initfromData(element))
             .toList());
-        page = response["data"]["page"]++;
+        page = response["data"]["page"];
+        page++;
         pages = response["data"]["pages"];
         noMoreData = page > pages;
       } else {
@@ -143,151 +143,320 @@ class MyRatingCard extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      enableDrag: true,
       builder: (BuildContext context) {
         return Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color:Color.fromARGB(255, 252, 164, 140),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 15,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Title with gradient border bottom
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.white.withOpacity(0.2),
-                      width: 2,
-                    ),
+            height: MediaQuery.of(context).size.height * 0.5,
+            padding: const EdgeInsets.all(0.0),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8),
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    color: Color(0xffF7AF8B),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                  ),
+                  child: Text(
+                    myReference.event.postTitle,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                child: Text(
-                  myReference.event.postTitle,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
+
+                // Rating Detail Block
+                Flexible(
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        for (var element in myReference.referenceList) ...[
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                            child: rateDetailBlock(element, context),
+                          ),
+                        ],
+                        const SizedBox(
+                          height: 5.0,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Info Cards
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  children: [
-                    _buildInfoRow(Icons.person, 'Host: templately no data'),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.calendar_today,
-                      'Date: ${_formatDate(myReference.event.eventStartDate)} - ${_formatDate(myReference.event.eventEndDate)}'
-                    ),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.category,
-                      'Type: ${myReference.event.type}'
-                    ),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.location_on,
-                      'Location: ${myReference.event.location}'
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Rating Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      color: Colors.orange[400],
-                      size: 32,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      myReference.event.averageRating.toStringAsFixed(1),
-                      style: TextStyle(
-                        color: Colors.orange[800],
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '(${myReference.event.ratingCount} ratings)',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+                )
+              ],
+            ));
+
+        // Container(
+        //   padding: const EdgeInsets.all(24),
+        //   decoration: BoxDecoration(
+        //     color: Color.fromARGB(255, 252, 164, 140),
+        //     borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: Colors.black.withOpacity(0.2),
+        //         blurRadius: 15,
+        //         offset: const Offset(0, -5),
+        //       ),
+        //     ],
+        //   ),
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       // Handle bar
+        //       Container(
+        //         width: 40,
+        //         height: 4,
+        //         margin: const EdgeInsets.only(bottom: 20),
+        //         decoration: BoxDecoration(
+        //           color: Colors.white.withOpacity(0.3),
+        //           borderRadius: BorderRadius.circular(2),
+        //         ),
+        //       ),
+        //       // Title with gradient border bottom
+        //       Container(
+        //         width: double.infinity,
+        //         padding: const EdgeInsets.only(bottom: 16),
+        //         decoration: BoxDecoration(
+        //           border: Border(
+        //             bottom: BorderSide(
+        //               color: Colors.white.withOpacity(0.2),
+        //               width: 2,
+        //             ),
+        //           ),
+        //         ),
+        //         child: Text(
+        //           myReference.event.postTitle,
+        //           style: const TextStyle(
+        //             fontSize: 24,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white,
+        //             letterSpacing: 0.5,
+        //           ),
+        //         ),
+        //       ),
+        //       const SizedBox(height: 20),
+        //       // Info Cards
+        //       Container(
+        //         padding: const EdgeInsets.all(16),
+        //         decoration: BoxDecoration(
+        //           color: Colors.white.withOpacity(0.1),
+        //           borderRadius: BorderRadius.circular(15),
+        //         ),
+        //         child: Column(
+        //           children: [
+        //             _buildInfoRow(Icons.person, 'Host: templately no data'),
+        //             const SizedBox(height: 12),
+        //             _buildInfoRow(Icons.calendar_today,
+        //                 'Date: ${_formatDate(myReference.event.eventStartDate)} - ${_formatDate(myReference.event.eventEndDate)}'),
+        //             const SizedBox(height: 12),
+        //             _buildInfoRow(
+        //                 Icons.category, 'Type: ${myReference.event.type}'),
+        //             const SizedBox(height: 12),
+        //             _buildInfoRow(Icons.location_on,
+        //                 'Location: ${myReference.event.location}'),
+        //           ],
+        //         ),
+        //       ),
+        //       const SizedBox(height: 16),
+        //       // Rating Card
+        //       Container(
+        //         padding: const EdgeInsets.all(16),
+        //         decoration: BoxDecoration(
+        //           color: Colors.white,
+        //           borderRadius: BorderRadius.circular(15),
+        //         ),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             Icon(
+        //               Icons.star_rounded,
+        //               color: Colors.orange[400],
+        //               size: 32,
+        //             ),
+        //             const SizedBox(width: 8),
+        //             Text(
+        //               myReference.event.averageRating.toStringAsFixed(1),
+        //               style: TextStyle(
+        //                 color: Colors.orange[800],
+        //                 fontSize: 24,
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //             const SizedBox(width: 8),
+        //             Text(
+        //               '(${myReference.event.ratingCount} ratings)',
+        //               style: TextStyle(
+        //                 color: Colors.grey[600],
+        //                 fontSize: 16,
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
       },
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+  Widget rateDetailBlock(MyReference reference, BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(bottom: BorderSide(color: Colors.black26)),
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // User Nickname
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                  child: Text(
+                reference.nickname,
+                style: const TextStyle(
+                  color: Color(0xFF4B4B4B),
+                  fontSize: 16,
+                ),
+              )),
+              if (reference.isHost)
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF7AF8B),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text("Host",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold)),
+                ),
+            ],
           ),
-          child: Icon(icon, color: Colors.white, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
+
+          // Rating
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Row(
+                children: List.generate(5, (index) {
+                  if (index < reference.rating) {
+                    return const SparkIcon(
+                      icon: SparkIcons.star,
+                      size: 30.0,
+                      color: Color(0xFFF77D43),
+                    );
+                  } else {
+                    return const SparkIcon(
+                      icon: SparkIcons.star,
+                      size: 30.0,
+                      color: Color(0xFF999998),
+                    );
+                  }
+                }),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Text(
+                reference.rating.toStringAsFixed(1),
+                style: const TextStyle(
+                  color: Color(0xFFF77D43),
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(
+            height: 8,
+          ),
+
+          // Content
+          if (reference.content.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Text("comments: ",
+                    style: TextStyle(
+                      color: Color(0xFF4B4B4B),
+                      fontSize: 12,
+                    )),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.68,
+                  ),
+                  child: Text(reference.content,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        color: Color(0xFF4B4B4B),
+                        fontSize: 12,
+                      )),
+                )
+              ],
             ),
+
+          const SizedBox(
+            height: 3,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+  // Widget _buildInfoRow(IconData icon, String text) {
+  //   return Row(
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.all(8),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white.withOpacity(0.1),
+  //           borderRadius: BorderRadius.circular(8),
+  //         ),
+  //         child: Icon(icon, color: Colors.white, size: 20),
+  //       ),
+  //       const SizedBox(width: 12),
+  //       Expanded(
+  //         child: Text(
+  //           text,
+  //           style: const TextStyle(
+  //             color: Colors.white,
+  //             fontSize: 16,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   String _formatDate(DateTime date) {
     return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
@@ -309,7 +478,7 @@ class MyRatingCard extends StatelessWidget {
               offset: const Offset(0, 4),
             ),
             BoxShadow(
-              color: Color.fromARGB(255, 241, 152, 111).withOpacity(0.1),
+              color: const Color.fromARGB(255, 241, 152, 111).withOpacity(0.1),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -325,11 +494,10 @@ class MyRatingCard extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       color: Colors.white,
-                      width: 2.0,
+                      width: 1.0,
                     ),
                   ),
                 ),
-                padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   myReference.event.postTitle,
                   style: const TextStyle(
@@ -341,25 +509,26 @@ class MyRatingCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              
-              Row(
-                children: [
-                  const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'hold by: template no data',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
+              // Hoster info
+
+              // const Row(
+              //   children: [
+              //     Icon(
+              //       Icons.person,
+              //       color: Colors.white,
+              //       size: 18,
+              //     ),
+              //     SizedBox(width: 8),
+              //     Text(
+              //       'hold by: template no data',
+              //       style: TextStyle(
+              //         color: Colors.white,
+              //         fontSize: 14,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 4),
               Row(
                 children: [
                   const Icon(
@@ -378,11 +547,11 @@ class MyRatingCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 252, 164, 140),
+                  color: const Color.fromARGB(255, 252, 164, 140),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -390,7 +559,6 @@ class MyRatingCard extends StatelessWidget {
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
-                    
                   ],
                 ),
                 child: Row(
@@ -405,7 +573,8 @@ class MyRatingCard extends StatelessWidget {
                             size: 25.0,
                             color: Color(0xFFFFF3E0),
                           );
-                        } else if (index == myReference.event.averageRating.floor() &&
+                        } else if (index ==
+                                myReference.event.averageRating.floor() &&
                             myReference.event.averageRating % 1 != 0) {
                           return Stack(
                             children: [
@@ -417,7 +586,8 @@ class MyRatingCard extends StatelessWidget {
                               ClipRect(
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  widthFactor: myReference.event.averageRating % 1,
+                                  widthFactor:
+                                      myReference.event.averageRating % 1,
                                   child: const SparkIcon(
                                     icon: SparkIcons.star,
                                     size: 25.0,
@@ -438,14 +608,15 @@ class MyRatingCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         myReference.event.averageRating.toStringAsFixed(1),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 255, 126, 90),
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

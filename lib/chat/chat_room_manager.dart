@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
 import 'package:spark_up/chat/data/rejected_message.dart';
 import 'package:spark_up/data/list_rooms_received.dart';
+import 'package:spark_up/main.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
 
@@ -105,6 +107,60 @@ class ChatRoomManager {
         if (message.senderId != Network.manager.userId &&
             currentPostId != message.postId) {
           updateChatRoom.unreadCount++;
+
+          BuildContext? context = MyApp.navigatorKey.currentContext;
+
+          if (WidgetsBinding.instance.lifecycleState ==
+              AppLifecycleState.resumed) {
+            // App Foreground Notification
+
+            // Display SnackBar in app
+            if (context != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                content: Container(
+                  padding: const EdgeInsets.all(18.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "New Message",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "${message.senderName}: ${message.content}",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                duration: const Duration(seconds: 3),
+              ));
+            }
+          } else if (WidgetsBinding.instance.lifecycleState ==
+              AppLifecycleState.paused) {
+            // App Background Notification
+            BackgroundNotificationService.manager
+                .handleIncomingMessage(message);
+          }
         }
 
         roomList.value.removeAt(i);
@@ -115,10 +171,111 @@ class ChatRoomManager {
   }
 
   void socketApproveCallback(ApprovedMessage message) {
-    //dont need to refresh but need to show message
+    BuildContext? context = MyApp.navigatorKey.currentContext;
+
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+      // Foreground Notification
+      // Display SnackBar in app
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          content: Container(
+            padding: const EdgeInsets.all(18.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Approved Message",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${message.hostNickName} arrpoved your apply in ${message.postTitle}",
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ));
+      }
+    } else if (WidgetsBinding.instance.lifecycleState ==
+        AppLifecycleState.paused) {
+      // Background Notification
+      BackgroundNotificationService.manager
+          .handleIncomingApprovedMessage(message);
+    }
   }
 
   void socketRejectedCallback(RejectedMessage message) {
-    //dont need to refresh but need to show message
+    BuildContext? context = MyApp.navigatorKey.currentContext;
+
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+      // Foreground Notification
+
+      // Display SnackBar in app
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          content: Container(
+            padding: const EdgeInsets.all(18.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Rejected Message",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${message.hostNickName} rejected your apply in ${message.postTitle}",
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ));
+      }
+    } else if (WidgetsBinding.instance.lifecycleState ==
+        AppLifecycleState.paused) {
+      // Background Notification
+      BackgroundNotificationService.manager
+          .handleIncomingRejectedMessage(message);
+    }
   }
 }
