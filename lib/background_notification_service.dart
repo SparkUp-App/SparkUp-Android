@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
@@ -33,14 +36,90 @@ class BackgroundNotificationService {
       iOS: initializationSettingsIOS,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) async {
-        // Handle notification tap
-        selectNotificationSubject.add(notificationResponse.payload);
-      },
-    );
+    debugPrint('Notification initialization started');
+
+    try {
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse notificationResponse) async {
+          // Handle notification tap
+          selectNotificationSubject.add(notificationResponse.payload);
+        },
+      );
+    } catch (e) {
+      debugPrint('Notification initialization failed: $e');
+    }
+
+    await requestNotificationPermissions();
+  }
+
+  Future<void> requestNotificationPermissions() async {
+    try {
+      if (Platform.isIOS) {
+        // No dedicated in ios
+      }
+
+      if (Platform.isAndroid) {
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission();
+      }
+    } catch (e) {
+      debugPrint('Notification permission request failed: $e');
+    }
+    await createNotificationChannel();
+  }
+
+  Future<void> createNotificationChannel() async {
+    final androidPlugin =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidPlugin == null) return;
+
+    final Map<ChannelCategory, AndroidNotificationChannelConfig>
+        cahnnelConifgs = {
+      ChannelCategory.message: AndroidNotificationChannelConfig(
+        importance: Importance.max,
+        enableVibration: true,
+        enableLigths: false,
+        playSound: true,
+        ledColor: const Color.fromARGB(255, 255, 0, 0),
+      ),
+      ChannelCategory.approved: AndroidNotificationChannelConfig(
+        importance: Importance.max,
+        enableVibration: true,
+        enableLigths: false,
+        playSound: true,
+      ),
+      ChannelCategory.rejected: AndroidNotificationChannelConfig(
+        importance: Importance.max,
+        enableVibration: true,
+        enableLigths: false,
+        playSound: true,
+      ),
+    };
+
+    try {
+      for (final category in ChannelCategory.values) {
+        final config = cahnnelConifgs[category];
+        await androidPlugin
+            .createNotificationChannel(AndroidNotificationChannel(
+          category.channelName,
+          category.channelTitle,
+          description: category.channelDescription,
+          importance: Importance.max,
+          enableVibration: config?.enableVibration ?? true,
+          enableLights: config?.enableLigths ?? false,
+          ledColor: config?.ledColor,
+          playSound: config?.playSound ?? true,
+        ));
+      }
+    } catch (e) {
+      debugPrint('Notification channel creation failed: $e');
+    }
   }
 
   Future<void> showNotification({
@@ -48,8 +127,29 @@ class BackgroundNotificationService {
     required ChannelCategory category,
     String? payload,
   }) async {
+    final int groudId = category.hashCode;
+
     // Android notification details
     AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      category.channelName,
+      category.channelTitle,
+      channelDescription: category.channelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+      groupKey: category.channelName,
+      setAsGroupSummary: false,
+      groupAlertBehavior: GroupAlertBehavior.all,
+      styleInformation: BigTextStyleInformation(
+        body,
+        contentTitle: category.channelTitle,
+        summaryText: category.channelTitle,
+        htmlFormatContent: true,
+        htmlFormatTitle: true,
+      ),
+    );
+
+    AndroidNotificationDetails summaryNotificationDetails =
         AndroidNotificationDetails(category.channelName, category.channelTitle,
             channelDescription: category.channelDescription,
             importance: Importance.max,
@@ -74,6 +174,16 @@ class BackgroundNotificationService {
       category.channelTitle,
       body,
       platformChannelSpecifics,
+      payload: payload,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      groudId,
+      category.channelTitle,
+      "You have ${category.channelTitle}",
+      NotificationDetails(
+          android: summaryNotificationDetails,
+          iOS: iOSPlatformChannelSpecifics),
       payload: payload,
     );
   }
@@ -141,4 +251,20 @@ enum ChannelCategory {
         return 'Rejected Message';
     }
   }
+}
+
+class AndroidNotificationChannelConfig {
+  final Importance importance;
+  final bool enableVibration;
+  final bool enableLigths;
+  final Color? ledColor;
+  final bool playSound;
+
+  AndroidNotificationChannelConfig({
+    this.importance = Importance.max,
+    this.enableVibration = true,
+    this.enableLigths = false,
+    this.ledColor,
+    this.playSound = true,
+  });
 }
