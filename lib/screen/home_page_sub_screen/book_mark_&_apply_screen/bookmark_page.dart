@@ -26,9 +26,11 @@ class _BookmarkPageState extends State<BookmarkPage>
         automaticallyImplyLeading: false,
         title: const Center(
           child: Text(
-            "Associative",
+            "SparkUp!",
             style: TextStyle(
               color: Colors.white,
+              fontFamily: "Kalam",
+              fontSize: 32.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -55,4 +57,3 @@ class _BookmarkPageState extends State<BookmarkPage>
     );
   }
 }
-

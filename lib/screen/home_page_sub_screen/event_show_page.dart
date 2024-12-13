@@ -118,10 +118,11 @@ class _EventShowPageState extends State<EventShowPage>
                 automaticallyImplyLeading: false,
                 title: const Center(
                   child: Text(
-                    "SparkUp",
+                    "SparkUp!",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 32.0,
                       fontFamily: "Kalam",
                     ),
                   ),

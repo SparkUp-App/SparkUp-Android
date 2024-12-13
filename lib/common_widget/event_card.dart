@@ -127,7 +127,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context,
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      "${receivedPost.eventStartDate.toString().split(' ')[0]} - ${receivedPost.eventEndDate.toString().split(' ')[0]}",
+                      "${receivedPost.eventStartDate.toString().split(' ')[0].replaceAll("-", ".")} - ${receivedPost.eventEndDate.toString().split(' ')[0].replaceAll("-", ".")}",
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontWeight: FontWeight.w600,
