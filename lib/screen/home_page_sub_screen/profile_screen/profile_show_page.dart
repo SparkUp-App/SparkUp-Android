@@ -25,6 +25,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
   late Profile profile;
   late double rating;
   late int participated;
+  late int level;
 
   @override
   void initState() {
@@ -164,7 +165,14 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        'assets/member/Nebulas.png',
+                        switch (level) {
+                          0 => 'assets/member/Nebulas.png',
+                          1 => 'assets/member/Proto Star.png',
+                          2 => 'asssets/member/Main Sequence.png',
+                          3 => 'assets/member/Red Giant.png',
+                          4 => 'assets/member/Supernova.png',
+                          int() => 'assets/member/Nebulas.png',
+                        },
                         width: 90,
                         height: 90,
                         fit: BoxFit.cover,
@@ -395,7 +403,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       ),
                       Container(
                         height: 1,
-                        width:MediaQuery.of(context).size.width*0.9,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         color: Colors.white,
                       ),
                     ],
@@ -528,6 +536,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             profile = Profile.initfromData(snapshot.data!["data"]["profile"]);
             rating = snapshot.data!["data"]["rating"];
             participated = snapshot.data!["data"]["participated"];
+            level = snapshot.data!["data"]["level"] ?? 0;
 
             return Scaffold(
               appBar: PreferredSize(
@@ -572,9 +581,10 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                               ]
                             : null,
                       ),
-                      Center(child:Container(
+                      Center(
+                          child: Container(
                         height: 1,
-                        width:MediaQuery.of(context).size.width*0.95,
+                        width: MediaQuery.of(context).size.width * 0.95,
                         color: Colors.white,
                       )),
                     ],
