@@ -122,6 +122,8 @@ class BackgroundNotificationService {
           enableLights: config?.enableLigths ?? false,
           ledColor: config?.ledColor,
           playSound: config?.playSound ?? true,
+          sound: RawResourceAndroidNotificationSound(
+              'notification_ring.wav'.split('.').first),
         ));
       }
     } catch (e) {
@@ -154,16 +156,24 @@ class BackgroundNotificationService {
         htmlFormatContent: true,
         htmlFormatTitle: true,
       ),
+      sound: RawResourceAndroidNotificationSound(
+          'notification_ring.wav'.split('.').first),
     );
 
     AndroidNotificationDetails summaryNotificationDetails =
-        AndroidNotificationDetails(category.channelName, category.channelTitle,
-            channelDescription: category.channelDescription,
-            importance: Importance.max,
-            priority: Priority.high,
-            groupKey: category.channelName,
-            setAsGroupSummary: true,
-            groupAlertBehavior: GroupAlertBehavior.all);
+        AndroidNotificationDetails(
+      category.channelName,
+      category.channelTitle,
+      channelDescription: category.channelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+      groupKey: category.channelName,
+      setAsGroupSummary: true,
+      groupAlertBehavior: GroupAlertBehavior.all,
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound(
+          'notification_ring.wav'.split('.').first),
+    );
 
     // iOS notification details
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
