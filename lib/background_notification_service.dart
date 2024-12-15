@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
@@ -23,14 +25,14 @@ class BackgroundNotificationService {
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // iOS initialization
-    final DarwinInitializationSettings initializationSettingsIOS =
+    const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
     );
 
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
@@ -50,26 +52,31 @@ class BackgroundNotificationService {
     } catch (e) {
       debugPrint('Notification initialization failed: $e');
     }
-
     await requestNotificationPermissions();
   }
 
-  Future<void> requestNotificationPermissions() async {
+  Future<bool> requestNotificationPermissions() async {
+    bool permissionGranted = false;
+    await Permission.location.request();
+
     try {
       if (Platform.isIOS) {
         // No dedicated in ios
       }
 
       if (Platform.isAndroid) {
-        await flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.requestNotificationsPermission();
+        final result = await Permission.notification.request();
+        permissionGranted = result.isGranted;
       }
     } catch (e) {
       debugPrint('Notification permission request failed: $e');
     }
-    await createNotificationChannel();
+
+    if (permissionGranted) {
+      await createNotificationChannel();
+    }
+
+    return permissionGranted;
   }
 
   Future<void> createNotificationChannel() async {
