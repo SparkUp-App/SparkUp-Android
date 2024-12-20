@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
+import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
 import 'package:spark_up/socket_service.dart';
@@ -66,12 +67,37 @@ class LogoutPage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 10.0,
+              height: 15.0,
             ),
             Container(
               height: 50.0,
               margin:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+              child: TextButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteMap.tutorialPage,
+                      arguments: true);
+                },
+                icon:
+                    const SparkIcon(icon: SparkIcons.study, color: Colors.grey),
+                label: const Text("Guide Book",
+                    style: TextStyle(color: Colors.black)),
+                style: TextButton.styleFrom(
+                  overlayColor: const Color(0xFFF7AF8B),
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  backgroundColor: Colors.white.withOpacity(0.9),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 50.0,
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.card_travel, color: Colors.grey),
@@ -92,7 +118,7 @@ class LogoutPage extends StatelessWidget {
             Container(
               height: 50.0,
               margin:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.phone, color: Colors.grey),
@@ -113,7 +139,7 @@ class LogoutPage extends StatelessWidget {
             Container(
               height: 50.0,
               margin:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.info, color: Colors.grey),
@@ -132,7 +158,7 @@ class LogoutPage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 10.0,
+              height: 15.0,
             ),
             Container(
               height: 50.0,

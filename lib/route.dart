@@ -47,7 +47,10 @@ class RouteMap {
     homePage: (context) => const HomePage(),
     initialProfileDataPage: (context) =>
         const BasicProfilePage(), //註冊完轉到initial個人資訊的頁面
-    tutorialPage: (context) => const TutorialScreen(),
+    tutorialPage: (context) {
+      bool fromSetting = ModalRoute.of(context)!.settings.arguments as bool;
+      return TutorialScreen(fromSetting: fromSetting);
+    },
     detailProfilePage: (context) => const DetailedProfilePage(),
     eventTypeProfilePage: (context) => const EventTypeProfilePage(),
     eventDetailePage: (context) {

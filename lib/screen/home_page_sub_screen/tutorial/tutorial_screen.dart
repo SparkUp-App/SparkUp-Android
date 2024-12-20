@@ -3,7 +3,9 @@ import 'package:spark_up/common_widget/exit_dialog.dart';
 import 'package:spark_up/route.dart';
 
 class TutorialScreen extends StatefulWidget {
-  const TutorialScreen({super.key});
+  const TutorialScreen({super.key, required this.fromSetting});
+
+  final bool fromSetting;
 
   @override
   State<TutorialScreen> createState() => _TutorialScreenState();
@@ -141,8 +143,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                                         NoSplash.splashFactory,
                                                   ),
                                                   onPressed: () {
-                                                    Navigator.pushNamed(context,
-                                                        RouteMap.homePage);
+                                                    widget.fromSetting
+                                                        ? Navigator.pop(context)
+                                                        : Navigator.pushNamed(
+                                                            context,
+                                                            RouteMap.homePage);
                                                   },
                                                   child: Container(
                                                       width: 150,
@@ -231,8 +236,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                                         NoSplash.splashFactory,
                                                   ),
                                                   onPressed: () {
-                                                    Navigator.pushNamed(context,
-                                                        RouteMap.homePage);
+                                                    widget.fromSetting
+                                                        ? Navigator.pop(context)
+                                                        : Navigator.pushNamed(
+                                                            context,
+                                                            RouteMap.homePage);
                                                   },
                                                   child: Container(
                                                       width: 150,

@@ -344,7 +344,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
 
     if (response["status"] == "success" && context.mounted) {
       SecureStorage.store(StoreKey.noProfile, "No");
-      Navigator.pushReplacementNamed(context, RouteMap.tutorialPage);
+      Navigator.pushReplacementNamed(context, RouteMap.tutorialPage,
+          arguments: false);
     } else {
       showDialog(
           context: context,
