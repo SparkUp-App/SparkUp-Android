@@ -484,11 +484,9 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           indicatorColor: const Color(0xFFF7AF8B),
                           labelStyle: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
                           ),
                           unselectedLabelStyle: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.normal,
                           ),
                           indicatorSize: TabBarIndicatorSize.tab,
                           dividerColor: Colors.transparent,

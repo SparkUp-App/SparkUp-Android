@@ -292,6 +292,10 @@ class _EventShowPageState extends State<EventShowPage>
                           indicatorColor: Colors.white,
                           indicatorWeight: 3,
                           indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
                           tabs: const [
                             Tab(text: 'Hot Event'),
                             Tab(text: 'For You'),

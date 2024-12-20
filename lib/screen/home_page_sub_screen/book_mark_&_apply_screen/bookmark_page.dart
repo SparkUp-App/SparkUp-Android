@@ -44,6 +44,7 @@ class _BookmarkPageState extends State<BookmarkPage>
           indicatorColor: Colors.white,
           indicatorWeight: 3,
           indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: const TextStyle(fontSize: 14, color: Colors.white),
           tabs: const [
             Tab(text: 'BookMark'),
             Tab(text: 'Apply'),
