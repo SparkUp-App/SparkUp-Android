@@ -42,6 +42,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
       await precacheImage(AssetImage(event["path"]!), context);
     }
   }
+
   Widget eventTypeContainer(String eventName, String imagePath) {
     bool isSelected = Profile.manager.interestTypes.contains(eventName);
 
@@ -73,7 +74,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                 width: 140,
                 height: 140,
                 fit: BoxFit.cover,
-                cacheWidth: 140 * 2, 
+                cacheWidth: 140 * 2,
                 cacheHeight: 140 * 2,
               ),
             ),
@@ -343,7 +344,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
 
     if (response["status"] == "success" && context.mounted) {
       SecureStorage.store(StoreKey.noProfile, "No");
-      Navigator.pushReplacementNamed(context, RouteMap.homePage);
+      Navigator.pushReplacementNamed(context, RouteMap.tutorialPage);
     } else {
       showDialog(
           context: context,
