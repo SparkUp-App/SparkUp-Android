@@ -84,7 +84,7 @@ class _ApplyTagState extends State<ApplyTag>
           child: ListView(
             children: [
               for (var element in postList) ...[
-                eventCard(element, context, refresh)
+                eventCard(element, context, refresh, reviewStatusShow: true),
               ],
               if (isLoading)
                 const Center(

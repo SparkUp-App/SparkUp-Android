@@ -4,7 +4,8 @@ import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/route.dart';
 
 Widget eventCard(ListReceivePost receivedPost, BuildContext context,
-    Function refreshCallBack) {
+    Function refreshCallBack,
+    {bool reviewStatusShow = false}) {
   return GestureDetector(
     onTap: () async {
       final edited = await Navigator.pushNamed(
@@ -18,7 +19,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context,
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7AF8B),
+        color: const Color(0xFFFFA890).withOpacity(0.8),
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
@@ -31,24 +32,59 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 標籤
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Text(
-              "#${receivedPost.type}",
-              style: const TextStyle(
-                color: Color(0xFFff6b6b),
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 標籤
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Text(
+                  "#${receivedPost.type}",
+                  style: const TextStyle(
+                    color: Color(0xFFff6b6b),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 8.0),
+              if (reviewStatusShow)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0, vertical: 6.0),
+                  decoration: BoxDecoration(
+                    color: switch (receivedPost.reviewStatus) {
+                      0 => const Color(0XFFF77D43).withOpacity(0.7),
+                      1 =>
+                        const Color.fromARGB(255, 209, 57, 46).withOpacity(0.8),
+                      2 => const Color(0xFF478BA2).withOpacity(0.8),
+                      int() => Colors.grey.withOpacity(0.8),
+                      null => Colors.grey.withOpacity(0.8),
+                    },
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Text(
+                    switch (receivedPost.reviewStatus) {
+                      0 => "Pendding",
+                      1 => "Rejected",
+                      2 => "Approved",
+                      int() => "Unknown Stage",
+                      null => "Unknown Staeg",
+                    },
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 8.0),
 
           // 活動標題
           Text(
@@ -127,7 +163,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context,
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      "${receivedPost.eventStartDate.toString().split(' ')[0]} - ${receivedPost.eventEndDate.toString().split(' ')[0]}",
+                      "${receivedPost.eventStartDate.toString().split(' ')[0].replaceAll("-", ".")} - ${receivedPost.eventEndDate.toString().split(' ')[0].replaceAll("-", ".")}",
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontWeight: FontWeight.w600,

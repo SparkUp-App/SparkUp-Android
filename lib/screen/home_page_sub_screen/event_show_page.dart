@@ -118,10 +118,11 @@ class _EventShowPageState extends State<EventShowPage>
                 automaticallyImplyLeading: false,
                 title: const Center(
                   child: Text(
-                    "SparkUp",
+                    "SparkUp!",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 32.0,
                       fontFamily: "Kalam",
                     ),
                   ),
@@ -291,6 +292,10 @@ class _EventShowPageState extends State<EventShowPage>
                           indicatorColor: Colors.white,
                           indicatorWeight: 3,
                           indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
                           tabs: const [
                             Tab(text: 'Hot Event'),
                             Tab(text: 'For You'),

@@ -12,6 +12,7 @@ class ListReceivePost {
   late bool bookmarked;
   late int comments;
   late int applicants;
+  late int? reviewStatus;
 
   ListReceivePost({
     required this.postId,
@@ -27,6 +28,7 @@ class ListReceivePost {
     required this.bookmarked,
     required this.comments,
     required this.applicants,
+    required this.reviewStatus,
   });
 
   factory ListReceivePost.initfromData(Map data) {
@@ -43,6 +45,10 @@ class ListReceivePost {
         bookmarks: data["bookmarks"],
         bookmarked: data["bookmarked"],
         comments: data["comments"],
-        applicants: data["applicants"]);
+        applicants: data["applicants"],
+        reviewStatus: data["review_status"] ?? 3);
   }
 }
+
+// Review Status
+// 0: Still Reviewing, 1: Rejected, 2: Approved, 3: Unknown

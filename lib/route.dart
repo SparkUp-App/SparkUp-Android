@@ -8,6 +8,7 @@ import "package:spark_up/screen/home_page_sub_screen/event_edit_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/participated_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/rating_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/tutorial/tutorial_screen.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_detail.dart";
 import "package:spark_up/screen/login_page.dart";
 import "package:spark_up/screen/logout_page.dart";
@@ -25,6 +26,7 @@ class RouteMap {
   static const registerPage = "/registerPage";
   static const homePage = "/homePage";
   static const initialProfileDataPage = "/initialProfileDataPage";
+  static const tutorialPage = "/tutorialPage";
   static const eventTypeProfilePage = "/eventTypeProfilePage";
   static const detailProfilePage = "/detailProfilePage";
   static const eventDetailePage = "/eventDetailPage";
@@ -45,6 +47,10 @@ class RouteMap {
     homePage: (context) => const HomePage(),
     initialProfileDataPage: (context) =>
         const BasicProfilePage(), //註冊完轉到initial個人資訊的頁面
+    tutorialPage: (context) {
+      bool fromSetting = ModalRoute.of(context)!.settings.arguments as bool;
+      return TutorialScreen(fromSetting: fromSetting);
+    },
     detailProfilePage: (context) => const DetailedProfilePage(),
     eventTypeProfilePage: (context) => const EventTypeProfilePage(),
     eventDetailePage: (context) {
