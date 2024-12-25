@@ -26,6 +26,8 @@ class ApplicantUser {
   late int userId;
   late String nickname;
   late DateTime appliedTime;
+  late int level;
+
   late Map<String, dynamic> attributes;
 
   ApplicantUser({
@@ -33,6 +35,7 @@ class ApplicantUser {
     required this.nickname,
     required this.appliedTime,
     required this.attributes,
+    required this.level,
   });
 
   factory ApplicantUser.initfromData(Map data) {
@@ -40,6 +43,7 @@ class ApplicantUser {
         userId: data["user_id"],
         nickname: data["nickname"],
         appliedTime: DateTime.parse(data["applied_time"]).toLocal(),
-        attributes: data["attributes"]);
+        attributes: data["attributes"],
+        level: data["level"]);
   }
 }

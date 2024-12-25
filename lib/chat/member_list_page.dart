@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/data/room_users.dart';
 import 'package:spark_up/common_widget/system_message.dart';
+import 'package:spark_up/common_widget/user_head.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
 
@@ -99,7 +100,7 @@ class _MemeberListPageState extends State<MemberListPage> {
                     for (var user in userList) ...[
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 3.0),
-                        child: userCard(user: user),
+                        child: userCard(user: user, context: context),
                       ),
                     ]
                   ],
@@ -108,17 +109,13 @@ class _MemeberListPageState extends State<MemberListPage> {
   }
 }
 
-Widget userCard({required RoomUsers user}) {
+Widget userCard({required RoomUsers user, required BuildContext context}) {
   return Container(
     padding: const EdgeInsets.all(10.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Icon(
-          Icons.circle,
-          size: 80.0,
-          color: Colors.black12,
-        ),
+        UserHead(userId: user.userId, level: user.level, size: 70.0),
         const SizedBox(
           width: 5.0,
         ),
@@ -132,9 +129,14 @@ Widget userCard({required RoomUsers user}) {
                 "Host",
                 style: TextStyle(color: Color(0xFF7F7E7E), fontSize: 10.0),
               ),
-            Text(
-              user.nickname,
-              style: const TextStyle(color: Colors.black, fontSize: 18.0),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.65,
+              child: Text(
+                user.nickname,
+                style: const TextStyle(color: Colors.black, fontSize: 18.0),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
             ),
             Text(
               "${user.joinedAt.month}/${user.joinedAt.day} Joined",
