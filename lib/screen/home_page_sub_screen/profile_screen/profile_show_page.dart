@@ -10,10 +10,14 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileShowPage extends StatefulWidget {
   const ProfileShowPage(
-      {super.key, required this.userId, required this.editable});
+      {super.key,
+      required this.userId,
+      required this.editable,
+      this.fromHomePage = false});
 
   final int userId;
   final bool editable;
+  final bool fromHomePage;
 
   @override
   State<ProfileShowPage> createState() => _ProfileShowPageState();
@@ -363,7 +367,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   child: Column(
                     children: [
                       AppBar(
-                        leading: widget.editable
+                        leading: widget.fromHomePage
                             ? null
                             : IconButton(
                                 onPressed: () => Navigator.pop(context),
@@ -386,7 +390,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.black,
                         elevation: 0,
-                        actions: widget.editable
+                        actions: widget.fromHomePage
                             ? [
                                 IconButton(
                                   icon: const Icon(
@@ -544,7 +548,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   child: Column(
                     children: [
                       AppBar(
-                        leading: widget.editable
+                        leading: widget.fromHomePage
                             ? null
                             : IconButton(
                                 onPressed: () => Navigator.pop(context),
@@ -564,7 +568,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         backgroundColor: Colors.transparent,
                         foregroundColor: Colors.black,
                         elevation: 0,
-                        actions: widget.editable
+                        actions: widget.fromHomePage
                             ? [
                                 IconButton(
                                   icon: const Icon(

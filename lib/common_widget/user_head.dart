@@ -22,7 +22,7 @@ class UserHead extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RouteMap.profileShowPage,
-            arguments: (userId, Network.manager.userId == userId));
+            arguments: (userId, Network.manager.userId == userId, false));
       },
       child: Container(
         decoration: BoxDecoration(
