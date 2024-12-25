@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/no_more_data.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -516,7 +517,7 @@ class _HotContentState extends State<HotContent>
                   eventCard(element, context, refresh)
                 ],
                 if (isLoading) const eventCardSkeletonList(),
-                if (noMoreData) const Center(child: Text("No More Data"))
+                if (noMoreData) const NoMoreData(),
               ],
             )));
   }
@@ -665,10 +666,7 @@ class _ForYouContentState extends State<ForYouContent>
                   eventCard(element, context, refresh)
                 ],
                 if (isLoading) const eventCardSkeletonList(),
-                if (noMoreData)
-                  const Center(
-                    child: Text("No More Data"),
-                  ),
+                if (noMoreData) const NoMoreData(),
               ],
             )));
   }
