@@ -344,9 +344,9 @@ class _EventShowPageState extends State<EventShowPage>
                     ),
                     Positioned(
                       bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 100,
+                      left: 30,
+                      right: 30,
+                      height: 90,
                       child: Container(
                         margin: const EdgeInsets.all(20.0),
                         child: SizedBox(
