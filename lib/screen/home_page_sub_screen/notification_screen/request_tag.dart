@@ -433,7 +433,7 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                     GestureDetector(
                       onTap: () => Navigator.of(context).pushNamed(
                         RouteMap.profileShowPage,
-                        arguments: (widget.applicantUser.userId, false),
+                        arguments: (widget.applicantUser.userId, false, false),
                       ),
                       child: Text(
                         widget.applicantUser.nickname,

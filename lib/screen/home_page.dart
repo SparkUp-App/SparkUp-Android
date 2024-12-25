@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                 builder: () => ProfileShowPage(
                   userId: Network.manager.userId!,
                   editable: true,
+                  fromHomePage: true,
                 ),
               ),
             ],
