@@ -29,6 +29,7 @@ enum SparkIcons {
   back('assets/icons/back.svg'),
   comment('assets/icons/comment.svg'),
   heart('assets/icons/heart.svg'),
+  heartBorder("assets/icons/heart_border.svg"),
   alcohol('assets/icons/alcohol.svg'),
   blood('assets/icons/blood.svg'),
   bookmark('assets/icons/bookmark.svg'),
