@@ -343,7 +343,7 @@ class _EventShowPageState extends State<EventShowPage>
                       ),
                     ),
                     Positioned(
-                      bottom: 0,
+                      bottom: 20,
                       left: 30,
                       right: 30,
                       height: 90,
