@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -81,18 +82,22 @@ class _ApplyTagState extends State<ApplyTag>
         },
         child: RefreshIndicator(
           onRefresh: refresh,
-          child: ListView(
-            children: [
-              for (var element in postList) ...[
-                eventCard(element, context, refresh, reviewStatusShow: true),
-              ],
-              if (isLoading)
-                const Center(
-                  child: EventCardSkeletonListRandomLength(),
+          child: postList.isEmpty && !isLoading
+              ? const EmptyView(
+                  content: "Apply an event in the event detail page.")
+              : ListView(
+                  children: [
+                    for (var element in postList) ...[
+                      eventCard(element, context, refresh,
+                          reviewStatusShow: true),
+                    ],
+                    if (isLoading)
+                      const Center(
+                        child: EventCardSkeletonListRandomLength(),
+                      ),
+                    if (isEnd) const NoMoreData(),
+                  ],
                 ),
-              if (isEnd) NoMoreData(),
-            ],
-          ),
         ),
       ),
     );
