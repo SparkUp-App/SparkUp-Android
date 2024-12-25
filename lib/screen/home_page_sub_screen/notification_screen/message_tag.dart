@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
+import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/data/list_rooms_received.dart';
 import 'package:spark_up/route.dart';
@@ -48,26 +49,30 @@ class _MessageTagState extends State<MessageTag>
       builder: (context, isLoading, child) {
         return RefreshIndicator(
           onRefresh: ChatRoomManager.manager.refresh,
-          child: ValueListenableBuilder(
-            valueListenable: ChatRoomManager.manager.roomList,
-            builder: (context, value, child) {
-              return ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: _scrollController,
-                children: [
-                  for (var chatRoom in ChatRoomManager
-                      .manager.roomList.value) ...[chatRoomCard(chatRoom)],
-                  if (isLoading) ...[const eventCardSkeletonList()],
-                  if (ChatRoomManager.manager.error) ...[
-                    const Center(
-                      child:
-                          Text("Something Went Wrong\n Please Try Again Later"),
-                    )
-                  ],
-                ],
-              );
-            },
-          ),
+          child: ChatRoomManager.manager.roomList.value.isEmpty && !isLoading
+              ? const EmptyView(
+                  content:
+                      "Join an event then you can chat with others in this place.")
+              : ValueListenableBuilder(
+                  valueListenable: ChatRoomManager.manager.roomList,
+                  builder: (context, value, child) {
+                    return ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      children: [
+                        for (var chatRoom in ChatRoomManager.manager.roomList
+                            .value) ...[chatRoomCard(chatRoom)],
+                        if (isLoading) ...[const eventCardSkeletonList()],
+                        if (ChatRoomManager.manager.error) ...[
+                          const Center(
+                            child: Text(
+                                "Something Went Wrong\n Please Try Again Later"),
+                          )
+                        ],
+                      ],
+                    );
+                  },
+                ),
         );
       },
     );

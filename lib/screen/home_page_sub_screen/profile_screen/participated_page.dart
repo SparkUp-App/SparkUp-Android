@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/no_more_data.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
@@ -120,17 +122,19 @@ class _ParticipatedPageState extends State<ParticipatedPage> {
           onRefresh: () async {
             refresh();
           },
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            controller: scrollController,
-            children: [
-              for (var element in receivedPostList) ...[
-                eventCard(element, context, () {})
-              ],
-              if (isLoading) const eventCardSkeletonList(),
-              if (noMoreData) const Center(child: Text("No More Data"))
-            ],
-          )),
+          child: receivedPostList.isEmpty && !isLoading
+              ? const EmptyView(content: "Join an event in home page")
+              : ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: scrollController,
+                  children: [
+                    for (var element in receivedPostList) ...[
+                      eventCard(element, context, () {})
+                    ],
+                    if (isLoading) const eventCardSkeletonList(),
+                    if (noMoreData) const NoMoreData(),
+                  ],
+                )),
     );
   }
 }
