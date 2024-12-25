@@ -447,6 +447,7 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                     ),
                     const SizedBox(height: 4),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
                           "Bio: ",
@@ -459,7 +460,9 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            "User biography here...",
+                            widget.applicantUser.bio == ""
+                                ? "No Bio"
+                                : widget.applicantUser.bio,
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 13.0,
