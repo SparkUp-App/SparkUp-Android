@@ -140,6 +140,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (sendingLike) return;
 
     sendingLike = true;
+    setState(() {});
 
     final response = await Network.manager
         .sendRequest(method: RequestMethod.post, path: PostPath.like, data: {
@@ -152,31 +153,36 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.liked = !postData.liked;
-          if (postData.liked == true)
+          if (postData.liked == true) {
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "This event gets your like!");
-          else if (postData.liked == false)
+          } else if (postData.liked == false) {
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "You take back your like!");
+          }
         });
       } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                SystemMessage(content: "${response["data"]["message"]}"));
+        ToastService.showErrorToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: postData.liked
+                ? "Take back like failed\n (Error: ${response["data"]["message"]})"
+                : "Like failed\n (Error: ${response["data"]["message"]})");
       }
     }
 
     sendingLike = false;
+    setState(() {});
   }
 
   void pressBookMarkedProcess() async {
     if (sendingBookMark) return;
     sendingBookMark = true;
+    setState(() {});
 
     final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
@@ -191,30 +197,42 @@ class _EventDetailPageState extends State<EventDetailPage>
       if (response["status"] == "success") {
         setState(() {
           postData.bookmarked = !postData.bookmarked;
-          if (postData.bookmarked == true)
+          if (postData.bookmarked == true) {
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "You have bookmark this event!");
-          else if (postData.bookmarked == false)
+          } else if (postData.bookmarked == false) {
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "You have unbookmark this event!");
+          }
         });
       } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                SystemMessage(content: "${response["data"]["message"]}"));
+        ToastService.showErrorToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: postData.bookmarked
+                ? "Unbookmark failed\n (Error: ${response["data"]["message"]})"
+                : "Bookmark failed\n (Error: ${response["data"]["message"]})");
       }
     }
 
     sendingBookMark = false;
+    setState(() {});
   }
 
   void pressAplyProcess() async {
     if (sendingApplicant) return;
+
+    if (DateTime.now().isAfter(postData.eventEndDate)) {
+      showDialog(
+          context: context,
+          builder: (context) => const SystemMessage(
+              content: "This event has ended, you can't apply now"));
+    }
+
     if (postData.applicationStatus == 1 || postData.applicationStatus == 2)
       return;
     sendingApplicant = true;
@@ -245,22 +263,21 @@ class _EventDetailPageState extends State<EventDetailPage>
 
     if (context.mounted) {
       if (response["status"] == "success") {
-        showDialog(
-            context: context,
-            builder: (context) => SystemMessage(
-                content: isCreating
-                    ? "Send Application Request Successful"
-                    : "Cancel Application Successful"));
-
+        ToastService.showSuccessToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: isCreating
+                ? "Send Application Request Successful"
+                : "Cancel Application Successful");
         // 更新狀態：如果是創建則設為 0，如果是取消則設為 null
         postData.applicationStatus = isCreating ? 0 : null;
       } else {
-        showDialog(
-            context: context,
-            builder: (context) => SystemMessage(
-                content: isCreating
-                    ? "Send Application Request Failed\n (Please Try Later)"
-                    : "Cancel Application Failed\n (Please Try Later)"));
+        ToastService.showErrorToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: isCreating
+                ? "Send Application Request Failed\n (Error: ${response["data"]["message"]})"
+                : "Cancel Application Failed\n (Error: ${response["data"]["message"]})");
       }
     }
 
@@ -372,7 +389,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             Skeleton.leaf(
@@ -395,7 +412,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Row(
@@ -414,9 +431,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Text(
+                        child: const Text(
                           "Hold By:AAAAA", // 使用隨機生成的空白字符
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -435,9 +452,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Text(
+                        child: const Text(
                           "Posted:2024/01/10", // 使用隨機生成的空白字符
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -459,9 +476,9 @@ class _EventDetailPageState extends State<EventDetailPage>
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Hold By:AAAAA", // 使用隨機生成的空白字符
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -654,23 +671,55 @@ class _EventDetailPageState extends State<EventDetailPage>
                     ? []
                     : [
                         IconButton(
-                          onPressed: () => pressLikedProcess(),
-                          icon: Icon(
-                            postData.liked
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: const Color.fromARGB(255, 233, 113, 153),
-                            size: 24.0,
-                          ),
-                        ),
+                            onPressed: () => pressLikedProcess(),
+                            icon: sendingLike
+                                ? const SizedBox(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.0,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      const SparkIcon(
+                                        icon: SparkIcons.heartBorder,
+                                        size: 24.0,
+                                        color: Colors.white,
+                                      ),
+                                      if (postData.liked)
+                                        const SparkIcon(
+                                            icon: SparkIcons.heart,
+                                            size: 20.0,
+                                            color: Color(0xFFDE5B6D))
+                                    ],
+                                  )),
                         IconButton(
                           onPressed: pressBookMarkedProcess,
-                          icon: Icon(
-                            postData.bookmarked
-                                ? Icons.bookmark
-                                : Icons.bookmark_border,
-                          ),
-                          color: Colors.white,
+                          icon: sendingBookMark
+                              ? const SizedBox(
+                                  height: 20.0,
+                                  width: 20.0,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Stack(alignment: Alignment.center, children: [
+                                  const SparkIcon(
+                                    icon: SparkIcons.bookmarkBorder,
+                                    color: Colors.white,
+                                    size: 24.0,
+                                  ),
+                                  if (postData.bookmarked)
+                                    const SparkIcon(
+                                      icon: SparkIcons.bookmark,
+                                      size: 20.0,
+                                      color: Color(0xFFC73619),
+                                    )
+                                ]),
                         ),
                         if (postData.userId == Network.manager.userId)
                           IconButton(
@@ -680,7 +729,8 @@ class _EventDetailPageState extends State<EventDetailPage>
                                 color: Colors.white,
                               ))
                       ],
-                expandedHeight: 220.0,
+                stretch: true,
+                expandedHeight: 300.0,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     color: const Color.fromARGB(255, 245, 174, 128),
@@ -715,6 +765,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                   decorationColor: Colors.white,
                                   decorationThickness: 2,
                                 ),
+                                maxLines: 2,
                               ),
                               const SizedBox(height: 8),
                               Row(
@@ -759,11 +810,10 @@ class _EventDetailPageState extends State<EventDetailPage>
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.favorite,
-                                            color: Colors.white,
-                                            size: 18,
-                                          ),
+                                          const SparkIcon(
+                                              icon: SparkIcons.heart,
+                                              size: 18,
+                                              color: Colors.white),
                                           const SizedBox(width: 4),
                                           Text(
                                             "${postData.likes}",
@@ -777,11 +827,10 @@ class _EventDetailPageState extends State<EventDetailPage>
                                       const SizedBox(width: 16),
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.chat_bubble_outline,
-                                            color: Colors.white,
-                                            size: 18,
-                                          ),
+                                          const SparkIcon(
+                                              icon: SparkIcons.comment,
+                                              size: 18,
+                                              color: Colors.white),
                                           const SizedBox(width: 4),
                                           Text(
                                             "${postData.comments}",
@@ -795,11 +844,10 @@ class _EventDetailPageState extends State<EventDetailPage>
                                       const SizedBox(width: 16),
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.person_outline,
-                                            color: Colors.white,
-                                            size: 18,
-                                          ),
+                                          const SparkIcon(
+                                              icon: SparkIcons.user,
+                                              size: 18,
+                                              color: Colors.white),
                                           const SizedBox(width: 4),
                                           Text(
                                             "${postData.applicants ?? 0}",
@@ -942,48 +990,52 @@ class _EventDetailPageState extends State<EventDetailPage>
               ),
             ),
           )),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 5.0, horizontal: 10.0),
-                  child: ElevatedButton(
-                    onPressed: () => pressAplyProcess(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 245, 174, 128),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.all(10.0),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          (Icons.check),
-                          color: Colors.white,
-                        ),
-                        Text(
-                          (switch (postData.applicationStatus) {
-                            0 => 'Cancel Apply',
-                            1 => 'Reject',
-                            2 => 'Approved',
-                            _ => 'Apply'
-                          }),
-                          style: const TextStyle(color: Colors.white),
-                        )
-                      ],
+          if (postData.userId != Network.manager.userId &&
+              DateTime.now().isBefore(postData.eventEndDate)) ...[
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 10.0),
+                    child: ElevatedButton(
+                      onPressed: () => pressAplyProcess(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 245, 174, 128),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        padding: const EdgeInsets.all(10.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            (Icons.check),
+                            color: Colors.white,
+                          ),
+                          Text(
+                            (switch (postData.applicationStatus) {
+                              0 => 'Cancel Apply',
+                              1 => 'Reject',
+                              2 => 'Approved',
+                              _ => 'Apply'
+                            }),
+                            style: const TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          )
+              ],
+            )
+          ]
         ],
       ),
     );
@@ -1105,6 +1157,7 @@ class _CommentBlockState extends State<CommentBlock> {
   void pressLikedProcess() async {
     if (sendingLike) return;
     sendingLike = true;
+    setState(() {});
 
     final response = await Network.manager
         .sendRequest(method: RequestMethod.post, path: CommentPath.like, data: {
@@ -1115,19 +1168,28 @@ class _CommentBlockState extends State<CommentBlock> {
 
     if (context.mounted) {
       if (response["status"] == "success") {
+        ToastService.showSuccessToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: widget.comment.liked
+                ? "You take back your like!"
+                : "This comment gets your like!");
         setState(() {
           widget.comment.liked = !widget.comment.liked;
           widget.comment.likes += widget.comment.liked ? 1 : -1;
         });
       } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                SystemMessage(content: "${response["data"]["message"]}"));
+        ToastService.showErrorToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: widget.comment.liked
+                ? "Take back like failed (Error: ${response["data"]["message"]})"
+                : "Like failed (Error: ${response["data"]["message"]})");
       }
     }
 
     sendingLike = false;
+    setState(() {});
   }
 
   void pressDeleteProcess() async {
@@ -1145,12 +1207,17 @@ class _CommentBlockState extends State<CommentBlock> {
     if (context.mounted) {
       if (response["status"] == "success") {
         widget.comment.deleted = true;
+        ToastService.showSuccessToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "Delete Comment Successful");
         setState(() {});
       } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                SystemMessage(content: "${response["data"]["message"]}"));
+        ToastService.showErrorToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message:
+                "Delete Comment Failed (Error: ${response["data"]["message"]})");
       }
     }
 
@@ -1174,7 +1241,7 @@ class _CommentBlockState extends State<CommentBlock> {
                     padding: const EdgeInsets.all(10),
                     child: const Center(
                       child: Text(
-                        "Comment Has Been Deleted",
+                        "Comment Deleted",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -1184,27 +1251,12 @@ class _CommentBlockState extends State<CommentBlock> {
             )
           : GestureDetector(
               onLongPress: widget.comment.userId == Network.manager.userId
-                  ? () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('刪除評論'),
-                          content: const Text('您確定要刪除此評論嗎？'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('取消'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                pressDeleteProcess();
-                              },
-                              child: const Text('確定'),
-                            ),
-                          ],
-                        ),
-                      );
+                  ? () async {
+                      final deleteConfirm = await confirmDialog(context,
+                          "Want to Delete comment?", widget.comment.content);
+                      if (deleteConfirm) {
+                        pressDeleteProcess();
+                      }
                     }
                   : null,
               child: Row(
@@ -1274,14 +1326,22 @@ class _CommentBlockState extends State<CommentBlock> {
                           Center(
                             child: IconButton(
                               onPressed: () => pressLikedProcess(),
-                              icon: Icon(
-                                widget.comment.liked
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: widget.comment.liked
-                                    ? Colors.red
-                                    : Colors.grey,
-                              ),
+                              icon: sendingLike
+                                  ? const SizedBox(
+                                      height: 20.0,
+                                      width: 20.0,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3.0,
+                                        color: Colors.grey,
+                                      ))
+                                  : Icon(
+                                      widget.comment.liked
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: widget.comment.liked
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
                             ),
                           ),
                         ],
