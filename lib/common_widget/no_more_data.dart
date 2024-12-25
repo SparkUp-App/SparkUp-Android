@@ -6,7 +6,7 @@ class NoMoreData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
           Container(
@@ -30,7 +30,7 @@ class NoMoreData extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 30),
         ],
       ),
     );
