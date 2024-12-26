@@ -90,6 +90,7 @@ enum SparkIcons {
   trash('assets/icons/trash.svg'),
   travel('assets/icons/travel.svg'),
   zodiacSign('assets/icons/zodiac_sign.svg'),
+  rocket('assets/icons/rocket.svg'),
   sent('assets/icons/sent.svg');
 
   final String path;
