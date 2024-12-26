@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/profile_path.dart';
 import "package:spark_up/route.dart";
 import 'package:spark_up/secure_storage.dart';
+import 'package:spark_up/socket_service.dart';
 
 class EventTypeProfilePage extends StatefulWidget {
   const EventTypeProfilePage({super.key});
@@ -344,6 +346,12 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
 
     if (response["status"] == "success" && context.mounted) {
       SecureStorage.store(StoreKey.noProfile, "No");
+      SocketService.manager.initSocket(
+          userId: Network.manager.userId!,
+          onMessage: ChatRoomManager.manager.socketMessageCallback,
+          onApprovedMessage: ChatRoomManager.manager.socketApproveCallback,
+          onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback);
+      ChatRoomManager.manager.getData();
       Navigator.pushReplacementNamed(context, RouteMap.tutorialPage,
           arguments: false);
     } else {
