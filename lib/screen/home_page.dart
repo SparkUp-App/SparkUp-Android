@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           floatingActionButton: Container(
             margin: const EdgeInsets.only(top: 25),
             width: 65,
