@@ -583,21 +583,20 @@ class _EventDetailPageState extends State<EventDetailPage>
                                         });
 
                                     if (response["status"] == "success") {
-                                      await showDialog(
-                                          context: this.context,
-                                          builder: (context) =>
-                                              const SystemMessage(
-                                                  content:
-                                                      "Delete Post Successful"));
+                                      ToastService.showSuccessToast(
+                                          this.context,
+                                          length: ToastLength.medium,
+                                          expandedHeight: 100,
+                                          message: "Delete Post Successful");
                                       prePageReload = true;
                                       Navigator.pop(
                                           this.context, prePageReload);
                                     } else {
-                                      showDialog(
-                                          context: this.context,
-                                          builder: (context) => const SystemMessage(
-                                              content:
-                                                  "Delet Post Falied\n Pleas Try Again Later"));
+                                      ToastService.showErrorToast(this.context,
+                                          length: ToastLength.medium,
+                                          expandedHeight: 100,
+                                          message:
+                                              "Delete Post Failed (Error: ${response["data"]["message"]})");
                                     }
 
                                     deletingPost = false;
