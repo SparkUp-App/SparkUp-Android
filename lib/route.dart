@@ -81,9 +81,14 @@ class RouteMap {
     profileShowPage: (context) {
       int userId;
       bool editable;
-      (userId, editable) =
-          ModalRoute.of(context)!.settings.arguments as (int, bool);
-      return ProfileShowPage(userId: userId, editable: editable);
+      bool fromHomePage;
+      (userId, editable, fromHomePage) =
+          ModalRoute.of(context)!.settings.arguments as (int, bool, bool);
+      return ProfileShowPage(
+        userId: userId,
+        editable: editable,
+        fromHomePage: fromHomePage,
+      );
     },
     levelPage: (context) => const levelShowPage(),
     chatPage: (context) {

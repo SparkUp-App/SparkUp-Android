@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:flutter/widgets.dart";
 import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/spark_Icon.dart";
@@ -113,39 +114,44 @@ class _HomePageState extends State<HomePage> {
                 builder: () => ProfileShowPage(
                   userId: Network.manager.userId!,
                   editable: true,
+                  fromHomePage: true,
                 ),
               ),
             ],
           ),
-          floatingActionButton: Visibility(
-            visible: !_isKeyboardVisible,
-            child: Container(
-              margin: const EdgeInsets.only(top: 25),
-              width: 55,
-              height: 55,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const sparkPageEventTypeDecide(),
-                  ));
-                },
-                backgroundColor: Color.fromARGB(255, 255, 197, 170),
-                elevation: 0.0,
-                child: Image.asset(
-                  'assets/sparkUpMainIcon.png',
-                  fit: BoxFit.contain,
-                ),
+          resizeToAvoidBottomInset: false,
+          floatingActionButton: Container(
+            margin: const EdgeInsets.only(top: 25),
+            width: 65,
+            height: 65,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const sparkPageEventTypeDecide(),
+                ));
+              },
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+              backgroundColor: Colors.white,
+              elevation: 0.0,
+              child: const Icon(
+                Icons.add_circle_rounded,
+                color: Color(0xFFF77D43),
+                size: 50.0,
               ),
             ),
           ),
           floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+              const _NoBounceDockedCenterFabLocation(),
           bottomNavigationBar: Theme(
             data: ThemeData(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
             ),
             child: BottomNavigationBar(
+              elevation: 1.0,
+              backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: false,
               showUnselectedLabels: false,
@@ -229,5 +235,24 @@ class _CenterTestState extends State<CenterTest> {
   @override
   Widget build(BuildContext context) {
     return const Center();
+  }
+}
+
+class _NoBounceDockedCenterFabLocation extends FloatingActionButtonLocation {
+  const _NoBounceDockedCenterFabLocation();
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // 計算 x 座標 (置中)
+    final double fabX = (scaffoldGeometry.scaffoldSize.width -
+            scaffoldGeometry.floatingActionButtonSize.width) /
+        2;
+
+    // 計算 y 座標 (底部停靠)
+    final double fabY = scaffoldGeometry.scaffoldSize.height -
+        scaffoldGeometry.floatingActionButtonSize.height / 2 -
+        kBottomNavigationBarHeight * 1.2; // 使用固定高度
+
+    return Offset(fabX, fabY);
   }
 }
