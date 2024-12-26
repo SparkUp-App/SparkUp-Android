@@ -75,6 +75,33 @@ class LogoutPage extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
                 onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteMap.levelPage,
+                  );
+                },
+                icon: const SparkIcon(
+                    icon: SparkIcons.rocket, color: Colors.grey),
+                label: const Text("Level Detail",
+                    style: TextStyle(color: Colors.black)),
+                style: TextButton.styleFrom(
+                  overlayColor: const Color(0xFFF7AF8B),
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  backgroundColor: Colors.white.withOpacity(0.9),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 50.0,
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+              child: TextButton.icon(
+                onPressed: () {
                   Navigator.pushNamed(context, RouteMap.tutorialPage,
                       arguments: true);
                 },
@@ -168,9 +195,9 @@ class LogoutPage extends StatelessWidget {
                 onPressed: () {
                   logoutProcess(context);
                 },
-                icon: const Icon(Icons.logout, color: Colors.grey),
+                icon: const Icon(Icons.logout, color: Colors.red),
                 label:
-                    const Text("Logout", style: TextStyle(color: Colors.black)),
+                    const Text("Logout", style: TextStyle(color: Colors.red)),
                 style: TextButton.styleFrom(
                   overlayColor: const Color(0xFFF7AF8B),
                   padding: const EdgeInsets.symmetric(
