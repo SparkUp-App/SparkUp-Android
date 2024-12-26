@@ -46,6 +46,8 @@ class _EventDetailPageState extends State<EventDetailPage>
   late PostView postData;
   late TabController tabController;
 
+  final FocusNode _focusNode = FocusNode();
+
   List<Comment> commentList = [];
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
@@ -81,6 +83,7 @@ class _EventDetailPageState extends State<EventDetailPage>
   void dispose() {
     scrollController.dispose();
     tabController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -290,6 +293,7 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (textEditingController.text == "") return;
 
     sendingMessage = true;
+    _focusNode.unfocus();
     setState(() {});
 
     final response = await Network.manager.sendRequest(
@@ -786,13 +790,25 @@ class _EventDetailPageState extends State<EventDetailPage>
                                               fontSize: 14,
                                             ),
                                           ),
-                                          Text(
-                                            postData.nickname,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
+                                          GestureDetector(
+                                            onTap: () => Navigator.pushNamed(
+                                                context,
+                                                RouteMap.profileShowPage,
+                                                arguments: (
+                                                  postData.userId,
+                                                  false,
+                                                  false
+                                                )),
+                                            child: Text(
+                                              postData.nickname,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
+                                          )
                                         ],
                                       ),
                                       const SizedBox(height: 4),
@@ -1082,6 +1098,7 @@ class _EventDetailPageState extends State<EventDetailPage>
               children: [
                 Expanded(
                   child: TextField(
+                    focusNode: _focusNode,
                     controller: textEditingController,
                     decoration: const InputDecoration(
                       hintText: "  Write a comment...",
