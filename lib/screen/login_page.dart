@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:spark_up/background_notification_service.dart";
+import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/system_message.dart";
 import "package:spark_up/data/profile.dart";
@@ -8,6 +9,7 @@ import "package:spark_up/network/path/auth_path.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:spark_up/secure_storage.dart";
+import "package:spark_up/socket_service.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -173,6 +175,18 @@ class _LoginPageState extends State<LoginPage> {
                                               response["data"]["user_id"]);
                                           if (response["data"]
                                               ["profile_exists"]) {
+                                            SocketService.manager.initSocket(
+                                                userId: Network.manager.userId!,
+                                                onMessage: ChatRoomManager
+                                                    .manager
+                                                    .socketMessageCallback,
+                                                onApprovedMessage:
+                                                    ChatRoomManager.manager
+                                                        .socketApproveCallback,
+                                                onRejectedMessage:
+                                                    ChatRoomManager.manager
+                                                        .socketRejectedCallback);
+                                            ChatRoomManager.manager.getData();
                                             SecureStorage.store(
                                                 StoreKey.noProfile, "No");
                                             Navigator.pushReplacementNamed(

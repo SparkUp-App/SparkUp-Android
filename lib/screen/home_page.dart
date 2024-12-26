@@ -57,13 +57,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _hasVisited[0] = true;
-
-    SocketService.manager.initSocket(
-        userId: Network.manager.userId!,
-        onMessage: ChatRoomManager.manager.socketMessageCallback,
-        onApprovedMessage: ChatRoomManager.manager.socketApproveCallback,
-        onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback);
-    ChatRoomManager.manager.getData();
   }
 
   void _onItemTapped(int index) {
