@@ -8,7 +8,7 @@ final List<Map<String, String>> spaceData = [
   },
   {
     'image': 'assets/member/Proto Star.png',
-    'name': 'Proto Star',
+    'name': 'Protostar',
     'des': 'Participated in 11 - 20 events',
   },
   {
@@ -34,18 +34,11 @@ class levelShowPage extends StatelessWidget {
   // 定義顯示每個項目的 Widget
   Widget spaceMean(String spaceAssets, String spaceName, String description) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: const Color(0xFFF9F4F2),
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +95,13 @@ class levelShowPage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black54),
       ),
       body: Container(
-        color: Colors.white,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.only(top: 20),
+        color: const Color(0xFFF9F4F2),
         child: Column(
           children: [
             Expanded(
