@@ -51,10 +51,10 @@ class SocketService {
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'user_id': userId.toString()},
-      'reconnection': true,
-      'reconnectionDelay': 1000,
-      'reconnectionDelayMax': 5000,
-      'reconnectionAttempts': 5,
+      'reconnection': true, // Enable reconnection
+      'reconnectionDelay': 1000, // Delay before attempting to reconnect
+      'reconnectionDelayMax':
+          5000, // Maximum delay between reconnection attempts
       'forceNew': true,
     });
 
