@@ -175,60 +175,65 @@ class _NextPageState extends State<NextPage> {
   }
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    if (isKeyboardVisible != _isKeyboardVisible) {
-      setState(() {
-        _isKeyboardVisible = isKeyboardVisible;
-      });
-    }
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        await showDialog(
-          context: context,
-          builder: (context) => regretDialog(),
-        );
-    }, child:Scaffold(
+  bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+  if (isKeyboardVisible != _isKeyboardVisible) {
+    setState(() {
+      _isKeyboardVisible = isKeyboardVisible;
+    });
+  }
+
+  return PopScope(
+    canPop: false,
+    onPopInvoked: (didPop) async {
+      if (didPop) return;
+      await showDialog(
+        context: context,
+        builder: (context) => regretDialog(),
+      );
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: Text(
           widget.selectedEventType,
           style: const TextStyle(
-            color: Colors.white, // 設定文字顏色為白色
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: const Color(0xFFE9765B),
-        centerTitle: true, // 讓標題置中
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: Theme(
-        data: ThemeData(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFFE9765B),
+      body: Container(
+        color: Colors.white, // 設置統一的背景顏色
+        child: Theme(
+          data: ThemeData(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFFE9765B),
+            ),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Stepper(
+                  type: StepperType.horizontal,
+                  currentStep: _currentStep,
+                  onStepContinue: null,
+                  onStepCancel: null,
+                  controlsBuilder: (BuildContext context, ControlsDetails details) {
+                    return Container();
+                  },
+                  steps: steps,
+                ),
+              ),
+              if (!isKeyboardVisible) _buildNavigationButtons(),
+            ],
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stepper(
-                type: StepperType.horizontal,
-                currentStep: _currentStep,
-                onStepContinue: null,
-                onStepCancel: null,
-                controlsBuilder: (BuildContext context, ControlsDetails details) {
-                  return Container();
-                },
-                steps: steps,
-              ),
-            ),
-            if(!isKeyboardVisible) _buildNavigationButtons(),
-          ],
-        ),
       ),
-    )
-    );
-  }
+    ),
+  );
+}
 
 //建立活動流程的主幹，之後10種templete要導到10種可能
 List<Step> getSteps(String eventType) {
