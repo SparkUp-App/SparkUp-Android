@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/data/profile.dart';
@@ -33,7 +34,10 @@ void main() async {
         onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback);
     ChatRoomManager.manager.getData();
   }
-  runApp(const ImagePrecacheWrapper());
+
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((_) => runApp(const ImagePrecacheWrapper()));
 }
 
 class ImagePrecacheWrapper extends StatefulWidget {
@@ -115,6 +119,12 @@ class MyApp extends StatelessWidget {
             ? RouteMap.loginPage
             : noProfile == "Yes"
                 ? RouteMap.initialProfileDataPage
-                : RouteMap.homePage);
+                : RouteMap.homePage,
+                
+        builder: (context, child){
+          return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)), child: child!);
+        }
+        );
+          
   }
 }
