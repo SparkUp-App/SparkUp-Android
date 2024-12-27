@@ -19,6 +19,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
+import 'dart:async'; // 用於延遲標誌重置
 
 class NextPage extends StatefulWidget {
   final String selectedEventType;
@@ -36,6 +37,7 @@ class _NextPageState extends State<NextPage> {
   late double _screenSize;
   bool isLoading = false;
   bool _isKeyboardVisible = false;
+  bool isToastShowing = false; // 防止 Toast 疊加的標誌變數
 
   @override
   void initState() {
@@ -428,11 +430,21 @@ void updateStepperShow(){
     }
   }
   void _showValidationError(String? message) {
-    ToastService.showErrorToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: message,
+    // 檢查是否已有 Toast 顯示
+    if (isToastShowing) return;
+
+    isToastShowing = true; // 設置為正在顯示 Toast
+    ToastService.showErrorToast(
+      context,
+      length: ToastLength.medium,
+      expandedHeight: 100,
+      message: message,
     );
+
+    // 設置延遲，Toast 顯示完成後恢復標誌
+    Timer(const Duration(seconds: 3), () {
+      isToastShowing = false; // 恢復標誌，允許下一個 Toast
+    });
   }
   Step _buildDefaultStep() {
     return Step(
@@ -492,7 +504,7 @@ void updateStepperShow(){
           expandedHeight: 100,
           message: "Event Create Successful");
       
-      Navigator.pushReplacementNamed(context, RouteMap.homePage);
+      Navigator.pushReplacementNamed(context, RouteMap.infomationPage);
     } else {
       showDialog(
           context: context,

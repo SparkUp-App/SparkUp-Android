@@ -24,6 +24,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
             isRequired: true,
+            restrictWord: 30,
           ),
           Textfield(
             label: "Location",
@@ -161,15 +162,15 @@ Widget _buildDatePicker({
                       fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       prefixIcon: const Icon(Icons.calendar_today),
                       prefixIconColor: Colors.black26,
@@ -239,15 +240,15 @@ Widget _buildTimePicker({
                       fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       prefixIcon: const Icon(Icons.access_time),
                       prefixIconColor: Colors.black26,

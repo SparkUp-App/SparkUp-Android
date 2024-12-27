@@ -108,15 +108,15 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeM
           contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), 
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.black12),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFE9765B)),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           border: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.black12),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           hintText: hintText,
           hintStyle: TextStyle(

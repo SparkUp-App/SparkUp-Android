@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MultiInput extends StatefulWidget {
   const MultiInput({
@@ -23,12 +22,26 @@ class _ProfileMultiInputState extends State<MultiInput> {
   late List<TextEditingController> controllers;
 
   @override
-void initState() {
-  super.initState();
-  controllers = widget.values.map((value) => TextEditingController(text: value)).toList();
-}
+  void initState() {
+    super.initState();
+    controllers = widget.values.map((value) => TextEditingController(text: value)).toList();
+  }
 
   void _addNewInput() {
+    // 檢查是否有未填寫的 TextField
+    bool hasEmptyField = controllers.any((controller) => controller.text.trim().isEmpty);
+    if (hasEmptyField) {
+      // 提示使用者填寫內容
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("請先填寫所有輸入框後再新增！"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // 如果所有框都已填寫，新增一個新的輸入框
     setState(() {
       controllers.add(TextEditingController());
     });
@@ -42,7 +55,10 @@ void initState() {
   }
 
   void _updateValues() {
-    List<String> newValues = controllers.map((controller) => controller.text.trim()).where((value) => value.isNotEmpty).toList();
+    List<String> newValues = controllers
+        .map((controller) => controller.text.trim())
+        .where((value) => value.isNotEmpty)
+        .toList();
     widget.onChanged(newValues);
   }
 
@@ -55,20 +71,19 @@ void initState() {
           TextFormField(
             controller: controllers[index],
             decoration: InputDecoration(
-            
               filled: true,
               fillColor: Colors.white,
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black12),
-                borderRadius: BorderRadius.circular(10.0),
+                borderSide: const BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black12),
-                borderRadius: BorderRadius.circular(10.0),
+                borderSide: const BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               hintText: widget.hintLabel,
               hintStyle: const TextStyle(
@@ -82,7 +97,7 @@ void initState() {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () => _removeInput(index),
               color: Colors.black26,
             ),
@@ -105,29 +120,28 @@ void initState() {
             fontWeight: FontWeight.w600,
           ),
         ),
-        for(int i = 0; i < controllers.length; i++) _buildInputTextField(i),
+        for (int i = 0; i < controllers.length; i++) _buildInputTextField(i),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.75,
           height: 1,
         ),
         Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: ElevatedButton(
-              onPressed: _addNewInput,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFE9765B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: ElevatedButton(
+            onPressed: _addNewInput,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE9765B),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
             ),
           ),
-        
+        ),
       ],
     );
   }

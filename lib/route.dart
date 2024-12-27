@@ -19,6 +19,7 @@ import "package:spark_up/screen/initial_profile_create/initial_profileData_event
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/edit_profile_page.dart";
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/level_show_page.dart";
+import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_information_of_additional_teaching.dart";
 
 class RouteMap {
   //Regist Path for page
@@ -40,6 +41,7 @@ class RouteMap {
   static const levelPage = "/levelShowPage";
   static const chatPage = "/chatPage";
   static const memberlistPage = "/memberListPage";
+  static const infomationPage = "/infomationPage";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage: (context) => const LoginPage(),
@@ -102,6 +104,7 @@ class RouteMap {
       int postId;
       postId = ModalRoute.of(context)!.settings.arguments as int;
       return MemberListPage(postId: postId);
-    }
+    },
+    infomationPage: (context) => const SparkPageInformationOfAdditionalTeaching(),
   };
 }
