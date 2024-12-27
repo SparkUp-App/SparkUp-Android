@@ -1089,8 +1089,12 @@ class _EventDetailPageState extends State<EventDetailPage>
                     child: ElevatedButton(
                       onPressed: () => pressAplyProcess(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 245, 174, 128),
+                        backgroundColor: switch (postData.applicationStatus) {
+                          0 => const Color.fromARGB(255, 245, 174, 128),
+                          1 => Colors.red,
+                          2 => Colors.green,
+                          _ => const Color.fromARGB(255, 245, 174, 128)
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)),
                         padding: const EdgeInsets.all(10.0),
@@ -1098,14 +1102,19 @@ class _EventDetailPageState extends State<EventDetailPage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            (Icons.check),
+                          Icon(
+                            (switch (postData.applicationStatus) {
+                              0 => Icons.remove,
+                              1 => Icons.close,
+                              2 => Icons.check,
+                              _ => Icons.add
+                            }),
                             color: Colors.white,
                           ),
                           Text(
                             (switch (postData.applicationStatus) {
                               0 => 'Cancel Apply',
-                              1 => 'Reject',
+                              1 => 'Rejected',
                               2 => 'Approved',
                               _ => 'Apply'
                             }),
