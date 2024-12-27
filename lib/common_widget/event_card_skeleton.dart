@@ -19,7 +19,7 @@ class EventCardSkeleton extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
-        color: Colors.grey[300]!,
+        color: Colors.grey[100]!,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
