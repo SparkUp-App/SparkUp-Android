@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 import "package:spark_up/background_notification_service.dart";
 import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/system_message.dart";
+import "package:spark_up/const_variable.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
@@ -22,36 +24,77 @@ class _LoginPageState extends State<LoginPage> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   bool isLoading = false;
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwrordFocusNode = FocusNode();
+  bool passwordHide = true;
+  bool emailEmpty = false;
+  bool passwordEmpty = false;
 
   Widget loginTextField(String textFieldIcon, String label, String hintText,
-      TextEditingController controller,
-      {isObscured = false}) {
+      TextEditingController controller, FocusNode focusNode) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontFamily: 'IowanOldStyle',
-                fontSize: 16,
-                color: Color(0xFFE9765B),
-                fontWeight: FontWeight.w600,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    fontFamily: 'IowanOldStyle',
+                    fontSize: 16,
+                    color: Color(0xFFE9765B),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
+              if ((label == "Email" && emailEmpty) ||
+                  (label == "Password" && passwordEmpty))
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                  child: Text(
+                      label == "Email"
+                          ? "*Email cannot be empty"
+                          : "*Password cannot be empty",
+                      style: const TextStyle(
+                        fontFamily: 'IowanOldStyle',
+                        fontSize: 12,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                      )),
+                )
+            ],
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 2.0),
             width: double.infinity,
             child: TextField(
               controller: controller,
-              obscureText: isObscured, //確認是否要用點點隱藏輸入的內容(密碼欄位最需要)
+              focusNode: focusNode,
+              autocorrect: false,
+              obscureText: label == "Email" ? false : passwordHide,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
+                suffixIcon: label == "Password"
+                    ? IconButton(
+                        icon: Icon(
+                          passwordHide
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.black26,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            passwordHide = !passwordHide;
+                          });
+                        },
+                      )
+                    : null,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.circular(10.0),
@@ -83,6 +126,22 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.black38,
                 ),
               ),
+              onTapOutside: (tap) {
+                focusNode.unfocus();
+              },
+              onSubmitted: (value) {
+                label == "Email"
+                    ? FocusScope.of(context).requestFocus(_passwrordFocusNode)
+                    : FocusScope.of(context).unfocus();
+              },
+              onChanged: (value) {
+                if (value.isEmpty) {
+                  label == "Email" ? emailEmpty = true : passwordEmpty = true;
+                } else {
+                  label == "Email" ? emailEmpty = false : passwordEmpty = false;
+                }
+                setState(() {});
+              },
             ),
           ),
         ],
@@ -122,8 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 273,
-                                height: 273,
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                height: MediaQuery.of(context).size.width * 0.7,
                                 child: Image.asset(
                                   'assets/sparkUpMainIcon.png',
                                   fit: BoxFit.contain,
@@ -132,11 +191,18 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(
                                 height: 40,
                               ),
-                              loginTextField('assets/icons/email.svg', 'Email',
-                                  'Email Address', emailController),
-                              loginTextField('assets/icons/password.svg',
-                                  'Password', 'Password', passwordController,
-                                  isObscured: true),
+                              loginTextField(
+                                  'assets/icons/email.svg',
+                                  'Email',
+                                  'Email Address',
+                                  emailController,
+                                  _emailFocusNode),
+                              loginTextField(
+                                  'assets/icons/password.svg',
+                                  'Password',
+                                  'Password',
+                                  passwordController,
+                                  _passwrordFocusNode),
                               const SizedBox(
                                 height: 30,
                               ),
@@ -147,6 +213,36 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      if (emailController.text.isEmpty) {
+                                        emailEmpty = true;
+                                      }
+                                      if (passwordController.text.isEmpty) {
+                                        passwordEmpty = true;
+                                      }
+                                      if (passwordEmpty || emailEmpty) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                        "Please fill in all fields"));
+                                        setState(() {});
+                                        return;
+                                      }
+
+                                      if( !emailRegex.hasMatch(emailController.text)){
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                    "Please enter a valid email address"));
+                                        setState(() {});
+                                        return;
+                                      }
+
                                       setState(() {
                                         isLoading = true;
                                       });
@@ -206,9 +302,9 @@ class _LoginPageState extends State<LoginPage> {
                                           showDialog(
                                               context: context,
                                               builder: (context) =>
-                                                  SystemMessage(
-                                                      content: response["data"]
-                                                          ["message"]));
+                                                  const SystemMessage(
+                                                      title: "Login Failed",
+                                                      content: "No user found. \nPlease check the email and password."));
                                         }
                                       }
                                     },
@@ -271,7 +367,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Opacity(
                       opacity: 0.8,
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFF16743),
+                        ),
                       ),
                     ))
             ])));
