@@ -237,7 +237,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 100, // 設置背景的高度
+                height: MediaQuery.of(context).size.height * 0.1, // 設置背景的高度
                 child: Container(
                   color: Colors.white.withOpacity(0.95), // 淺白色背景
                   child: Column(
@@ -315,7 +315,9 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
               color: Colors.black,
             ),
           ),
-          const Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator(
+            color: Color(0xFFF16743),
+          ))
         ]
       ]),
     );
