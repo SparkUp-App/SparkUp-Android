@@ -22,6 +22,13 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
   List<String> _availableLanguageTags = List<String>.from(languageType);
   List<String> _selectedLanguageTags = [];
 
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _nicknameFocusNode = FocusNode();
+
+  bool phoneHint = false;
+  bool nicknameHint = false;
+
+
   @override
   void initState() {
     super.initState();
@@ -96,12 +103,22 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                       hintLabel: 'Enter phone number',
                       textFieldIcon: 'assets/icons/phone.svg',
                       value: Profile.manager.phone,
+                      focusNode: _phoneFocusNode,
                       onChanged: (newValue) {
+                        phoneHint = newValue == null || newValue.isEmpty || !phoneRegex.hasMatch(newValue);
                         setState(() {
                           Profile.manager.phone = newValue ?? "";
                         });
                       },
                       isRequired: true,
+                      hint: phoneHint,
+                      keyboardType: TextInputType.phone,
+                      hintTextWidget: const Text("*09--------", style: TextStyle(fontSize: 12.0, color: Colors.red),),
+                      onSubmitted: (value) {
+                        _phoneFocusNode.unfocus();
+                        FocusScope.of(context).requestFocus(_nicknameFocusNode);
+                      },
+                      onTapOutside: (event) => _phoneFocusNode.unfocus(),
                     ),
                     profileTextfield(
                       label: 'Nickname',
@@ -109,10 +126,16 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                       textFieldIcon: 'assets/icons/user.svg',
                       value: Profile.manager.nickname,
                       onChanged: (newValue) {
+                        nicknameHint = newValue == null || newValue.isEmpty || newValue.length > 20;
                         setState(() {
                           Profile.manager.nickname = newValue ?? "";
                         });
                       },
+                      focusNode: _nicknameFocusNode,
+                      hint: nicknameHint,
+                      hintTextWidget: const Text("*At most 20 characters", style: TextStyle(fontSize: 12.0, color: Colors.red),),
+                      onSubmitted: (value) => _nicknameFocusNode.unfocus(),
+                      onTapOutside: (event) => _nicknameFocusNode.unfocus(),
                       isRequired: true,
                     ),
                     profieldDatepicker(
@@ -124,6 +147,8 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                           Profile.manager.dob = newValue ?? "";
                         });
                       },
+                      initDate: DateTime.now(),
+                      lastDate: DateTime.now(),
                       isRequired: true,
                     ),
                     profileDropdown(
@@ -212,6 +237,8 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
     if (Profile.manager.phone.isEmpty == true ||
         Profile.manager.nickname.isEmpty == true ||
         Profile.manager.dob.isEmpty == true) {
+      phoneHint = true;
+      nicknameHint = true;
       ToastService.showErrorToast(
         context,
         length: ToastLength.medium,
@@ -224,6 +251,12 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Please fill in correct phone number");
+      return;
+    } else if (Profile.manager.nickname.length > 20) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Nickname should be at most 20 characters");
       return;
     }
     print(_selectedLanguageTags);
