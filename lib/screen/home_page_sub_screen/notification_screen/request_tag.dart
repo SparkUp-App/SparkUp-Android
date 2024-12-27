@@ -424,6 +424,7 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                 userId: widget.applicantUser.userId,
                 level: widget.applicantUser.level,
                 size: 60,
+                canRouteProfile: true,
               ),
               const SizedBox(width: 8),
               Expanded(
