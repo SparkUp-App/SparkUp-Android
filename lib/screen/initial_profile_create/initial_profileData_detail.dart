@@ -152,7 +152,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                     profileDropdown(
                       label: 'Zodiac Sign',
                       value: Profile.manager.constellation,
-                      dropdownIcon: 'assets/icons/czodiac_sign.svg',
+                      dropdownIcon: 'assets/icons/zodiac_sign.svg',
                       options: constellationList,
                       onChanged: (newValue) {
                         setState(() {
@@ -259,7 +259,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 100, 
+                  height: 70, 
                   child: Container(
                     decoration: BoxDecoration(
                       border: const Border(top: BorderSide(color: Colors.black12)),

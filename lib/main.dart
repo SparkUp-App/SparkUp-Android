@@ -7,6 +7,7 @@ import 'package:spark_up/secure_storage.dart';
 
 String? userId;
 String? noProfile;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   List<String?> result = await Future.wait([

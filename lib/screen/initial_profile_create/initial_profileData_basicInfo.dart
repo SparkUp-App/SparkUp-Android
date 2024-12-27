@@ -162,7 +162,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 100,
+                  height: 70,
                   child: Container(
                     decoration: BoxDecoration(
                       border: const Border(top: BorderSide(color: Colors.black12)),
