@@ -223,6 +223,7 @@ class _sparkPageEventTypeDecideState extends State<sparkPageEventTypeDecide> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 )),
               ),

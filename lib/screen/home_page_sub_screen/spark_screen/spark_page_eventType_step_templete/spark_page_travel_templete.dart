@@ -35,6 +35,7 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
                 basePost.attributes["Price"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
           Textfield(
             label: 'Participation guidelines',

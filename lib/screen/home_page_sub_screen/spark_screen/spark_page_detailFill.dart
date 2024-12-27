@@ -77,7 +77,7 @@ class _NextPageState extends State<NextPage> {
       break;
     case 'Social':
       basePost.attributes["Your activity"]="";
-      basePost.attributes["Activity Schedule"] ="";
+      basePost.attributes["Activity Schedule"] =<String,String>{};
       basePost.attributes["Requirements for Participants"]="";
       basePost.attributes["Entry fee"] ="";
       break;
@@ -134,16 +134,16 @@ class _NextPageState extends State<NextPage> {
           Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error),
           const SizedBox(width: 8),
           const Text(
-            '您確定要放棄建立活動',
+            'Cancel whole activity?',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 18,
             ),
           ),
         ],
       ),
       content: const Text(
-        '退出後，您所填寫的資料將不會被保存',
+        'After exiting, the information you entered will NOT be saved',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black54,
@@ -156,7 +156,7 @@ class _NextPageState extends State<NextPage> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             foregroundColor: Colors.grey,
           ),
-          child: const Text('取消'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () => Navigator.pushReplacementNamed(context, RouteMap.homePage),
@@ -168,67 +168,72 @@ class _NextPageState extends State<NextPage> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Text('確定'),
+          child: const Text('Confirm'),
         ),
       ],
     );
   }
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    if (isKeyboardVisible != _isKeyboardVisible) {
-      setState(() {
-        _isKeyboardVisible = isKeyboardVisible;
-      });
-    }
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        await showDialog(
-          context: context,
-          builder: (context) => regretDialog(),
-        );
-    }, child:Scaffold(
+  bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+  if (isKeyboardVisible != _isKeyboardVisible) {
+    setState(() {
+      _isKeyboardVisible = isKeyboardVisible;
+    });
+  }
+
+  return PopScope(
+    canPop: false,
+    onPopInvoked: (didPop) async {
+      if (didPop) return;
+      await showDialog(
+        context: context,
+        builder: (context) => regretDialog(),
+      );
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: Text(
           widget.selectedEventType,
           style: const TextStyle(
-            color: Colors.white, // 設定文字顏色為白色
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: const Color(0xFFE9765B),
-        centerTitle: true, // 讓標題置中
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: Theme(
-        data: ThemeData(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFFE9765B),
+      body: Container(
+        color: Colors.white, // 設置統一的背景顏色
+        child: Theme(
+          data: ThemeData(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFFE9765B),
+            ),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Stepper(
+                  type: StepperType.horizontal,
+                  currentStep: _currentStep,
+                  onStepContinue: null,
+                  onStepCancel: null,
+                  controlsBuilder: (BuildContext context, ControlsDetails details) {
+                    return Container();
+                  },
+                  steps: steps,
+                ),
+              ),
+              if (!isKeyboardVisible) _buildNavigationButtons(),
+            ],
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stepper(
-                type: StepperType.horizontal,
-                currentStep: _currentStep,
-                onStepContinue: null,
-                onStepCancel: null,
-                controlsBuilder: (BuildContext context, ControlsDetails details) {
-                  return Container();
-                },
-                steps: steps,
-              ),
-            ),
-            if(!isKeyboardVisible) _buildNavigationButtons(),
-          ],
-        ),
       ),
-    )
-    );
-  }
+    ),
+  );
+}
 
 //建立活動流程的主幹，之後10種templete要導到10種可能
 List<Step> getSteps(String eventType) {
@@ -348,7 +353,7 @@ void updateStepperShow(){
                 ),
               ),
               child: Text(
-                _currentStep > 0 ? '上一步':"取消建立",
+                _currentStep > 0 ? 'Go back':"Regret",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -369,7 +374,7 @@ void updateStepperShow(){
                 ),
               ),
               child: Text(
-                _currentStep < steps.length - 1 ? '下一步' : '發送',
+                _currentStep < steps.length - 1 ? 'Next' : 'Send!',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -412,11 +417,11 @@ void updateStepperShow(){
         } else if (basePost.location.isEmpty) {
           return 'Please fill necessary data : Location';
         }
-        return null; 
-      case 1:
         if (basePost.eventStartDate.isAfter(basePost.eventEndDate)) {
           return 'End time can not eariler than Start time';
         } 
+        return null; 
+      case 1:
         return null; 
       default:
         return null;

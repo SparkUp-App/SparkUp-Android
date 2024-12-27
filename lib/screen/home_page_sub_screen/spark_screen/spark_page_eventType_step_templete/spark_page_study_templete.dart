@@ -66,6 +66,7 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
                 basePost.attributes["Entry Fee"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
         ],
       ),
