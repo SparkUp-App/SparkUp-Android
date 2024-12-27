@@ -66,6 +66,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = actualIndex;
       _hasVisited[actualIndex] = true;
+      if (actualIndex != 2) {
+        // NotificationPage Does not need lazy loading
+        _hasVisited[2] = false;
+      }
     });
   }
 

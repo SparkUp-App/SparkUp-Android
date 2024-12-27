@@ -12,12 +12,8 @@ class MessageTag extends StatefulWidget {
   State<MessageTag> createState() => _MessageTagState();
 }
 
-class _MessageTagState extends State<MessageTag>
-    with AutomaticKeepAliveClientMixin {
+class _MessageTagState extends State<MessageTag> {
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -43,7 +39,6 @@ class _MessageTagState extends State<MessageTag>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return ValueListenableBuilder(
       valueListenable: ChatRoomManager.manager.isLoading,
       builder: (context, isLoading, child) {
@@ -124,9 +119,10 @@ class _MessageTagState extends State<MessageTag>
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 20.0),
-                            child: const Text(
-                              "temp mins ago",
-                              style: TextStyle(
+                            child: Text(
+                              timeAfterCalculate(
+                                  chatRoom.latestMessage!.createTime),
+                              style: const TextStyle(
                                   color: Color(0xFF7F7E7E),
                                   fontSize: 10.0,
                                   fontWeight: FontWeight.normal),
@@ -161,26 +157,26 @@ class _MessageTagState extends State<MessageTag>
   }
 }
 
-//For Calculating Time Before Now
-//
-// Duration differTime =
-// DateTime.now().difference(widget.comment.lastUpdateDate);
-// int monthsDiff =
-//     (DateTime.now().year - widget.comment.lastUpdateDate.year) * 12 +
-//         DateTime.now().month -
-//         widget.comment.lastUpdateDate.month;
-// if (differTime.inSeconds < 60) {
-//   timeAfter = "${differTime.inSeconds} seconds ago";
-// } else if (differTime.inMinutes < 60) {
-//   timeAfter = "${differTime.inMinutes} minutes ago";
-// } else if (differTime.inHours < 60) {
-//   timeAfter = "${differTime.inHours} hours ago";
-// } else if (differTime.inDays < 7) {
-//   timeAfter = "${differTime.inDays} days ago";
-// } else if (differTime.inDays < 30) {
-//   timeAfter = "${(differTime.inDays / 7).floor()} weeks ago";
-// } else if (monthsDiff < 12) {
-//   timeAfter = "$monthsDiff months ago";
-// } else {
-//   timeAfter = "${(monthsDiff / 12).floor()} years ago";
-// }
+String timeAfterCalculate(DateTime targetTime) {
+  String timeAfter;
+  Duration differTime = DateTime.now().difference(targetTime);
+  int monthsDiff = (DateTime.now().year - targetTime.year) * 12 +
+      DateTime.now().month -
+      targetTime.month;
+  if (differTime.inSeconds < 60) {
+    timeAfter = "just now";
+  } else if (differTime.inMinutes < 60) {
+    timeAfter = "${differTime.inMinutes} minutes ago";
+  } else if (differTime.inHours < 60) {
+    timeAfter = "${differTime.inHours} hours ago";
+  } else if (differTime.inDays < 7) {
+    timeAfter = "${differTime.inDays} days ago";
+  } else if (differTime.inDays < 30) {
+    timeAfter = "${(differTime.inDays / 7).floor()} weeks ago";
+  } else if (monthsDiff < 12) {
+    timeAfter = "$monthsDiff months ago";
+  } else {
+    timeAfter = "${(monthsDiff / 12).floor()} years ago";
+  }
+  return timeAfter;
+}
