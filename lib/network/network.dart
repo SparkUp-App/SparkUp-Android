@@ -41,21 +41,38 @@ class Network {
       }
     } on TimeoutException catch (e) {
       debugPrint("TimeoutException: $e");
-      return {"status": "error", "data": {"message": "Timeout Error"}};
+      return {
+        "status": "error",
+        "data": {"message": "Timeout Error"}
+      };
     } on SocketException catch (e) {
       debugPrint("SocketException: $e");
-      return {"status": "error", "data": {"message": "Socket Error"}};
+      return {
+        "status": "error",
+        "data": {"message": "Connection Error"}
+      };
     } on Error catch (e) {
       debugPrint("Error: $e");
-      return {"status": "error", "data": {"message": "Error"}};
+      return {
+        "status": "error",
+        "data": {"message": "Error"}
+      };
     }
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       debugPrint("Response Status Code: ${response.statusCode}");
-      return {"status": "success", "data": jsonDecode(response.body)};
+      return {
+        "status": "success",
+        "status_code": response.statusCode,
+        "data": jsonDecode(response.body)
+      };
     } else {
       debugPrint("Response Status Code: ${response.statusCode}");
-      return {"status": "faild", "data": jsonDecode(response.body)};
+      return {
+        "status": "faild",
+        "status_code": response.statusCode,
+        "data": jsonDecode(response.body)
+      };
     }
   }
 
