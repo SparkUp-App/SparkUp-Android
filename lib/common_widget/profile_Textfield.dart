@@ -89,7 +89,7 @@ class _profile_TextfieldState extends State<profileTextfield> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   prefixIcon: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: SvgPicture.asset(
                       widget.textFieldIcon,
                       width: 20,
