@@ -9,6 +9,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_social_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_speech_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_infomation_of_addtional_teaching.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -503,8 +504,14 @@ void updateStepperShow(){
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SparkPageInformationOfAdditionalTeaching(category: widget.selectedEventType),
+      ),
+    );
       
-      Navigator.pushReplacementNamed(context, RouteMap.infomationPage);
     } else {
       showDialog(
           context: context,

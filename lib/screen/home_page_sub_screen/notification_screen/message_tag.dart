@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/request_tag_skeleton.dart';
 import 'package:spark_up/data/list_rooms_received.dart';
 import 'package:spark_up/route.dart';
-import 'package:spark_up/common_widget/request_tag_skeleton.dart';
 
 class MessageTag extends StatefulWidget {
   const MessageTag({super.key});
@@ -50,130 +50,118 @@ class _MessageTagState extends State<MessageTag>
       builder: (context, isLoading, child) {
         return RefreshIndicator(
           onRefresh: ChatRoomManager.manager.refresh,
-          child: Container(
-            color: Colors.grey[50], // 淡灰色背景
-            child: ChatRoomManager.manager.roomList.value.isEmpty && !isLoading
-                ? const EmptyView(
-                    content:
-                        "Join an event then you can chat with others in this place.")
-                : ValueListenableBuilder(
-                    valueListenable: ChatRoomManager.manager.roomList,
-                    builder: (context, value, child) {
-                      return ListView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        children: [
-                          for (var chatRoom in ChatRoomManager.manager.roomList.value) 
-                            chatRoomCard(chatRoom),
-                          if (isLoading) ...[const RequestSkeletonListRandomLength()],
-                          if (ChatRoomManager.manager.error) 
-                            const Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Center(
-                                child: Text(
-                                  "Something Went Wrong\nPlease Try Again Later",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
+          child: ChatRoomManager.manager.roomList.value.isEmpty && !isLoading
+              ? const EmptyView(
+                  content:
+                      "Join an event then you can chat with others in this place.")
+              : ValueListenableBuilder(
+                  valueListenable: ChatRoomManager.manager.roomList,
+                  builder: (context, value, child) {
+                    return ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      children: [
+                        for (var chatRoom in ChatRoomManager.manager.roomList
+                            .value) ...[chatRoomCard(chatRoom)],
+                        if (isLoading) ...[const RequestSkeletonListRandomLength()],
+                        if (ChatRoomManager.manager.error) ...[
+                          const Center(
+                            child: Text(
+                                "Something Went Wrong\n Please Try Again Later"),
+                          )
                         ],
-                      );
-                    },
-                  ),
-          ),
+                      ],
+                    );
+                  },
+                ),
         );
       },
     );
   }
 
   Widget chatRoomCard(ChatListReceived chatRoom) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      elevation: 0.5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.withOpacity(0.1)),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
         onTap: () async {
-          await Navigator.of(context).pushNamed(
-            RouteMap.chatPage,
-            arguments: (chatRoom.postId, chatRoom.postName),
-          );
+          await Navigator.of(context).pushNamed(RouteMap.chatPage,
+              arguments: (chatRoom.postId, chatRoom.postName));
           setState(() {});
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      chatRoom.postName,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF2C2C2C),
-                      ),
-                    ),
-                    if (chatRoom.latestMessage != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        "${chatRoom.latestMessage!.senderName}: ${chatRoom.latestMessage!.content}",
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14.0,
+        child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            width: double.infinity,
+            height: 100,
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(bottom: BorderSide(color: Color(0xFFADADAD)))),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            chatRoom.postName,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "temp mins ago",
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (chatRoom.unreadCount != 0) ...[
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.red[400],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    chatRoom.unreadCount > 99 ? "99+" : "${chatRoom.unreadCount}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+                        if (chatRoom.latestMessage != null) ...[
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              "${chatRoom.latestMessage!.senderName}: ${chatRoom.latestMessage!.content}",
+                              style: const TextStyle(
+                                  color: Color(0xFF4B4B4B),
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0),
+                            child: const Text(
+                              "temp mins ago",
+                              style: TextStyle(
+                                  color: Color(0xFF7F7E7E),
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
+                  if (chatRoom.unreadCount != 0) ...[
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Icon(
+                          Icons.circle,
+                          size: 25.0,
+                          color: Colors.red,
+                        ),
+                        Text(
+                          chatRoom.unreadCount > 99
+                              ? "99+"
+                              : "${chatRoom.unreadCount}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.0,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )
+                  ]
+                ])));
   }
 }
+
 //For Calculating Time Before Now
 //
 // Duration differTime =
