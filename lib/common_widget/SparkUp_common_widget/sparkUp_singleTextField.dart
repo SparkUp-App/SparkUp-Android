@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 class Textfield extends StatefulWidget {
-  const Textfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填(預設false)，要開幾格空間給他(預設1)
+  const Textfield({
     super.key,
     required this.label,
     required this.hintLabel,
@@ -9,14 +11,17 @@ class Textfield extends StatefulWidget {
     required this.onChanged,
     this.isRequired = false,
     this.maxLine = 1,
+    this.onlyNumber = false, // 新增數字控制參數
   });
 
   final String label;
   final String hintLabel;
   final String value;
-  final Function(String?) onChanged; // 回條函數
+  final Function(String?) onChanged;
   final bool isRequired;
   final int maxLine;
+  final bool onlyNumber; // 新增數字控制參數
+
   @override
   State<Textfield> createState() => _profile_TextfieldState();
 }
@@ -27,7 +32,6 @@ class _profile_TextfieldState extends State<Textfield> {
   @override
   void initState() {
     super.initState();
-
     textController = TextEditingController(text: widget.value);
   }
 
@@ -40,7 +44,7 @@ class _profile_TextfieldState extends State<Textfield> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.label + (widget.isRequired ? " *" : ""),//Require 要多顯示 * 號
+              widget.label + (widget.isRequired ? " *" : ""),
               style: const TextStyle(
                 fontSize: 16,
                 color: Color(0xFFE9765B),
@@ -52,7 +56,15 @@ class _profile_TextfieldState extends State<Textfield> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: TextField(
                 maxLines: widget.maxLine,
-                controller:  textController,
+                controller: textController,
+                // 根據 onlyNumber 添加數字鍵盤和輸入限制
+                keyboardType: widget.onlyNumber 
+                    ? TextInputType.number 
+                    : TextInputType.text,
+                // 如果 onlyNumber 為 true，則添加數字輸入限制
+                inputFormatters: widget.onlyNumber 
+                    ? [FilteringTextInputFormatter.digitsOnly]
+                    : null,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -68,15 +80,13 @@ class _profile_TextfieldState extends State<Textfield> {
                     borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  
-
                   hintText: widget.hintLabel,
                   hintStyle: const TextStyle(
                     color: Colors.black26,
                   ),
                 ),
                 onChanged: (value) {
-                  widget.onChanged(value); // 将改变的值传递给父级
+                  widget.onChanged(value);
                 },
               ),
             ),
@@ -86,5 +96,3 @@ class _profile_TextfieldState extends State<Textfield> {
     );
   }
 }
-
-

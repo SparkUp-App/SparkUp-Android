@@ -79,7 +79,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           CustomDropdown(
               label: 'Gender',
               value: basePost.attributes["Gender"],
-              options: genderList,
+              options: liveGenderList,
               onChanged: (newValue) {
                 setState(() {
                   basePost.attributes["Gender"] = newValue;
@@ -149,6 +149,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
               basePost.attributes["Security deposit"] = newValues ?? "";
             });
           },
+          onlyNumber: true,
           ),
           Textfield(
             label: 'Rent(monthly)',
@@ -159,6 +160,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
               basePost.attributes["Rent(monthly)"] = newValues ?? "";
             });
           },
+          onlyNumber: true,
           ),
           DoubleTextFieldToMakeMap(
             label: "MISC", 
@@ -170,6 +172,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
                 basePost.attributes["MISC"] = newValues;
               });
             },
+            onlyNumber: true,
           )
         ],
       ),
@@ -179,7 +182,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?A"),
+          NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
             hintLabel: 'Enter anything you want to share that we have not mentioned previously',

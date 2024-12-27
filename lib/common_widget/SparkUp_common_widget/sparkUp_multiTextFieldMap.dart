@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DoubleTextFieldToMakeMap extends StatefulWidget {
   const DoubleTextFieldToMakeMap({
@@ -8,6 +9,7 @@ class DoubleTextFieldToMakeMap extends StatefulWidget {
     required this.secondHintLabel,
     required this.values,
     required this.onChanged,
+    this.onlyNumber = false, // 新增參數
   });
 
   final String label;
@@ -15,6 +17,7 @@ class DoubleTextFieldToMakeMap extends StatefulWidget {
   final String secondHintLabel;
   final Map<String, String> values;
   final Function(Map<String, String>) onChanged;
+  final bool onlyNumber; // 新增參數
 
   @override
   State<DoubleTextFieldToMakeMap> createState() => _ProfileDoubleTextFieldToMakeMapState();
@@ -82,13 +85,22 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeM
     Color backgroundcolor,
     Color hinttextcolor,
     Color textcolor,
+    bool isSecondField, // 新增參數來識別是否為第二個輸入框
   ) {
     return Expanded(
       child: TextFormField(
         controller: controller,
+        // 根據 onlyNumber 和 isSecondField 設置數字鍵盤
+        keyboardType: (widget.onlyNumber && isSecondField) 
+            ? TextInputType.number 
+            : TextInputType.text,
+        // 根據 onlyNumber 和 isSecondField 設置輸入限制
+        inputFormatters: (widget.onlyNumber && isSecondField) 
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
         style: TextStyle(
           fontSize: 14,
-          color:textcolor
+          color: textcolor
         ),
         decoration: InputDecoration(
           filled: true,
@@ -131,6 +143,7 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeM
             const Color(0xFFE9765B),
             Colors.white.withOpacity(0.8),
             Colors.white,
+            false, // 第一個輸入框
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.0),
@@ -150,6 +163,7 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeM
             Colors.white,
             Colors.black26,
             Colors.black,
+            true, // 第二個輸入框
           ),
           IconButton(
             icon: const Icon(Icons.delete, size: 20), 
@@ -216,7 +230,6 @@ class _ProfileDoubleTextFieldToMakeMapState extends State<DoubleTextFieldToMakeM
   }
 }
 
-// Helper class to store pairs of controllers
 class Pair<T> {
   final T first;
   final T second;

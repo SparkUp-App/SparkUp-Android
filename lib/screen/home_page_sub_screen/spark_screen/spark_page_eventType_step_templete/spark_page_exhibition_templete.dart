@@ -40,6 +40,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
                 basePost.attributes["Ticket price"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
           
         ],
@@ -50,7 +51,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
       title: const SizedBox.shrink(),
       content: Column(
         children: [
-          NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?A"),
+          NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
             hintLabel: 'Enter anything you want to share that we have not mentioned previously',

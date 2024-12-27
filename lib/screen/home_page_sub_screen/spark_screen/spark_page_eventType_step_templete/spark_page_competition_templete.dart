@@ -61,6 +61,7 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
                 basePost.attributes["Entry Fee"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
         ],
       ),
