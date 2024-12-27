@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:toasty_box/toasty_box.dart';
@@ -21,6 +22,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
   bool _isKeyboardVisible = false;
   List<String> _availableLanguageTags = List<String>.from(languageType);
   List<String> _selectedLanguageTags = [];
+  BuildContext? toastContext;
 
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _nicknameFocusNode = FocusNode();
@@ -33,6 +35,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
   void initState() {
     super.initState();
     _initializeLanguageTags();
+    ToastService.showToastNumber(1);
   }
 
   void _initializeLanguageTags() {
@@ -187,7 +190,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 70,
+                  height: MediaQuery.of(context).size.height * 0.1,
                   child: Container(
                     decoration: BoxDecoration(
                       border: const Border(top: BorderSide(color: Colors.black12)),
@@ -231,7 +234,7 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
         ),
       ),
     );
-  }
+  } 
 
   void _navigateToDetailedProfile() {
     if (Profile.manager.phone.isEmpty == true ||

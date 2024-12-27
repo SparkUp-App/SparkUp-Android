@@ -259,7 +259,7 @@ class _DetailedProfilePageState extends State<DetailedProfilePage> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 70, 
+                  height: MediaQuery.of(context).size.height * 0.1, 
                   child: Container(
                     decoration: BoxDecoration(
                       border: const Border(top: BorderSide(color: Colors.black12)),
