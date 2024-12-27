@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SystemMessage extends StatelessWidget {
-  const SystemMessage({super.key, required this.content});
+  const SystemMessage(
+      {super.key, this.title = "System Message", required this.content});
+  final String title;
   final String content;
   @override
   Widget build(BuildContext context) {
@@ -14,9 +16,9 @@ class SystemMessage extends StatelessWidget {
               topLeft: Radius.circular(28), topRight: Radius.circular(28)),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          "System Message",
-          style: TextStyle(
+        child: Text(
+          title,
+          style: const TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
