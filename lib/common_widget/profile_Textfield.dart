@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 class profileTextfield extends StatefulWidget {
-  const profileTextfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填(預設false)，要開幾格空間給他(預設1)
+  profileTextfield({ //要求:key，標籤，提示文字，此文字框的icon，他所對應的值，回調函數，是否為必填(預設false)，要開幾格空間給他(預設1)
     super.key,
     required this.label,
     required this.hintLabel,
@@ -10,6 +10,12 @@ class profileTextfield extends StatefulWidget {
     required this.onChanged,
     this.isRequired = false,
     this.maxLine = 1,
+    this.focusNode,
+    this.onSubmitted,
+    this.onTapOutside,
+    this.hint = false,
+    this.hintTextWidget,
+    this.keyboardType,
   });
 
   final String label;
@@ -19,6 +25,14 @@ class profileTextfield extends StatefulWidget {
   final Function(String?) onChanged; // 回條函數
   final bool isRequired;
   final int maxLine;
+  late FocusNode? focusNode;
+  final Function(String)? onSubmitted;
+  final Function(PointerDownEvent)? onTapOutside;
+  bool hint;
+  Widget? hintTextWidget;
+  TextInputType? keyboardType;
+
+
   @override
   State<profileTextfield> createState() => _profile_TextfieldState();
 }
@@ -30,6 +44,7 @@ class _profile_TextfieldState extends State<profileTextfield> {
   void initState() {
     super.initState();
 
+    widget.focusNode = widget.focusNode ?? FocusNode();
     textController = TextEditingController(text: widget.value);
   }
 
@@ -49,11 +64,14 @@ class _profile_TextfieldState extends State<profileTextfield> {
                 fontWeight: FontWeight.w600,
               ),
             ),
+            if(widget.hint) widget.hintTextWidget ?? Container(),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2.0),
               width: MediaQuery.of(context).size.width * 0.75,
               child: TextField(
+                keyboardType: widget.keyboardType ?? TextInputType.text,
                 maxLines: widget.maxLine,
+                focusNode: widget.focusNode,
                 controller:  textController,
                 decoration: InputDecoration(
                   filled: true,
@@ -90,6 +108,12 @@ class _profile_TextfieldState extends State<profileTextfield> {
                 ),
                 onChanged: (value) {
                   widget.onChanged(value); // 将改变的值传递给父级
+                },
+                onTapOutside: widget.onTapOutside ?? (event){
+                  widget.focusNode?.unfocus();
+                },
+                onSubmitted: widget.onSubmitted ?? (value){
+                  widget.focusNode?.unfocus();
                 },
               ),
             ),
