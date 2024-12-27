@@ -9,6 +9,9 @@ class profieldDatepicker extends StatefulWidget {
     required this.datepickerIcon,
     required this.onChanged,
     this.isRequired = false,
+    this.initDate,
+    this.firstDate,
+    this.lastDate,
   });
 
   final String label;
@@ -16,6 +19,9 @@ class profieldDatepicker extends StatefulWidget {
   final String datepickerIcon;
   final Function(String?) onChanged;
   final bool isRequired;
+  final DateTime? initDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   @override
   State<profieldDatepicker> createState() => _ProfileDatePickerState();
@@ -53,9 +59,9 @@ class _ProfileDatePickerState extends State<profieldDatepicker> {
                 onTap: () async {
                   DateTime? selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime(2004),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
+                    initialDate: widget.initDate ?? DateTime.now(),
+                    firstDate: widget.firstDate ?? DateTime(1900),
+                    lastDate: widget.lastDate ?? DateTime.now(),
                   );
 
                   if (selectedDate != null) {

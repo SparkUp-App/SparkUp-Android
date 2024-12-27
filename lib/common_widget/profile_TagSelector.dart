@@ -38,6 +38,7 @@ class _ProfileTagSelectState extends State<ProfileTagSelect> {
           builder: (context, setState) {
             return AlertDialog(
               title: Text('Choose your ${widget.label}'),
+              scrollable: true,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
