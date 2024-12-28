@@ -121,7 +121,7 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
               width: MediaQuery.of(context).size.width * 0.75,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black12),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
               ),
               child: Row(

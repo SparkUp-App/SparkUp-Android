@@ -9,6 +9,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_roommate_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_social_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_speech_templete.dart';
+import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_infomation_of_addtional_teaching.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_necessary_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_step_forALL/spark_page_lastPreview_templete.dart';
 import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_step_templete/spark_page_sport_templete.dart';
@@ -19,6 +20,7 @@ import 'package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eve
 import 'package:toasty_box/toasty_box.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
+import 'dart:async'; // 用於延遲標誌重置
 
 class NextPage extends StatefulWidget {
   final String selectedEventType;
@@ -36,6 +38,7 @@ class _NextPageState extends State<NextPage> {
   late double _screenSize;
   bool isLoading = false;
   bool _isKeyboardVisible = false;
+  bool isToastShowing = false; // 防止 Toast 疊加的標誌變數
 
   @override
   void initState() {
@@ -428,11 +431,21 @@ void updateStepperShow(){
     }
   }
   void _showValidationError(String? message) {
-    ToastService.showErrorToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: message,
+    // 檢查是否已有 Toast 顯示
+    if (isToastShowing) return;
+
+    isToastShowing = true; // 設置為正在顯示 Toast
+    ToastService.showErrorToast(
+      context,
+      length: ToastLength.medium,
+      expandedHeight: 100,
+      message: message,
     );
+
+    // 設置延遲，Toast 顯示完成後恢復標誌
+    Timer(const Duration(seconds: 3), () {
+      isToastShowing = false; // 恢復標誌，允許下一個 Toast
+    });
   }
   Step _buildDefaultStep() {
     return Step(
@@ -491,8 +504,14 @@ void updateStepperShow(){
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SparkPageInformationOfAdditionalTeaching(category: widget.selectedEventType),
+      ),
+    );
       
-      Navigator.pushReplacementNamed(context, RouteMap.homePage);
     } else {
       showDialog(
           context: context,

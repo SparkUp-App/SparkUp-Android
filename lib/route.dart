@@ -102,6 +102,6 @@ class RouteMap {
       int postId;
       postId = ModalRoute.of(context)!.settings.arguments as int;
       return MemberListPage(postId: postId);
-    }
+    },
   };
 }

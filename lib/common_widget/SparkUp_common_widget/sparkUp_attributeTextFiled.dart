@@ -63,15 +63,15 @@ class _profile_TextfieldState extends State<attributeTextfield> {
                   fillColor: Colors.white,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Color(0xFFE9765B)),
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(16.0),
