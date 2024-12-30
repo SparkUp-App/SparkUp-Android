@@ -97,6 +97,8 @@ List<Widget> _buildEditFields() {
 
   // Add non-attribute fields
   editData.forEach((key, value) {
+    print(key);
+    print(value);
       if (key== "event_start_date"||key== "event_end_date") {
         // Parse the initial date string to DateTime
         DateTime initialDate = DateTime.parse(value.toString()).toLocal();
@@ -138,6 +140,16 @@ List<Widget> _buildEditFields() {
             isRequired: true,
           )
         );
+      }else if (key == "location") {
+        fields.add(Textfield(
+          label: "Location",
+          hintLabel: "Enter location here",
+          value: value?.toString() ?? "",
+          onChanged: (newValue) => setState(() {
+            editData[key] = newValue?.trim() ?? "";
+          }),
+          isRequired: true,
+        ));
       }
       else if(key=="number_of_people_required"){
         fields.add(intCounterBox(
