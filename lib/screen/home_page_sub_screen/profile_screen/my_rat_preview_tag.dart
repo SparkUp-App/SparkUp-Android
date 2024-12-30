@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
+import 'package:spark_up/common_widget/my_preview_skeleton.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/my_reference_list_received.dart';
@@ -96,7 +97,7 @@ class _MyRatPreviewTagState extends State<MyRatPreviewTag>
                 if (index < myReferenceList.length) {
                   return MyRatingCard(myReference: myReferenceList[index]);
                 } else {
-                  return const eventCardSkeletonList();
+                  return const PreviewSkeletonListRandomLength();
                 }
               },
             )

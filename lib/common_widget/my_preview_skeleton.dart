@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:math';
 
-class EventCardSkeleton extends StatelessWidget {
-  const EventCardSkeleton({Key? key}) : super(key: key);
+class PreviewSkeleton extends StatelessWidget {
+  const PreviewSkeleton({Key? key}) : super(key: key);
 
   String _generateRandomSpaces(int length) {
     return ' ' * length; // 生成指定長度的空白字符
@@ -12,12 +12,10 @@ class EventCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final random = Random();
-    final labelSpaces = _generateRandomSpaces(random.nextInt(15) + 10); // 隨機生成5到15個空白字符
     final titleSpaces = _generateRandomSpaces(random.nextInt(50) + 40); // 隨機生成10到40個空白字符
-
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-      padding: const EdgeInsets.all(18.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      padding: const EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 10.0),
       decoration: BoxDecoration(
         color: Colors.grey[100]!,
         borderRadius: BorderRadius.circular(20.0),
@@ -32,7 +30,7 @@ class EventCardSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 2.0),
+          const SizedBox(height: 10.0),
           // 標籤骨架
           Skeleton.leaf(
             child: Container(
@@ -42,7 +40,7 @@ class EventCardSkeleton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Text(
-                labelSpaces, // 使用隨機生成的空白字符
+                titleSpaces, 
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -52,81 +50,58 @@ class EventCardSkeleton extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 6.0),
-
-          // 活動標題骨架
+          const SizedBox(height: 12.0),
           Skeleton.leaf(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
               decoration: BoxDecoration(
                 color: const Color(0xFFff6b6b),
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               child: Text(
-                titleSpaces, // 使用隨機生成的空白字符
+                "                                                                                             ", 
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: 8,
                   height: 1.5,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: 16.0),
 
-          // 底部資訊骨架
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // 左側互動數據
-              Skeleton.leaf(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFff6b6b),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: const Text(
-                    "                    ", // 可以保持不變或隨機生成
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                      height: 1.5,
-                    ),
-                  ),
+          // 活動標題骨架
+          Skeleton.leaf(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
+              child:Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFff6b6b),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Text(
+                "                                   ", // 使用隨機生成的空白字符
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  height: 1.5,
                 ),
               ),
-              // 右側日期
-              Skeleton.leaf(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFff6b6b),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: const Text(
-                    "                                                       ", // 可以保持不變或隨機生成
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
+          ),
+          const SizedBox(height: 16.0),
         ],
       ),
     );
   }
 }
 
-class eventCardSkeletonList extends StatelessWidget {
-  const eventCardSkeletonList({Key? key}) : super(key: key);
+class PreviewSkeletonList extends StatelessWidget {
+  const PreviewSkeletonList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +117,7 @@ class eventCardSkeletonList extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: 8,
           itemBuilder: (context, index) {
-            return const EventCardSkeleton();
+            return const PreviewSkeleton();
           },
         ),
       ),
@@ -150,8 +125,8 @@ class eventCardSkeletonList extends StatelessWidget {
   }
 }
 
-class EventCardSkeletonListRandomLength extends StatelessWidget {
-  const EventCardSkeletonListRandomLength({Key? key}) : super(key: key);
+class PreviewSkeletonListRandomLength extends StatelessWidget {
+  const PreviewSkeletonListRandomLength({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +145,7 @@ class EventCardSkeletonListRandomLength extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: randomCount,
           itemBuilder: (context, index) {
-            return const EventCardSkeleton();
+            return const PreviewSkeleton();
           },
         ),
       ),
