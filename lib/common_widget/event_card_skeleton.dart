@@ -17,7 +17,7 @@ class EventCardSkeleton extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-      padding: const EdgeInsets.all(14.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.grey[100]!,
         borderRadius: BorderRadius.circular(20.0),
@@ -32,6 +32,7 @@ class EventCardSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 3.0),
           // 標籤骨架
           Skeleton.leaf(
             child: Container(
@@ -51,12 +52,12 @@ class EventCardSkeleton extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 6.0),
 
           // 活動標題骨架
           Skeleton.leaf(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
               decoration: BoxDecoration(
                 color: const Color(0xFFff6b6b),
                 borderRadius: BorderRadius.circular(5.0),
@@ -72,7 +73,7 @@ class EventCardSkeleton extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 12.0),
 
           // 底部資訊骨架
           Row(
@@ -106,7 +107,7 @@ class EventCardSkeleton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: const Text(
-                    "                                                         ", // 可以保持不變或隨機生成
+                    "                                                       ", // 可以保持不變或隨機生成
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
