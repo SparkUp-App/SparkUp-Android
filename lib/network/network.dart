@@ -64,14 +64,14 @@ class Network {
       return {
         "status": "success",
         "status_code": response.statusCode,
-        "data": jsonDecode(response.body)
+        "data": jsonDecode(utf8.decode(response.bodyBytes))
       };
     } else {
       debugPrint("Response Status Code: ${response.statusCode}");
       return {
         "status": "faild",
         "status_code": response.statusCode,
-        "data": jsonDecode(response.body)
+        "data": jsonDecode(utf8.decode(response.bodyBytes))
       };
     }
   }
