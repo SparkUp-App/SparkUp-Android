@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/post_path.dart';
@@ -427,16 +429,62 @@ class _HotContentState extends State<HotContent>
           widget.searchKeyWord.value.isEmpty ? null : widget.searchKeyWord.value
     });
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Timeout Error",
+                      content:
+                          "The response time is too long, please check the connection and try again later.",
+                    ));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Connection Error",
+                      content:
+                          "The connection is unstable, please check the connection and try again later.",
+                    ));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local Error",
+                    content:
+                        "An unexpected local error occur, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "failed") {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Server error",
+                content:
+                    "An unexpected server error occur, please contact us or try again later."));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occur, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
     } else {
-      //TODO Request Failed Process
+      isLoading = false;
+      return;
     }
 
     isLoading = false;
@@ -460,14 +508,62 @@ class _HotContentState extends State<HotContent>
           widget.searchKeyWord.value.isEmpty ? null : widget.searchKeyWord.value
     });
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Timeout Error",
+                      content:
+                          "The response time is too long, please check the connection and try again later.",
+                    ));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Connection Error",
+                      content:
+                          "The connection is unstable, please check the connection and try again later.",
+                    ));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local Error",
+                    content:
+                        "An unexpected local error occur, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "failed") {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Server error",
+                content:
+                    "An unexpected server error occur, please contact us or try again later."));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occur, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
+    } else {
+      isLoading = false;
+      return;
     }
 
     isLoading = false;
@@ -513,17 +609,21 @@ class _HotContentState extends State<HotContent>
             onRefresh: () async {
               refresh();
             },
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: scrollController,
-              children: [
-                for (var element in receivedPostList) ...[
-                  eventCard(element, context, refresh)
-                ],
-                if (isLoading) const eventCardSkeletonList(),
-                if (noMoreData) const NoMoreData(),
-              ],
-            )));
+            child: receivedPostList.isEmpty && !isLoading
+                ? const EmptyView(
+                    content:
+                        "Something went wrong.\n Please drag down the page to refresh.")
+                : ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: scrollController,
+                    children: [
+                      for (var element in receivedPostList) ...[
+                        eventCard(element, context, refresh)
+                      ],
+                      if (isLoading) const eventCardSkeletonList(),
+                      if (noMoreData) const NoMoreData(),
+                    ],
+                  )));
   }
 }
 
@@ -574,16 +674,62 @@ class _ForYouContentState extends State<ForYouContent>
       "sort": 0
     });
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Timeout Error",
+                      content:
+                          "The response time is too long, please check the connection and try again later.",
+                    ));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Connection Error",
+                      content:
+                          "The connection is unstable, please check the connection and try again later.",
+                    ));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local Error",
+                    content:
+                        "An unexpected local error occur, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "failed") {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Server error",
+                content:
+                    "An unexpected server error occur, please contact us or try again later."));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occur, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
     } else {
-      //TODO Request Failed Process
+      isLoading = false;
+      return;
     }
 
     isLoading = false;
@@ -609,14 +755,62 @@ class _ForYouContentState extends State<ForYouContent>
       "sort": 0
     });
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Timeout Error",
+                      content:
+                          "The response time is too long, please check the connection and try again later.",
+                    ));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Connection Error",
+                      content:
+                          "The connection is unstable, please check the connection and try again later.",
+                    ));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local Error",
+                    content:
+                        "An unexpected local error occur, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "failed") {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Server error",
+                content:
+                    "An unexpected server error occur, please contact us or try again later."));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occur, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
+    } else {
+      isLoading = false;
+      return;
     }
 
     isLoading = false;
@@ -662,7 +856,7 @@ class _ForYouContentState extends State<ForYouContent>
             onRefresh: () async {
               refresh();
             },
-            child: ListView(
+            child: receivedPostList.isEmpty && !isLoading ? const EmptyView(content: "Something went wrong.\n Please drag down the page to refresh"):ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               controller: scrollController,
               children: [
