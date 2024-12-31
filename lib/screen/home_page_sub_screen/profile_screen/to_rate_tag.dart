@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
+import 'package:spark_up/common_widget/rating_person_skeleton.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/reference_list_received.dart';
@@ -99,7 +100,7 @@ class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixi
                 const Center(child: NoMoreData()),
               ],
               if (isLoading) ...[
-                const eventCardSkeletonList(),
+                const RateingSkeletonListRandomLength(),
               ],
             ],
           ),
