@@ -19,6 +19,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  bool readAllChecking = false;
   bool isLoading = false;
   bool sendingMessage = false;
   bool hasMoreMessage = true;
@@ -35,7 +36,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    readAll();
+    readAll(context);
     ChatRoomManager.manager.currentPostId = widget.postId;
     _scrollController.addListener(() {
       if (_scrollController.offset ==
@@ -63,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     super.dispose();
-    readAll();
+    readAll(context);
     ChatRoomManager.manager.currentPostId = null;
     _scrollController.removeListener(() {
       if (_scrollController.offset ==
@@ -81,7 +82,8 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void readAll() {
+  void readAll(BuildContext context) async {
+    readAllChecking = true;
     int index = 0;
     for (index; index < ChatRoomManager.manager.roomCount; index++) {
       if (ChatRoomManager.manager.roomList.value[index].postId ==
@@ -94,11 +96,7 @@ class _ChatPageState extends State<ChatPage> {
       return;
     }
 
-    ChatRoomManager.manager.roomList.value
-        .firstWhere((element) => element.postId == widget.postId)
-        .setunreadCount(0);
-
-    Network.manager.sendRequest(
+    final response = await Network.manager.sendRequest(
         method: RequestMethod.post,
         path: ChatPath.message,
         data: {
@@ -106,6 +104,76 @@ class _ChatPageState extends State<ChatPage> {
           "user_id": Network.manager.userId,
           "limit": 1
         });
+
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        ChatRoomManager.manager.roomList.value
+            .firstWhere((element) => element.postId == widget.postId)
+            .setunreadCount(0);
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timout Error":
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout error",
+                    content:
+                        "The response time is too long, please check the connectino and try again later."));
+            break;
+          case "Connection Error":
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection error",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local error",
+                    content:
+                        "An unexpected local error occur, please contact us or try again later."));
+            break;
+        }
+        ChatRoomManager.manager.refresh();
+        Navigator.pop(context);
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          case 404:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Chat room not found",
+                    content:
+                        "The chat room has been delted or no longer exist."));
+            break;
+          case 403:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "No access permission",
+                    content:
+                        "You are not the member of this chat room.\n Contact the host or try again later."));
+            break;
+          default:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server error",
+                    content:
+                        "An unexpected server error occur, please contact us or try again later."));
+            break;
+        }
+        ChatRoomManager.manager.refresh();
+        Navigator.pop(context);
+      }
+    } else {
+      return;
+    }
+
+    readAllChecking = false;
   }
 
   void getMoreMessage() async {
@@ -131,11 +199,13 @@ class _ChatPageState extends State<ChatPage> {
         ];
         hasMoreMessage = response["data"]["has_more"];
         oldestMessageId = response["data"]["oldest_id"];
-      } else {
+      } else if(!readAllChecking){
+        
         showDialog(
             context: context,
             builder: (context) => const SystemMessage(
-                content: "Something Went Wrong\n Please Try Again Later"));
+                title: "Message load failed",
+                content: "Can't load message, please check the connection first."));
       }
     } else {
       return;
@@ -164,15 +234,17 @@ class _ChatPageState extends State<ChatPage> {
           showDialog(
               context: context,
               builder: (context) => const SystemMessage(
-                  content: "Something Went Wrong\n Please Try Again Later"));
+                  title: "Message send failed",
+                  content: "Can't send message, please check the connection first."));
           debugPrint('Message failed to send');
         }
       } catch (e) {
         showDialog(
             context: context,
             builder: (context) => const SystemMessage(
+                title: "Message send failed",
                 content:
-                    "Something Went Wrong\n Please Try Again Later\n(Error: scoket error)"));
+                    "Can't send message, please check the connection first."));
         debugPrint('Error sending message: $e');
       } finally {
         sendingMessage = false;
