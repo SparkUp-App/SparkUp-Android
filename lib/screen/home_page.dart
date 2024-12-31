@@ -57,13 +57,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _hasVisited[0] = true;
-
-    SocketService.manager.initSocket(
-        userId: Network.manager.userId!,
-        onMessage: ChatRoomManager.manager.socketMessageCallback,
-        onApprovedMessage: ChatRoomManager.manager.socketApproveCallback,
-        onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback);
-    ChatRoomManager.manager.getData();
   }
 
   void _onItemTapped(int index) {
@@ -73,6 +66,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = actualIndex;
       _hasVisited[actualIndex] = true;
+      if (actualIndex != 2) {
+        // NotificationPage Does not need lazy loading
+        _hasVisited[2] = false;
+      }
     });
   }
 
@@ -119,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           floatingActionButton: Container(
             margin: const EdgeInsets.only(top: 25),
             width: 65,

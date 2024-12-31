@@ -38,6 +38,8 @@ class _ProfileTagSelectState extends State<ProfileTagSelect> {
           builder: (context, setState) {
             return AlertDialog(
               title: Text('Choose your ${widget.label}'),
+              scrollable: true,
+              backgroundColor: Colors.white,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -68,7 +70,9 @@ class _ProfileTagSelectState extends State<ProfileTagSelect> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Confirm'),
+                  child: const Text('Confirm', style: TextStyle(
+                    color: Color(0xFFF16743),
+                  ),),
                   onPressed: () {
                     Navigator.of(context).pop();
                     widget.onChanged(_selectedTags);

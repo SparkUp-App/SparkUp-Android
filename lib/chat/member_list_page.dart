@@ -42,10 +42,12 @@ class _MemeberListPageState extends State<MemberListPage> {
             .toList();
         totalUsers = response["data"]["total_users"];
       } else {
-        showDialog(
+        await showDialog(
             context: context,
             builder: (context) => const SystemMessage(
-                content: "Something Went Wrong\n Pleas Try Again Later"));
+                title: "Load memeber list failed",
+                content: "Something went wrong\n Pleas try again later"));
+        Navigator.pop(context);
       }
     }
 

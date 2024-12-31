@@ -102,13 +102,84 @@ class _EventDetailPageState extends State<EventDetailPage>
     if (context.mounted) {
       if (response["status"] == "success") {
         postData = PostView.initfromData(response["data"]);
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout Error",
+                    content:
+                        "The response time is too long, please check the connection and try again later"));
+            Navigator.pop(context, prePageReload);
+            break;
+          case "Connection Error":
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection Error",
+                    content:
+                        "The connection is not stable, please check the connection and try again later"));
+            Navigator.pop(context, prePageReload);
+            break;
+          case "Error":
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local Error",
+                    content:
+                        "An unexpected local error occurred, please contact us or try again later"));
+            Navigator.pop(context, prePageReload);
+            break;
+          default:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Error",
+                    content:
+                        "An unexpected loacl error occurred, please contact us or try again later"));
+            Navigator.pop(context, prePageReload);
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          case 404:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Page Not Found",
+                    content: "The event you are looking for no longer exist"));
+            prePageReload = true;
+            Navigator.pop(context, prePageReload);
+            break;
+          case 500:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server Error",
+                    content:
+                        "An unexpected server error occurred, please contact us or try again later"));
+            prePageReload = true;
+            Navigator.pop(context, prePageReload);
+            break;
+          default:
+            await showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server Error",
+                    content:
+                        "An unexpected server error occurred, please contact us or try again later"));
+            prePageReload = true;
+            Navigator.pop(context, prePageReload);
+        }
       } else {
-        showDialog(
-          context: context,
-          builder: (context) => SystemMessage(
-            content: "${response["data"]["message"]}",
-          ),
-        );
+        await showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occurred, please contact us or try again later"));
+        prePageReload = true;
+        Navigator.pop(context, prePageReload);
       }
     }
 
@@ -126,12 +197,9 @@ class _EventDetailPageState extends State<EventDetailPage>
         for (var data in response["data"]["comments"]) {
           commentList.add(Comment.initfromData(data));
         }
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                SystemMessage(content: "${response["data"]["mesage"]}"));
       }
+    } else {
+      return;
     }
 
     setState(() {
@@ -1021,8 +1089,12 @@ class _EventDetailPageState extends State<EventDetailPage>
                     child: ElevatedButton(
                       onPressed: () => pressAplyProcess(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 245, 174, 128),
+                        backgroundColor: switch (postData.applicationStatus) {
+                          0 => const Color.fromARGB(255, 245, 174, 128),
+                          1 => Colors.red,
+                          2 => Colors.green,
+                          _ => const Color.fromARGB(255, 245, 174, 128)
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)),
                         padding: const EdgeInsets.all(10.0),
@@ -1030,14 +1102,19 @@ class _EventDetailPageState extends State<EventDetailPage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            (Icons.check),
+                          Icon(
+                            (switch (postData.applicationStatus) {
+                              0 => Icons.remove,
+                              1 => Icons.close,
+                              2 => Icons.check,
+                              _ => Icons.add
+                            }),
                             color: Colors.white,
                           ),
                           Text(
                             (switch (postData.applicationStatus) {
                               0 => 'Cancel Apply',
-                              1 => 'Reject',
+                              1 => 'Rejected',
                               2 => 'Approved',
                               _ => 'Apply'
                             }),

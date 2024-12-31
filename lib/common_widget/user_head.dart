@@ -12,17 +12,21 @@ class UserHead extends StatelessWidget {
       {super.key,
       required this.userId,
       required this.level,
-      required this.size});
+      required this.size,
+      this.canRouteProfile = false});
   final int userId;
   final int level;
   final double size;
+  final bool canRouteProfile;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RouteMap.profileShowPage,
-            arguments: (userId, Network.manager.userId == userId, false));
+        if (canRouteProfile) {
+          Navigator.pushNamed(context, RouteMap.profileShowPage,
+              arguments: (userId, Network.manager.userId == userId, false));
+        }
       },
       child: Container(
         decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
@@ -516,6 +517,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                   ),
                 ),
               ),
+              backgroundColor: const Color(0xFFF7F2EF),
             );
           } else if (snapshot.hasError) {
             //other user view profile
@@ -523,7 +525,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
               showDialog(
                   context: context,
                   builder: (context) => const SystemMessage(
-                      content: "Something Went Wrong Pleas Try Again Later"));
+                      title: "Profile load failed",
+                      content: "Something went wrong please try again later."));
               Navigator.pop(context);
             }
             return Center(
@@ -531,7 +534,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             );
           } else if (snapshot.hasData) {
             if (snapshot.data!["data"] == null) {
-              return const Center(child: Text("Doesn't Get Data"));
+              return const Center(child: Text("Doesn't get data"));
             }
 
             //Data Initial
@@ -708,6 +711,19 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             );
           }
         });
+  }
+
+  Widget profileLoadFailedScreen(){
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F2EF),
+      body: Column(children: [
+        const EmptyView(content: "Profile load failed"),
+        IconButton(
+          onPressed: () => setState((){}),
+          icon: const Icon(Icons.refresh),
+        ) 
+      ],)
+    );
   }
 
   @override
