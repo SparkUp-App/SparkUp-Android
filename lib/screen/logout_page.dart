@@ -147,7 +147,7 @@ class LogoutPage extends StatelessWidget {
               margin:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: () => Navigator.pushNamed(context, RouteMap.contactUsPage),
                 icon: const Icon(Icons.phone, color: Colors.grey),
                 label: const Text("Contact us",
                     style: TextStyle(color: Colors.black)),
