@@ -16,7 +16,7 @@ class ExitConfirmationDialog extends StatelessWidget {
           Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error),
           const SizedBox(width: 8),
           const Text(
-            '確定要離開?',
+            'Warning?',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -25,7 +25,7 @@ class ExitConfirmationDialog extends StatelessWidget {
         ],
       ),
       content: const Text(
-        '您確定要離開應用程式嗎?',
+        'Are you sure you want to exit the application?',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black54,
@@ -38,7 +38,7 @@ class ExitConfirmationDialog extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             foregroundColor: Colors.grey,
           ),
-          child: const Text('取消'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () => exit(0),
@@ -50,7 +50,7 @@ class ExitConfirmationDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Text('確定'),
+          child: const Text('Confirm'),
         ),
       ],
     );
