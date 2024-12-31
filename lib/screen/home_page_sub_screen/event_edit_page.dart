@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiDate_input.dart';
 import 'package:spark_up/common_widget/confirm_dialog.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/base_post.dart';
@@ -96,6 +97,8 @@ List<Widget> _buildEditFields() {
 
   // Add non-attribute fields
   editData.forEach((key, value) {
+    print(key);
+    print(value);
       if (key== "event_start_date"||key== "event_end_date") {
         // Parse the initial date string to DateTime
         DateTime initialDate = DateTime.parse(value.toString()).toLocal();
@@ -112,7 +115,7 @@ List<Widget> _buildEditFields() {
 
         // Add time picker for start and end dates
         fields.add(_buildTimePicker(
-          label: "${_formatLabel(key)} Time",
+          label: "${_formatLabel(key)} TIME",
           time: TimeOfDay.fromDateTime(initialDate),
           onTimeChanged: (newTime) {
             setState(() {
@@ -130,13 +133,23 @@ List<Widget> _buildEditFields() {
         ));
       } else if(key=="title"){
         fields.add(Textfield(
-            label: key,
+            label: "Title",
             hintLabel: "Enter ${key} Here",
             value:  editData[key].toString(),
             onChanged: (newValue) => setState(() =>  editData[key] = newValue ?? ""),
             isRequired: true,
           )
         );
+      }else if (key == "location") {
+        fields.add(Textfield(
+          label: "Location",
+          hintLabel: "Enter location here",
+          value: value?.toString() ?? "",
+          onChanged: (newValue) => setState(() {
+            editData[key] = newValue?.trim() ?? "";
+          }),
+          isRequired: true,
+        ));
       }
       else if(key=="number_of_people_required"){
         fields.add(intCounterBox(
@@ -149,6 +162,16 @@ List<Widget> _buildEditFields() {
               editData[key]  = newValue.toInt();
             },
           ),
+        );
+      }
+      else if(key=="content"){
+        fields.add(Textfield(
+            label: "Content",
+            hintLabel: "Enter Content Here",
+            value:  editData[key].toString(),
+            onChanged: (newValue) => setState(() =>  editData[key] = newValue ?? ""),
+            maxLine: 5,
+          )
         );
       }
   });
@@ -233,8 +256,25 @@ List<Widget> _buildEditFields() {
             )
           );
         }
+        else if(key=="Itinerary"){
+          fields.add(
+            Column(
+              children: [
+                SizedBox(height: 20),
+            NoteCard(message: "Please fill in the destination according to the order of the travel itinerary."),
+            TopicMultiInput(
+              topicsData: (value as Map<String, dynamic>).map<String, List<String>>(
+                (k, v) => MapEntry(k, List<String>.from(v as List)),
+              ),
+              onChanged: (Map<String, List<String>> newValues) {
+                editData["attributes"][key] = newValues;
+              },
+            ),
+              ]),
+          );
+        }
   });
-
+  
   return fields;
 }
 

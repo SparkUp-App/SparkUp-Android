@@ -342,6 +342,9 @@ class _EventShowPageState extends State<EventShowPage>
                         selectTypeNotifier: selectTypeNotifier,
                       ),
                     ),
+                    Visibility(
+                      visible: MediaQuery.of(context).viewInsets.bottom == 0,
+                      child: 
                     Positioned(
                       bottom: 20,
                       left: 30,
@@ -372,6 +375,7 @@ class _EventShowPageState extends State<EventShowPage>
                           ),
                         ),
                       ),
+                    ),
                     ),
                   ]
                 ],
