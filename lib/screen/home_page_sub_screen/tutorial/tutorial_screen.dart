@@ -30,7 +30,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: false,
+        canPop: widget.fromSetting,
         onPopInvoked: (didPop) async {
           if (didPop) return;
           await showDialog(
