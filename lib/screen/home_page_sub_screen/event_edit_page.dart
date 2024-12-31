@@ -9,7 +9,6 @@ import 'package:spark_up/network/path/post_path.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_singleTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextField.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_int_counter.dart';
-import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_datePicker.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_describe_container.dart';
 import 'package:spark_up/common_widget/SparkUp_common_widget/sparkUp_multiTextFieldMap.dart';
 
@@ -404,8 +403,8 @@ Widget _buildSaveButton() {
         return true;
       }
     }
-    //return false;
-    return true;
+    return false;
+    //return true;
   }
 
 Widget _buildDatePicker({
