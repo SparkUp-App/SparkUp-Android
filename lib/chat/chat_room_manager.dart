@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/chat/data/apply_message.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
@@ -113,11 +115,13 @@ class ChatRoomManager {
           BuildContext? context = MyApp.navigatorKey.currentContext;
 
           if (WidgetsBinding.instance.lifecycleState ==
-              AppLifecycleState.resumed && NotificationManager.foregroundNewMessage) {
+                  AppLifecycleState.resumed &&
+              NotificationManager.foregroundNewMessage) {
             // App Foreground Notification
 
             // Display SnackBar in app
             if (context != null) {
+              AudioPlayer().play(AssetSource('notification_ring.wav'));
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0.0,
@@ -158,15 +162,16 @@ class ChatRoomManager {
                 duration: const Duration(seconds: 3),
               ));
             }
-          } 
+          }
         }
 
         if (WidgetsBinding.instance.lifecycleState ==
-              AppLifecycleState.paused && NotificationManager.backgroundNewMessage && message.senderId != Network.manager.userId) {
-            // App Background Notification
-            BackgroundNotificationService.manager
-                .handleIncomingMessage(message);
-          }
+                AppLifecycleState.paused &&
+            NotificationManager.backgroundNewMessage &&
+            message.senderId != Network.manager.userId) {
+          // App Background Notification
+          BackgroundNotificationService.manager.handleIncomingMessage(message);
+        }
 
         roomList.value.removeAt(i);
         roomList.value = [updateChatRoom, ...roomList.value];
@@ -178,10 +183,12 @@ class ChatRoomManager {
   void socketApproveCallback(ApprovedMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundApproveMessage) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed &&
+        NotificationManager.foregroundApproveMessage) {
       // Foreground Notification
       // Display SnackBar in app
       if (context != null) {
+        AudioPlayer().play(AssetSource('notification_ring.wav'));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -222,7 +229,8 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused && NotificationManager.backgroundApproveMessage) {
+            AppLifecycleState.paused &&
+        NotificationManager.backgroundApproveMessage) {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingApprovedMessage(message);
@@ -232,11 +240,13 @@ class ChatRoomManager {
   void socketRejectedCallback(RejectedMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundRejectMessage) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed &&
+        NotificationManager.foregroundRejectMessage) {
       // Foreground Notification
 
       // Display SnackBar in app
       if (context != null) {
+        AudioPlayer().play(AssetSource('notification_ring.wav'));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -277,7 +287,8 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused && NotificationManager.backgroundRejectMessage) {
+            AppLifecycleState.paused &&
+        NotificationManager.backgroundRejectMessage) {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingRejectedMessage(message);
@@ -287,11 +298,13 @@ class ChatRoomManager {
   void socketApplyCallback(ApplyMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundApplyMessage) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed &&
+        NotificationManager.foregroundApplyMessage) {
       // Foreground Notification
 
       // Display SnackBar in app
       if (context != null) {
+        AudioPlayer().play(AssetSource('notification_ring.wav'));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -332,10 +345,10 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused && NotificationManager.backgroundApplyMessage) {
+            AppLifecycleState.paused &&
+        NotificationManager.backgroundApplyMessage) {
       // Background Notification
-      BackgroundNotificationService.manager
-          .handleIncomingApplymessage(message);
+      BackgroundNotificationService.manager.handleIncomingApplymessage(message);
     }
   }
 }
