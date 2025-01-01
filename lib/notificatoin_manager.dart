@@ -1,6 +1,8 @@
 import 'package:spark_up/secure_storage.dart';
 
-class NotificatoinManager {
+class NotificationManager {
+  static bool allowNotification = true;
+
   static bool foregroundNewMessage = true;
   static bool foregroundApproveMessage = true;
   static bool foregroundRejectMessage = true;
@@ -12,6 +14,9 @@ class NotificatoinManager {
   static bool backgroundApplyMessage = true;
 
   static init() {
+    SecureStorage.read(StoreKey.allowNotification).then((value) {
+      allowNotification = value == "true" || value == null;
+    });
     SecureStorage.read(StoreKey.foregroundNewMessage).then((value) {
       foregroundNewMessage = value == "true" || value == null;
     });
@@ -36,9 +41,12 @@ class NotificatoinManager {
     SecureStorage.read(StoreKey.backgroundApplyMessage).then((value) {
       backgroundApplyMessage = value == "true" || value == null;
     });
+    allowNotificationCheck();
   }
 
   static reset() {
+    allowNotification = true;
+
     foregroundNewMessage = true;
     foregroundApproveMessage = true;
     foregroundRejectMessage = true;
@@ -94,8 +102,39 @@ class NotificatoinManager {
         backgroundApplyMessage = !backgroundApplyMessage;
         SecureStorage.store(key, backgroundApplyMessage.toString());
         break;
+      case StoreKey.allowNotification:
+        allowNotification = !allowNotification;
+        foregroundNewMessage = allowNotification;
+        foregroundApproveMessage = allowNotification;
+        foregroundRejectMessage = allowNotification;
+        foregroundApplyMessage = allowNotification;
+        backgroundNewMessage = allowNotification;
+        backgroundApproveMessage = allowNotification;
+        backgroundRejectMessage = allowNotification;
+        backgroundApplyMessage = allowNotification;
+        SecureStorage.store(StoreKey.foregroundNewMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.foregroundApproveMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.foregroundRejectMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.foregroundApplyMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.backgroundNewMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.backgroundApproveMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.backgroundRejectMessage, allowNotification.toString());
+        SecureStorage.store(StoreKey.backgroundApplyMessage, allowNotification.toString());
+        SecureStorage.store(key, allowNotification.toString());
+        break;
       default:
         break;
+    }
+    allowNotificationCheck();
+  }
+
+  static allowNotificationCheck(){
+    if(foregroundNewMessage || foregroundApproveMessage || foregroundRejectMessage || foregroundApplyMessage || backgroundNewMessage || backgroundApproveMessage || backgroundRejectMessage || backgroundApplyMessage){
+      allowNotification = true;
+      SecureStorage.store(StoreKey.allowNotification, "true");
+    } else {
+      allowNotification = false;
+      SecureStorage.store(StoreKey.allowNotification, "false");
     }
   }
 }

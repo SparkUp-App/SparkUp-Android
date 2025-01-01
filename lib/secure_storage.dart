@@ -21,6 +21,8 @@ enum StoreKey{
   userId(key: "USER_ID"),
   noProfile(key: "NO_PROFILE"),
   
+  allowNotification(key: "ALLOW_NOTIFICATION"),
+
   foregroundNewMessage(key: "FOREGROUND_NEW_MESSAGE"),
   foregroundApproveMessage(key: "FOREGROUND_APPROVE_MESSAGE"),
   foregroundRejectMessage(key: "FOREGROUND_REJECT_MESSAGE"),

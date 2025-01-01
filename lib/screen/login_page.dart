@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
-import "package:spark_up/background_notification_service.dart";
 import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/system_message.dart";
@@ -8,6 +6,7 @@ import "package:spark_up/const_variable.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
+import "package:spark_up/notificatoin_manager.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:spark_up/secure_storage.dart";
@@ -291,6 +290,7 @@ class _LoginPageState extends State<LoginPage> {
                                       if (context.mounted) {
                                         debugPrint("${response["status"]}");
                                         if (response["status"] == "success") {
+                                          NotificationManager.init();
                                           SecureStorage.store(StoreKey.userId,
                                               "${response["data"]["user_id"]}");
                                           Network.manager.saveUserId(

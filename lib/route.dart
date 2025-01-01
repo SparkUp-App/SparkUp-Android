@@ -14,6 +14,7 @@ import "package:spark_up/screen/login_page.dart";
 import "package:spark_up/screen/logout_page.dart";
 import "package:spark_up/screen/logout_page_sub_screen/contact_us_page.dart";
 import "package:spark_up/screen/logout_page_sub_screen/license_page.dart" as sparkupLicense;
+import "package:spark_up/screen/logout_page_sub_screen/notification_setting_page.dart";
 import "package:spark_up/screen/register_page.dart";
 import "package:spark_up/screen/home_page.dart";
 import "package:spark_up/screen/initial_profile_create/initial_profileData_basicInfo.dart";
@@ -44,6 +45,7 @@ class RouteMap {
   static const memberlistPage = "/memberListPage";
   static const contactUsPage = "/contactUsPage";
   static const licensePage = "/licensePage";
+  static const notificationSettingPage = "/notificationSettingPage";
   //Bind page to Path
   static Map<String, WidgetBuilder> routes = {
     loginPage: (context) => const LoginPage(),
@@ -109,5 +111,6 @@ class RouteMap {
     },
     contactUsPage: (context) => const ContactUsPage(),
     licensePage: (context) => const sparkupLicense.LicensePage(),
+    notificationSettingPage: (context) => const NotificationSettingPage(),
   };
 }

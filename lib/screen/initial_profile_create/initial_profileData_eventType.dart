@@ -4,6 +4,7 @@ import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/profile_path.dart';
+import 'package:spark_up/notificatoin_manager.dart';
 import "package:spark_up/route.dart";
 import 'package:spark_up/secure_storage.dart';
 import 'package:spark_up/socket_service.dart';
@@ -355,6 +356,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
           onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback,
           onApplyMessage: ChatRoomManager.manager.socketApplyCallback);
       ChatRoomManager.manager.getData();
+      NotificationManager.init();
       Navigator.pushReplacementNamed(context, RouteMap.tutorialPage,
           arguments: false);
     } else {
