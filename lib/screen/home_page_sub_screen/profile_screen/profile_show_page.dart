@@ -189,7 +189,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                 ),
                 const SizedBox(height: 16),
                 if (widget.editable) ...[
-                  SizedBox(
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
                     width: 130,
                     height: 32,
                     child: ElevatedButton(
@@ -201,15 +202,18 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                       ),
                       onPressed: () async {
                         final update = await Navigator.pushNamed(
-                          context, RouteMap.editProfile,
-                          arguments: profile);
-                        if(update == true) setState(() {}); 
-                        },
-                      child: const Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          color: Color(0xFFF16743),
-                          fontWeight: FontWeight.bold,
+                            context, RouteMap.editProfile,
+                            arguments: profile);
+                        if (update == true) setState(() {});
+                      },
+                      child: const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Edit Profile",
+                          style: TextStyle(
+                            color: Color(0xFFF16743),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
