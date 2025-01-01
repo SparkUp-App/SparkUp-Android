@@ -213,9 +213,13 @@ class _EventShowPageState extends State<EventShowPage>
                                   height: 40.0,
                                   child: TextButton(
                                       onPressed: cancelTextButton,
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.black38),
+                                      child: const FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          "Cancel",
+                                          style:
+                                              TextStyle(color: Colors.black38),
+                                        ),
                                       ))),
                             ),
                         ],
@@ -346,38 +350,37 @@ class _EventShowPageState extends State<EventShowPage>
                     ),
                     Visibility(
                       visible: MediaQuery.of(context).viewInsets.bottom == 0,
-                      child: 
-                    Positioned(
-                      bottom: 20,
-                      left: 30,
-                      right: 30,
-                      height: 90,
-                      child: Container(
-                        margin: const EdgeInsets.all(20.0),
-                        child: SizedBox(
-                          width: 150,
-                          height: 47,
-                          child: ElevatedButton(
-                            onPressed: searchButtonPressed,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF7AF8B),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                      child: Positioned(
+                        bottom: 20,
+                        left: 30,
+                        right: 30,
+                        height: 90,
+                        child: Container(
+                          margin: const EdgeInsets.all(20.0),
+                          child: SizedBox(
+                            width: 150,
+                            height: 47,
+                            child: ElevatedButton(
+                              onPressed: searchButtonPressed,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF7AF8B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Search',
-                              style: TextStyle(
-                                fontFamily: 'IowanOldStyle',
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Search',
+                                style: TextStyle(
+                                  fontFamily: 'IowanOldStyle',
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                     ),
                   ]
                 ],
@@ -856,17 +859,21 @@ class _ForYouContentState extends State<ForYouContent>
             onRefresh: () async {
               refresh();
             },
-            child: receivedPostList.isEmpty && !isLoading ? const EmptyView(content: "Something went wrong.\n Please drag down the page to refresh"):ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: scrollController,
-              children: [
-                for (var element in receivedPostList) ...[
-                  eventCard(element, context, refresh)
-                ],
-                if (isLoading) const eventCardSkeletonList(),
-                if (noMoreData) const NoMoreData(),
-              ],
-            )));
+            child: receivedPostList.isEmpty && !isLoading
+                ? const EmptyView(
+                    content:
+                        "Something went wrong.\n Please drag down the page to refresh")
+                : ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: scrollController,
+                    children: [
+                      for (var element in receivedPostList) ...[
+                        eventCard(element, context, refresh)
+                      ],
+                      if (isLoading) const eventCardSkeletonList(),
+                      if (noMoreData) const NoMoreData(),
+                    ],
+                  )));
   }
 }
 
