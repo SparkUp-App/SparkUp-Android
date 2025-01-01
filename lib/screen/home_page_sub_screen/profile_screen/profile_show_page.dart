@@ -199,9 +199,12 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      onPressed: () => Navigator.pushNamed(
+                      onPressed: () async {
+                        final update = await Navigator.pushNamed(
                           context, RouteMap.editProfile,
-                          arguments: profile),
+                          arguments: profile);
+                        if(update == true) setState(() {}); 
+                        },
                       child: const Text(
                         "Edit Profile",
                         style: TextStyle(
