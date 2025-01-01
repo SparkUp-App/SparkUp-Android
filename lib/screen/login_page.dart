@@ -213,6 +213,30 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      if(emailController.text.length > 255){
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                    "Input email address is not legal."));
+                                        setState(() {});
+                                        return;
+                                      }
+
+                                      if(passwordController.text.length > 255){
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                    "Input password is not legal."));
+                                        setState(() {});
+                                        return;
+                                      }
+
                                       if (emailController.text.isEmpty) {
                                         emailEmpty = true;
                                       }
