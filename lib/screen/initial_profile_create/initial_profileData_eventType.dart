@@ -352,7 +352,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
           userId: Network.manager.userId!,
           onMessage: ChatRoomManager.manager.socketMessageCallback,
           onApprovedMessage: ChatRoomManager.manager.socketApproveCallback,
-          onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback);
+          onRejectedMessage: ChatRoomManager.manager.socketRejectedCallback,
+          onApplyMessage: ChatRoomManager.manager.socketApplyCallback);
       ChatRoomManager.manager.getData();
       Navigator.pushReplacementNamed(context, RouteMap.tutorialPage,
           arguments: false);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spark_up/background_notification_service.dart';
+import 'package:spark_up/chat/data/apply_message.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
 import 'package:spark_up/chat/data/rejected_message.dart';
@@ -278,6 +278,61 @@ class ChatRoomManager {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingRejectedMessage(message);
+    }
+  }
+
+  void socketApplyCallback(ApplyMessage message) {
+    BuildContext? context = MyApp.navigatorKey.currentContext;
+
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+      // Foreground Notification
+
+      // Display SnackBar in app
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          content: Container(
+            padding: const EdgeInsets.all(18.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "New Apply Message",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  message.message,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ));
+      }
+    } else if (WidgetsBinding.instance.lifecycleState ==
+        AppLifecycleState.paused) {
+      // Background Notification
+      BackgroundNotificationService.manager
+          .handleIncomingApplymessage(message);
     }
   }
 }

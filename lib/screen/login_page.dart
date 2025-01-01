@@ -213,26 +213,27 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      if(emailController.text.length > 255){
+                                      if (emailController.text.length > 255) {
                                         showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 const SystemMessage(
                                                     title: "Login Failed",
                                                     content:
-                                                    "Input email address is not legal."));
+                                                        "Input email address is not legal."));
                                         setState(() {});
                                         return;
                                       }
 
-                                      if(passwordController.text.length > 255){
+                                      if (passwordController.text.length >
+                                          255) {
                                         showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 const SystemMessage(
                                                     title: "Login Failed",
                                                     content:
-                                                    "Input password is not legal."));
+                                                        "Input password is not legal."));
                                         setState(() {});
                                         return;
                                       }
@@ -255,14 +256,15 @@ class _LoginPageState extends State<LoginPage> {
                                         return;
                                       }
 
-                                      if( !emailRegex.hasMatch(emailController.text)){
+                                      if (!emailRegex
+                                          .hasMatch(emailController.text)) {
                                         showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 const SystemMessage(
                                                     title: "Login Failed",
                                                     content:
-                                                    "Please enter a valid email address"));
+                                                        "Please enter a valid email address"));
                                         setState(() {});
                                         return;
                                       }
@@ -305,7 +307,10 @@ class _LoginPageState extends State<LoginPage> {
                                                         .socketApproveCallback,
                                                 onRejectedMessage:
                                                     ChatRoomManager.manager
-                                                        .socketRejectedCallback);
+                                                        .socketRejectedCallback,
+                                                onApplyMessage: ChatRoomManager
+                                                    .manager
+                                                    .socketApplyCallback);
                                             ChatRoomManager.manager.getData();
                                             SecureStorage.store(
                                                 StoreKey.noProfile, "No");
@@ -328,7 +333,8 @@ class _LoginPageState extends State<LoginPage> {
                                               builder: (context) =>
                                                   const SystemMessage(
                                                       title: "Login Failed",
-                                                      content: "No user found. \nPlease check the email and password."));
+                                                      content:
+                                                          "No user found. \nPlease check the email and password."));
                                         }
                                       }
                                     },
