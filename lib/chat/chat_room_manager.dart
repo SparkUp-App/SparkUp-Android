@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spark_up/background_notification_service.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
@@ -137,12 +138,13 @@ class ChatRoomManager {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        "New Message",
-                        style: TextStyle(
+                      Text(
+                        "New Message - ${message.postTitle}",
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         "${message.senderName}: ${message.content}",
