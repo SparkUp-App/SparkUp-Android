@@ -99,13 +99,13 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
             },
           ),
           Textfield(
-            label: 'lifestyle',
-            hintLabel: 'Enter lifestyle',
+            label: 'Lifestyle',
+            hintLabel: 'Enter Lifestyle',
             maxLine: 3,
-            value: basePost.attributes["lifestyle"] ?? "",
+            value: basePost.attributes["Lifestyle"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["lifestyle"] = newValue ?? "";
+                basePost.attributes["Lifestyle"] = newValue ?? "";
               });
             },
           ),
