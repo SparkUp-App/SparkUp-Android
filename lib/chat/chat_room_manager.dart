@@ -8,6 +8,7 @@ import 'package:spark_up/data/list_rooms_received.dart';
 import 'package:spark_up/main.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/chat_path.dart';
+import 'package:spark_up/notificatoin_manager.dart';
 
 class ChatRoomManager {
   static ChatRoomManager manager = ChatRoomManager();
@@ -112,7 +113,7 @@ class ChatRoomManager {
           BuildContext? context = MyApp.navigatorKey.currentContext;
 
           if (WidgetsBinding.instance.lifecycleState ==
-              AppLifecycleState.resumed) {
+              AppLifecycleState.resumed && NotificationManager.foregroundNewMessage) {
             // App Foreground Notification
 
             // Display SnackBar in app
@@ -157,13 +158,15 @@ class ChatRoomManager {
                 duration: const Duration(seconds: 3),
               ));
             }
-          } else if (WidgetsBinding.instance.lifecycleState ==
-              AppLifecycleState.paused) {
+          } 
+        }
+
+        if (WidgetsBinding.instance.lifecycleState ==
+              AppLifecycleState.paused && NotificationManager.backgroundNewMessage && message.senderId != Network.manager.userId) {
             // App Background Notification
             BackgroundNotificationService.manager
                 .handleIncomingMessage(message);
           }
-        }
 
         roomList.value.removeAt(i);
         roomList.value = [updateChatRoom, ...roomList.value];
@@ -175,7 +178,7 @@ class ChatRoomManager {
   void socketApproveCallback(ApprovedMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundApproveMessage) {
       // Foreground Notification
       // Display SnackBar in app
       if (context != null) {
@@ -219,7 +222,7 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused) {
+        AppLifecycleState.paused && NotificationManager.backgroundApproveMessage) {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingApprovedMessage(message);
@@ -229,7 +232,7 @@ class ChatRoomManager {
   void socketRejectedCallback(RejectedMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundRejectMessage) {
       // Foreground Notification
 
       // Display SnackBar in app
@@ -274,7 +277,7 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused) {
+        AppLifecycleState.paused && NotificationManager.backgroundRejectMessage) {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingRejectedMessage(message);
@@ -284,7 +287,7 @@ class ChatRoomManager {
   void socketApplyCallback(ApplyMessage message) {
     BuildContext? context = MyApp.navigatorKey.currentContext;
 
-    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed && NotificationManager.foregroundApplyMessage) {
       // Foreground Notification
 
       // Display SnackBar in app
@@ -329,7 +332,7 @@ class ChatRoomManager {
         ));
       }
     } else if (WidgetsBinding.instance.lifecycleState ==
-        AppLifecycleState.paused) {
+        AppLifecycleState.paused && NotificationManager.backgroundApplyMessage) {
       // Background Notification
       BackgroundNotificationService.manager
           .handleIncomingApplymessage(message);
