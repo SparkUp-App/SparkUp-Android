@@ -27,7 +27,7 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
           ),
           Textfield(
             label: 'Introduce the Topic',
-            hintLabel: 'Enter introduce',
+            hintLabel: 'Enter introduction',
             maxLine: 4,
             value: basePost.attributes["Introduce the Topic"] ?? "",
             onChanged: (newValue) {

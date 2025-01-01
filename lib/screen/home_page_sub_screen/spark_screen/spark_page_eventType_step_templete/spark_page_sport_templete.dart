@@ -27,7 +27,7 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
             },
           ),
           Textfield(
-            label: 'Sports Rule',
+            label: 'Rule',
             hintLabel: 'Enter rule',
             maxLine: 4,
             value: basePost.attributes["Sports Rule"] ?? "",
