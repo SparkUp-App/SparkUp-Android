@@ -16,34 +16,34 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
     // 根据 category 设置不同的 URL
     if (category == 'Competition') {
       teachingStrategiesUrl1 = 'https://reurl.cc/mRlerj';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRlerj';
+      teachingStrategiesUrl2 = 'https://reurl.cc/qnnKag'; // ok
     } else if (category == 'Exhibition') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/mRRk3V';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V';
+      teachingStrategiesUrl1 = 'https://reurl.cc/1XXkYV';
+      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V'; // ok
     } else if (category == 'Meal') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/qnnKr0';
-      teachingStrategiesUrl2 = 'https://reurl.cc/qnnKr0';
+      teachingStrategiesUrl1 = 'https://reurl.cc/044aZk';
+      teachingStrategiesUrl2 = 'https://reurl.cc/Eggb1A'; // ok
     } else if (category == 'Parade') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/WAA8G5';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V';
+      teachingStrategiesUrl1 = 'https://reurl.cc/G55GED';
+      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V'; // ok
     } else if (category == 'Roommate') {
       teachingStrategiesUrl1 = 'https://reurl.cc/XZZaZE';
-      teachingStrategiesUrl2 = 'https://reurl.cc/XZZaZE';
+      teachingStrategiesUrl2 = 'https://reurl.cc/M66M6W'; // ok
     } else if (category == 'Social') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/mRlerj';
-      teachingStrategiesUrl2 = 'https://reurl.cc/M66M6W';
+      teachingStrategiesUrl1 = 'https://reurl.cc/mRRkMY';
+      teachingStrategiesUrl2 = 'https://reurl.cc/1XXkv9'; // ok
     } else if (category == 'Speech') {
       teachingStrategiesUrl1 = 'https://reurl.cc/WAA8G5';
-      teachingStrategiesUrl2 = 'https://reurl.cc/WAA8G5';
+      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk0G'; // ok
     } else if (category == 'Sport') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/M66M6W';
-      teachingStrategiesUrl2 = 'https://reurl.cc/M66M6W';
+      teachingStrategiesUrl1 = 'https://reurl.cc/eGGVyM';
+      teachingStrategiesUrl2 = 'https://reurl.cc/866bXM';// ok
     }else if (category == 'Study') {
       teachingStrategiesUrl1 = 'https://reurl.cc/KddvVR';
-      teachingStrategiesUrl2 = 'https://reurl.cc/lNNMEv';
+      teachingStrategiesUrl2 = 'https://reurl.cc/lNNMEv';// ok
     } else if (category == 'Travel') {
       teachingStrategiesUrl1 = 'https://reurl.cc/qnnKr0';
-      teachingStrategiesUrl2 = 'https://reurl.cc/qnnKr0';
+      teachingStrategiesUrl2 = 'https://reurl.cc/d11qLk'; // ok 
     }  else {
       teachingStrategiesUrl1 = 'https://example.com/general-teaching-strategies';
       teachingStrategiesUrl2 = 'https://example.com/general-classroom-activities';
