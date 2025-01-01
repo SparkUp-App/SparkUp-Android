@@ -126,7 +126,9 @@ class LogoutPage extends StatelessWidget {
               margin:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteMap.licensePage);
+                },
                 icon: const Icon(Icons.card_travel, color: Colors.grey),
                 label: const Text("License",
                     style: TextStyle(color: Colors.black)),
