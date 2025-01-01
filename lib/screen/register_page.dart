@@ -60,9 +60,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                 child: Text(
                   (switch (label) {
-                    "Email" => "*Please enter a valid email address",
+                    "Email" => "*Please enter a valid email address\n*Email length should be less than 255",
                     "Password" =>
-                      "*At least 1 uppercase, 1 lowercase, 1 number\n*Letters and numbers only",
+                      "*At least 1 uppercase, 1 lowercase, 1 number\n*Letters and numbers only\n*Password length should be less than 255",
                     "Confirm Password" => "*Not match Password",
                     _ => "",
                   }),
@@ -143,10 +143,10 @@ class _RegisterPageState extends State<RegisterPage> {
               onChanged: (value) {
                 switch (label) {
                   case "Email":
-                    emailHint = value.isEmpty || !emailRegex.hasMatch(value);
+                    emailHint = value.isEmpty || !emailRegex.hasMatch(value) || value.length > 255;
                     break;
                   case "Password":
-                    passwordHint = value.isEmpty || !passwordRegex.hasMatch(value);
+                    passwordHint = value.isEmpty || !passwordRegex.hasMatch(value) || value.length > 255;
                     confirmPasswordHint = confirmPasswordController.text != value;
                     break;
                   case "Confirm Password":
