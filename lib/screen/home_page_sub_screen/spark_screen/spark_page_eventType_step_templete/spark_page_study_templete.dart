@@ -15,24 +15,24 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
         children: [
           NoteCard(message: "What is the topic of your study? It can be a book or an issue."),
           Textfield(
-            label: 'Kind of study topic',
+            label: 'Topic',
             hintLabel: 'Enter topic',
             maxLine: 1,
-            value: basePost.attributes["Kind of study topic"] ?? "",
+            value: basePost.attributes["Topic"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Kind of study topic"] = newValue ?? "";
+                basePost.attributes["Topic"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Introduce the Topic',
-            hintLabel: 'Enter introduce',
+            label: 'Introduction of the topic',
+            hintLabel: 'Enter introduction',
             maxLine: 4,
-            value: basePost.attributes["Introduce the Topic"] ?? "",
+            value: basePost.attributes["Introduction of the topic"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Introduce the Topic"] = newValue ?? "";
+                basePost.attributes["Introduction of the topic"] = newValue ?? "";
               });
             },
           ),
@@ -46,24 +46,24 @@ List<Step> createStudySteps(int currentStep, BasePost basePost, Function setStat
         children: [
           NoteCard(message: "What are the participation guidelines that participants need to know?"),
           Textfield(
-            label: 'Participation Guidelines',
-            hintLabel: 'Enter Guidelines',
+            label: 'Participation guidelines',
+            hintLabel: 'Enter guidelines',
             maxLine: 1,
-            value: basePost.attributes["Participation Guidelines"] ?? "",
+            value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Participation Guidelines"] = newValue ?? "";
+                basePost.attributes["Participation guidelines"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Entry Fee',
-            hintLabel: 'Enter Entry Fee',
+            label: 'Entry fee',
+            hintLabel: 'Enter entry fee',
             maxLine: 1,
-            value: basePost.attributes["Entry Fee"] ?? "",
+            value: basePost.attributes["Entry fee"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Entry Fee"] = newValue ?? "";
+                basePost.attributes["Entry fee"] = newValue ?? "";
               });
             },
             onlyNumber: true,
@@ -79,7 +79,7 @@ Step(
       NoteCard(message: "Anything you would like to add to the participants"),
       Textfield(
         label: 'Notes',
-        hintLabel: 'Enter requirements',
+        hintLabel: 'Enter notes',
         maxLine: 5,
         value: basePost.content ?? "",
         onChanged: (newValue) {

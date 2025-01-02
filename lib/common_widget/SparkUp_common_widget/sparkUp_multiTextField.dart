@@ -34,7 +34,7 @@ class _ProfileMultiInputState extends State<MultiInput> {
       // 提示使用者填寫內容
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("請先填寫所有輸入框後再新增！"),
+          content: Text("Please fill in all input fields before adding!"),
           backgroundColor: Colors.red,
         ),
       );

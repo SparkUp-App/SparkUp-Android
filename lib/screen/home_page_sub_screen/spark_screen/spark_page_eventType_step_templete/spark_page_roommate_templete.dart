@@ -23,7 +23,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
         children: [
           NoteCard(message: 'Please give us an introduction about your place.'),
           CustomDropdown(
-              label: 'Type',
+              label: 'Select type',
               value: basePost.attributes["Type"],
               options: liveList,
               onChanged: (newValue) {
@@ -36,7 +36,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
             ),
           Textfield(
             label: 'Address',
-            hintLabel: 'Please desribe the Address',
+            hintLabel: 'Enter address',
             maxLine: 1,
             value: basePost.attributes["Address"] ?? "",
             onChanged: (newValue) {
@@ -89,7 +89,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
             ),
           Textfield(
             label: 'Personality',
-            hintLabel: 'Enter Personality',
+            hintLabel: 'Enter personality',
             maxLine: 1,
             value: basePost.attributes[""] ?? "",
             onChanged: (newValue) {
@@ -123,7 +123,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           NoteCard(message: "Such a fascinating place must come with some cost."),
           Textfield(
             label: 'Your contact information',
-            hintLabel: 'Enter Your contact information',
+            hintLabel: 'Enter your contact information',
             value: basePost.attributes["Your contact information"] ?? "",
           onChanged:(newValues) {
             setState(() {
@@ -142,7 +142,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           ),
           Textfield(
             label: 'Security deposit',
-            hintLabel: 'Enter Security deposit',
+            hintLabel: 'Enter security deposit',
             value: basePost.attributes["Security deposit"] ?? "",
           onChanged:(newValues) {
             setState(() {
@@ -153,7 +153,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           ),
           Textfield(
             label: 'Rent(monthly)',
-            hintLabel: 'Enter Security deposit',
+            hintLabel: 'Enter security deposit',
             value: basePost.attributes["Rent(monthly)"] ?? "",
           onChanged:(newValues) {
             setState(() {
@@ -185,7 +185,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {

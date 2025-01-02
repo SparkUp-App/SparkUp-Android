@@ -151,7 +151,7 @@ class InfoPreviewCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Additional Information",
+          "Additional information",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -369,7 +369,7 @@ class InfoPreviewCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Other Information",
+          "Other information",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -396,7 +396,7 @@ class InfoPreviewCard extends StatelessWidget {
             ),
           ),
           child: Text(
-            content.isEmpty ? "(The initiator did not mention)" : content,
+            content.isEmpty ? " " : content,
             style: TextStyle(
               fontSize: 16,
               color: content.isEmpty ? Colors.grey[400] : Colors.grey[800],
