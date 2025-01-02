@@ -1,35 +1,123 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/route.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
   final String category;
 
   const SparkPageInformationOfAdditionalTeaching({super.key, required this.category});
 
+  // PDF檔案對應表
+  final Map<String, List<String>> categoryPdfs = const {
+    'Competition': ['assets/example_pdf/Competition_example1.pdf', 'assets/example_pdf/Competition_example2.pdf'], //ok
+    'Exhibition': ['assets/example_pdf/Exhibition Example1.pdf', 'assets/example_pdf/Exhibition Example2.pdf'], //ok
+    'Meal': ['assets/example_pdf/Meal Example1.pdf', 'assets/example_pdf/Meal Example2.pdf'], //ok
+    'Parade': ['assets/example_pdf/Parade_example1.pdf', 'assets/example_pdf/Parade_example1.pdf'], //ok
+    'Roommate': ['assets/example_pdf/Roommate_example1.pdf', 'assets/example_pdf/Roommate_example2.pdf'], //ok
+    'Social': ['assets/example_pdf/Social Example1.pdf', 'assets/example_pdf/Social Example2.pdf'], //ok
+    'Speech': ['assets/example_pdf/Competition_example1.pdf', 'assets/example_pdf/Competition_example1.pdf'],
+    'Sport': ['assets/example_pdf/Sport_example1.pdf', 'assets/example_pdf/Sport_example2.pdf'], //ok
+    'Study': ['assets/example_pdf/Study_example1.pdf', 'assets/example_pdf/Study_example2.pdf'], //ok
+    'Travel': ['assets/example_pdf/Travel Example1.pdf', 'assets/example_pdf/Travel Example2.pdf'], //ok
+  };
+
+  Future<String> _preparePdfFile(String assetPath) async {
+    final bytes = await rootBundle.load(assetPath);
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/${assetPath.split('/').last}');
+    await file.writeAsBytes(bytes.buffer.asUint8List());
+    return file.path;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 根據 category 動態設置 URL
-    final Map<String, List<String>> categoryUrls = {
-      'Competition': ['https://reurl.cc/mRlerj', 'https://reurl.cc/qnnKag'],
-      'Exhibition': ['https://reurl.cc/1XXkYV', 'https://reurl.cc/mRRk3V'],
-      'Meal': ['https://reurl.cc/044aZk', 'https://reurl.cc/Eggb1A'],
-      'Parade': ['https://reurl.cc/G55GED', 'https://reurl.cc/mRRk3V'],
-      'Roommate': ['https://reurl.cc/XZZaZE', 'https://reurl.cc/M66M6W'],
-      'Social': ['https://reurl.cc/mRRkMY', 'https://reurl.cc/1XXkv9'],
-      'Speech': ['https://reurl.cc/WAA8G5', 'https://reurl.cc/mRRk0G'],
-      'Sport': ['https://reurl.cc/eGGVyM', 'https://reurl.cc/866bXM'],
-      'Study': ['https://reurl.cc/KddvVR', 'https://reurl.cc/lNNMEv'],
-      'Travel': ['https://reurl.cc/qnnKr0', 'https://reurl.cc/d11qLk'],
-    };
+    final pdfs = categoryPdfs[category] ?? 
+      ['assets/pdfs/default1.pdf', 'assets/pdfs/default2.pdf'];
+Widget _buildSuccessCard(String category) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.check_circle,
+          color: Color(0xFFE9765B),
+          size: 24,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Your post has been successfully posted under "$category".',
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color(0xFF2D3142),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-    final urls = categoryUrls[category] ?? [
-      'https://example.com/general-teaching-strategies',
-      'https://example.com/general-classroom-activities'
-    ];
+Widget _buildBottomButton(BuildContext context) {
+  return Container(
+    height: 70,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, -4),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    child: SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => Navigator.pushNamed(context, RouteMap.homePage),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFE9765B),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          elevation: 0,
+        ),
+        child: const Text(
+          'Back to Home',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+    // 其餘UI代碼保持不變，直到ResourceCard部分
 
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+      child:Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
@@ -48,9 +136,7 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
+              decoration: const BoxDecoration(color: Colors.white),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -58,7 +144,7 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
                   children: [
                     _buildSuccessCard(category),
                     const SizedBox(height: 24),
-                    _buildResourcesCard(category, urls),
+                    _buildResourcesCard(context, category, pdfs),
                   ],
                 ),
               ),
@@ -67,47 +153,11 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
           _buildBottomButton(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildSuccessCard(String category) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.check_circle,
-            color: Color(0xFFE9765B),
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Your post has been successfully posted under "$category".',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Color(0xFF2D3142),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildResourcesCard(String category, List<String> urls) {
+  Widget _buildResourcesCard(BuildContext context, String category, List<String> pdfs) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -137,9 +187,17 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
             title: 'Template plan of $category 1',
             description: 'Access comprehensive tips',
             icon: Icons.school,
-            url: urls[0],
-            onTap: () {
-              debugPrint('Accessing template plan 1...');
+            pdfPath: pdfs[0],
+            onTap: () async {
+              final path = await _preparePdfFile(pdfs[0]);
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PdfViewerPage(filePath: path,appbarname: "Template plan of $category 1"),
+                  ),
+                );
+              }
             },
           ),
           const SizedBox(height: 12),
@@ -147,9 +205,17 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
             title: 'Template plan of $category 2',
             description: 'Access comprehensive tips',
             icon: Icons.school,
-            url: urls[1],
-            onTap: () {
-              debugPrint('Accessing template plan 2...');
+            pdfPath: pdfs[1],
+            onTap: () async {
+              final path = await _preparePdfFile(pdfs[1]);
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PdfViewerPage(filePath: path,appbarname: "Template plan of $category 2"),
+                  ),
+                );
+              }
             },
           ),
         ],
@@ -157,51 +223,14 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomButton(BuildContext context) {
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, RouteMap.homePage),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE9765B),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            elevation: 0,
-          ),
-          child: const Text(
-            'Back to Home',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // 其他_build方法保持不變
 }
 
 class ResourceCard extends StatelessWidget {
   final String title;
   final String description;
   final IconData icon;
-  final String url;
+  final String pdfPath;
   final VoidCallback onTap;
 
   const ResourceCard({
@@ -209,45 +238,16 @@ class ResourceCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.icon,
-    required this.url,
+    required this.pdfPath,
     required this.onTap,
   });
-
-  Future<void> _launchURL(BuildContext context) async {
-    try {
-      if (await canLaunchUrlString(url)) {
-        await launchUrlString(url);
-      } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('無法開啟連結'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('錯誤: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          _launchURL(context);
-          onTap();
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -308,70 +308,34 @@ class ResourceCard extends StatelessWidget {
   }
 }
 
-class WebViewPage extends StatefulWidget {
-  final String url;
+class PdfViewerPage extends StatelessWidget {
+ final String filePath;
+ final String appbarname;
+const PdfViewerPage({super.key, required this.filePath, required this.appbarname});
 
-  const WebViewPage({super.key, required this.url});
-
-  @override
-  State<WebViewPage> createState() => _WebViewPageState();
-}
-
-class _WebViewPageState extends State<WebViewPage> {
-  late final WebViewController controller;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (String url) {
-            setState(() {
-              isLoading = true;
-            });
-          },
-          onPageFinished: (String url) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('WebView error: ${error.description}');
-          },
+ @override 
+ Widget build(BuildContext context) {
+   return Scaffold(
+     appBar: AppBar(
+       title: Text(
+        appbarname,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
         ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('WebView'),
-        backgroundColor: const Color(0xFFE9765B),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              controller.reload();
-            },
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: controller),
-          if (isLoading)
-            const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFFE9765B),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
+       ),
+       backgroundColor: const Color(0xFFE9765B),
+       centerTitle: true,
+     ),
+     body: SfPdfViewer.file(
+       File(filePath),
+       enableTextSelection: true,
+       canShowScrollHead: true,
+       enableDoubleTapZooming: true,
+       pageLayoutMode: PdfPageLayoutMode.continuous,
+       scrollDirection: PdfScrollDirection.vertical,
+     ),
+   );
+ }
 }
