@@ -881,6 +881,7 @@ class _EventDetailPageState extends State<EventDetailPage>
                                         ],
                                       ),
                                       const SizedBox(height: 4),
+
                                       Text(
                                         'Posted: ${DateFormat('yyyy/MM/dd').format(postData.eventStartDate)}',
                                         style: const TextStyle(
@@ -888,61 +889,62 @@ class _EventDetailPageState extends State<EventDetailPage>
                                           fontSize: 14,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  // 右側統計
-                                  Row(
-                                    children: [
+                                      const SizedBox(height: 10,),
+                                      // 右側統計
                                       Row(
                                         children: [
-                                          const SparkIcon(
-                                              icon: SparkIcons.heart,
-                                              size: 18,
-                                              color: Colors.white),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            "${postData.likes}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
+                                          Row(
+                                            children: [
+                                              const SparkIcon(
+                                                  icon: SparkIcons.heart,
+                                                  size: 18,
+                                                  color: Colors.white),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData.likes}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Row(
+                                            children: [
+                                              const SparkIcon(
+                                                  icon: SparkIcons.comment,
+                                                  size: 18,
+                                                  color: Colors.white),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData.comments}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Row(
+                                            children: [
+                                              const SparkIcon(
+                                                  icon: SparkIcons.user,
+                                                  size: 18,
+                                                  color: Colors.white),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "${postData.applicants ?? 0}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Row(
-                                        children: [
-                                          const SparkIcon(
-                                              icon: SparkIcons.comment,
-                                              size: 18,
-                                              color: Colors.white),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            "${postData.comments}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Row(
-                                        children: [
-                                          const SparkIcon(
-                                              icon: SparkIcons.user,
-                                              size: 18,
-                                              color: Colors.white),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            "${postData.applicants ?? 0}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ],
