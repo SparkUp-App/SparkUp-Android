@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});
@@ -30,26 +31,46 @@ class ContactUsPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.7,
               height: MediaQuery.of(context).size.height * 0.7,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SparkIcon(
+                const SparkIcon(
                   icon: SparkIcons.message,
                   size: 14.0,
                   color: Colors.grey,
                 ),
-                SizedBox(width: 8),
-                Text("Gmail: sparkup4111850@gmail.com",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                    textAlign: TextAlign.center),
+                const SizedBox(width: 8),
+                GestureDetector(
+                    onTap: _launchEmail,
+                    child: const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Gmail: sparkup4111850@gmail.com",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ],
             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _launchEmail() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'sparkup4111850@gmail.com',
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      debugPrint('Cannot launch email');
+    }
   }
 }
