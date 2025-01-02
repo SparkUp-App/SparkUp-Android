@@ -325,7 +325,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => const SystemMessage(
-                                            title: "Timeout Error",
+                                            title: "Register Failed",
                                             content:
                                                 "The response time is too long, please check the connection and try again later"),
                                       );
@@ -334,7 +334,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => const SystemMessage(
-                                            title: "Connection Error",
+                                            title: "Register Failed",
                                             content:
                                                 "The connection is not stable, please check the connection and try again later"),
                                       );
