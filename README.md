@@ -16,7 +16,7 @@ This guide will walk you through setting up the development environment and runn
    - Download Flutter 3.22.3 ZIP file
    - Extract to `C:\src\flutter` (recommended path)
 
-2. Set Up Environment Variables
+2. Set up environment variables
    - Add `C:\src\flutter\bin` to your system's PATH variable
    - Verify setup by running:
      ```bash
@@ -31,10 +31,10 @@ This guide will walk you through setting up the development environment and runn
      ```bash
      git clone https://github.com/flutter/flutter
      ```
-   - Setting Flutter 3.22.3 version: go to the clonded field
+   - Setting Flutter 3.22.3 version: go to the **flutter** field
       ```bash
-       git branch flutter3.22.3 3.22.3
-       git switch flutter3.22.3
+      git fetch --tags
+      git checkout 3.22.3
       ```
 2. Set Up Environment Variables
    - Add `C:\src\flutter\bin` to your system's PATH variable
