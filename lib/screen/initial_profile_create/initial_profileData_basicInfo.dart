@@ -283,6 +283,12 @@ class _BasicProfilePageState extends State<BasicProfilePage> {
           expandedHeight: 100,
           message: "Nickname should be at most 20 characters");
       return;
+    } else if (Profile.manager.languages.isEmpty){
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Please select at least one language");
+      return;
     }
     print(_selectedLanguageTags);
     Navigator.pushNamed(context, RouteMap.detailProfilePage);

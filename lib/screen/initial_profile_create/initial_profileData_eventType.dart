@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/system_message.dart';
@@ -8,6 +10,8 @@ import 'package:spark_up/notificatoin_manager.dart';
 import "package:spark_up/route.dart";
 import 'package:spark_up/secure_storage.dart';
 import 'package:spark_up/socket_service.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toasty_box.dart';
 
 class EventTypeProfilePage extends StatefulWidget {
   const EventTypeProfilePage({super.key});
@@ -17,7 +21,7 @@ class EventTypeProfilePage extends StatefulWidget {
 }
 
 class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
-  bool selectOneAlert = false;
+  bool selectTwoAlert = false;
 
   bool isLoading = false;
   final List<Map<String, String>> eventTypes = [
@@ -55,8 +59,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
           if (isSelected) {
             Profile.manager.interestTypes.remove(eventName);
           } else {
-            selectOneAlert = false;
             Profile.manager.interestTypes.add(eventName);
+            selectTwoAlert = Profile.manager.interestTypes.length > 1;
           }
         });
       },
@@ -154,7 +158,7 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            "(Select one or more topics)",
+                            "(Select two or more topics)",
                             style: TextStyle(
                               fontFamily: 'IowanOldStyle',
                               color: Colors.white,
@@ -244,15 +248,15 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (selectOneAlert)
-                          const Center(
-                            child: Text(
-                              "*At least select one type",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontFamily: "IowanOldStyle"),
-                            ),
-                          ),
+                        // if (selectTwoAlert)
+                        //   const Center(
+                        //     child: Text(
+                        //       "*At least select two types",
+                        //       style: TextStyle(
+                        //           color: Colors.red,
+                        //           fontFamily: "IowanOldStyle"),
+                        //     ),
+                        //   ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -316,7 +320,8 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
               color: Colors.black,
             ),
           ),
-          const Center(child: CircularProgressIndicator(
+          const Center(
+              child: CircularProgressIndicator(
             color: Color(0xFFF16743),
           ))
         ]
@@ -326,10 +331,14 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
 
   void _navigateToNextProfile() async {
     // Select at least one type judge
-    if (Profile.manager.interestTypes.isEmpty) {
-      setState(() {
-        selectOneAlert = true;
-      });
+    if (Profile.manager.interestTypes.length < 2) {
+      // setState(() {
+      //   selectTwoAlert = true;
+      // });
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Please select at least two types of event");
       return;
     }
 
@@ -359,12 +368,51 @@ class _EventTypeProfilePageState extends State<EventTypeProfilePage> {
       NotificationManager.init();
       Navigator.pushReplacementNamed(context, RouteMap.tutorialPage,
           arguments: false);
+    } else if (response["status"] == "error") {
+      switch (response["data"]["message"]) {
+        case "Timeout Error":
+          showDialog(
+              context: context,
+              builder: (context) => const SystemMessage(
+                  title: "Profile Build Failed",
+                  content:
+                      "The response time is too long, please check the connection and try againg later."));
+          break;
+        case "Connection Error":
+          showDialog(
+              context: context,
+              builder: (context) => const SystemMessage(
+                  title: "Profile Biuld Failed",
+                  content:
+                      "The connection is unstable, please check the connection and try again later."));
+          break;
+        default:
+          showDialog(
+              context: context,
+              builder: (context) => const SystemMessage(
+                  title: "Profile Build Failed",
+                  content:
+                      "An unexpected local error occured, please contact us or try again later."));
+          break;
+      }
+    } else if (response["status"] == "error") {
+      switch (response["status_code"]) {
+        default:
+          showDialog(
+              context: context,
+              builder: (context) => const SystemMessage(
+                    title: "Profile Build Failed",
+                    content:
+                        "An unexpected server error occured, please contact us or try again later.",
+                  ));
+      }
     } else {
       showDialog(
           context: context,
-          builder: (context) => SystemMessage(
+          builder: (context) => const SystemMessage(
+              title: "Profile Build Failed",
               content:
-                  "Profile Update Failed (Error: ${response["data"]["message"]})"));
+                  "An unexpected error occured, please contact us or try again later."));
     }
   }
 }
