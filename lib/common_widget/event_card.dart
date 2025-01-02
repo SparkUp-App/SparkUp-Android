@@ -70,7 +70,7 @@ Widget eventCard(ListReceivePost receivedPost, BuildContext context,
                   ),
                   child: Text(
                     switch (receivedPost.reviewStatus) {
-                      0 => "Pendding",
+                      0 => "Pending",
                       1 => "Rejected",
                       2 => "Approved",
                       int() => "Unknown Stage",
