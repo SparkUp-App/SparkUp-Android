@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:spark_up/chat/data/apply_message.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
 import 'package:spark_up/chat/data/rejected_message.dart';
@@ -226,6 +227,13 @@ class BackgroundNotificationService {
         category: ChannelCategory.rejected);
   }
 
+  void handleIncomingApplymessage(ApplyMessage message){
+    showNotification(
+        body:
+            message.message,
+        category: ChannelCategory.apply);
+  }
+
   void dispose() {
     selectNotificationSubject.close();
   }
@@ -234,7 +242,8 @@ class BackgroundNotificationService {
 enum ChannelCategory {
   message,
   approved,
-  rejected;
+  rejected,
+  apply;
 
   String get channelName {
     switch (this) {
@@ -244,6 +253,8 @@ enum ChannelCategory {
         return 'approved_channel';
       case ChannelCategory.rejected:
         return 'rejected_channel';
+      case ChannelCategory.apply:
+        return 'apply_channel';
     }
   }
 
@@ -255,6 +266,8 @@ enum ChannelCategory {
         return 'Approved Message Channel';
       case ChannelCategory.rejected:
         return 'Rejected Message Channel';
+      case ChannelCategory.apply:
+        return 'Apply Message Channel';
     }
   }
 
@@ -266,6 +279,8 @@ enum ChannelCategory {
         return 'Approved Message';
       case ChannelCategory.rejected:
         return 'Rejected Message';
+      case ChannelCategory.apply:
+        return 'Apply Message';
     }
   }
 }

@@ -1,6 +1,7 @@
 class ChatMessage {
   final int id;
   final int? postId;
+  final String? postTitle;
   final int senderId;
   final String senderName;
   final String content;
@@ -10,6 +11,7 @@ class ChatMessage {
   ChatMessage({
     required this.id,
     this.postId,
+    this.postTitle,
     required this.senderId,
     required this.senderName,
     required this.content,
@@ -21,6 +23,7 @@ class ChatMessage {
     return ChatMessage(
       id: data['id'],
       postId: data['post_id'],
+      postTitle: data['post_title'],
       senderId: data['sender_id'],
       senderName: data['sender_name'] as String,
       content: data['content'],

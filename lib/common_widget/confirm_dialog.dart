@@ -19,58 +19,60 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      backgroundColor: Colors.white,
+      title: Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error,),
+          const SizedBox(width: 8),
+          const Text(
+            'Warning',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      ),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             content,
-            style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16.0, color: Colors.black54),
           ),
-          Text(subContent ?? ""),
+          Text(subContent ?? "", style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold,color: Colors.black54),),
         ],
       ),
-      actionsPadding: const EdgeInsets.all(0),
+      clipBehavior: Clip.antiAlias,
       actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Container(
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          top: BorderSide(width: 1.0, color: Colors.black12),
-                          right: BorderSide(width: 1, color: Colors.black12))),
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, false);
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.red),
-                      ))),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            foregroundColor: Colors.grey,
+          ),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: (){
+            Navigator.pop(context, true);
+          },
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(width: 1, color: Colors.black12))),
-                margin: const EdgeInsets.all(0),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text(
-                    "Confirm",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-            )
-          ],
-        )
+          ),
+          child: const Text('Confirm'),
+        ),
       ],
     );
   }

@@ -229,11 +229,13 @@ class _EventDetailPageState extends State<EventDetailPage>
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "This event gets your like!");
+            postData.likes++;
           } else if (postData.liked == false) {
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "You take back your like!");
+            postData.likes--;
           }
         });
       } else {

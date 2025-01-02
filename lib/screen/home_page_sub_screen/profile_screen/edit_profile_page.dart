@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spark_up/common_widget/confirm_dialog.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/const_variable.dart';
 import 'package:spark_up/data/profile.dart';
@@ -18,7 +20,9 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  bool profileUpdated = false;
   bool isLoading = false;
+  late Map<String, dynamic> _profileChangedCheckData;
   late Map<String, dynamic> _profileData;
   late Map<String, TextEditingController> _textContollerMap;
 
@@ -47,6 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
 
     _profileData = widget.profile.toProfile;
+    _profileChangedCheckData = widget.profile.toProfile;
     _textContollerMap = _profileData.map(
       (key, value) {
         return value.runtimeType == String
@@ -56,9 +61,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     _availableInterestTags = List<String>.from(eventType);
-    _selectedInterestTags = List<String>.from(_profileData["interest_types"] ?? []);
+    _selectedInterestTags =
+        List<String>.from(_profileData["interest_types"] ?? []);
     _availableLanguageTags = List<String>.from(languageType);
-    _selectedLanguageTags = List<String>.from(_profileData["language"] ?? []);
+    _selectedLanguageTags = List<String>.from(_profileData["languages"] ?? []);
     for (var type in _selectedInterestTags) {
       _availableInterestTags.remove(type);
     }
@@ -67,7 +73,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Widget _buildTagSelector(String label, String key, List<String> selectedTags, List<String> availableTags) {
+  Widget _buildTagSelector(String label, String key, List<String> selectedTags,
+      List<String> availableTags) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -84,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: Container(
               height: 60,
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFFF16743), width: 2),
+                border: Border.all(color: const Color(0xFFF16743), width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -142,6 +149,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           builder: (context, setState) {
             return AlertDialog(
               title: Text('Choose your $label'),
+              backgroundColor: Colors.white,
+              scrollable: true,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -156,9 +165,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             if (selected) {
                               selectedTags.add(tag);
                               availableTags.remove(tag);
+                              _profileData[key] = selectedTags;
                             } else {
                               availableTags.remove(tag);
                               selectedTags.remove(tag);
+                              _profileData[key] = selectedTags;
                             }
                           });
                         },
@@ -172,7 +183,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Confirm'),
+                  child: const Text('Confirm',
+                      style: TextStyle(color: ProfileTheme.primaryColor)),
                   onPressed: () {
                     Navigator.of(context).pop(); // 關閉對話框
                   },
@@ -317,50 +329,64 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildTextField(String label, String key,
-      {int maxLines = 1, bool isRequired = false}) {
+      {int maxLines = 1,
+      bool isRequired = false,
+      Widget? hintText,
+      bool hint = false,
+      TextInputType keyboardType = TextInputType.text}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 140,
-            child: RichText(
-              text: TextSpan(
-                text: label,
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-                children: [
-                  if (isRequired)
-                    const TextSpan(
-                      text: ' *',
-                      style: TextStyle(color: Colors.red, fontSize: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            hint ? hintText ?? Container() : Container(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 140,
+                  child: RichText(
+                    text: TextSpan(
+                      text: label,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                      children: [
+                        if (isRequired)
+                          const TextSpan(
+                            text: ' *',
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                      ],
                     ),
-                ],
-              ),
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    maxLines: maxLines,
+                    keyboardType: keyboardType,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        hintText: "Enter $label here",
+                        hintStyle: const TextStyle(color: Colors.black26),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ProfileTheme.primaryColor))),
+                    controller: _textContollerMap[key],
+                    onChanged: (value) {
+                      _profileData[key] = value;
+                    },
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    onSubmitted: (value) => FocusScope.of(context).unfocus(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          Expanded(
-            child: TextField(
-              maxLines: maxLines,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                hintText: "Enter $label here",
-                hintStyle: const TextStyle(color: Colors.black26),
-              ),
-              controller: _textContollerMap[key],
-              onChanged: (value) {
-                _profileData[key] = value;
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
   Widget _buildSectionTitle(String title, {String? subtitle}) {
@@ -394,8 +420,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -415,6 +439,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () async {
+              if (changedCheck()) {
+                final confirm = await confirmDialog(
+                    context,
+                    "Profile changed have not been saved.",
+                    "You want to leave without saving?");
+                if (confirm) {
+                  Navigator.pop(context, profileUpdated);
+                }
+              } else {
+                Navigator.pop(context, profileUpdated);
+              }
+            },
+          ),
         ),
         body: Stack(
           children: [
@@ -423,10 +463,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               children: [
                 _buildSectionTitle(
                   "About Me",
-                  subtitle: "Make it easy for others to get a sense of who you are",
+                  subtitle:
+                      "Make it easy for others to get a sense of who you are",
                 ),
                 _buildTextField('Bio', 'bio', maxLines: 4),
-                _buildTextField('Phone', 'phone', isRequired: true),
+                _buildTextField('Phone', 'phone',
+                    isRequired: true, keyboardType: TextInputType.phone),
                 _buildTextField('Nick Name', 'nickname', isRequired: true),
                 _buildDatePicker('Birthday', 'dob', isRequired: true),
                 _buildDropdown('Gender', 'gender', isRequired: true),
@@ -455,10 +497,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 _buildTagSelector(
                   'Language',
-                  'Language',
+                  'languages',
                   _selectedLanguageTags,
                   _availableLanguageTags,
                 ),
+                ProfileEditMultiInput(
+                    label: "Personalities",
+                    hintLabel: "",
+                    icon: "assets/icons/person.svg",
+                    values: _profileData["personalities"],
+                    onChanged: (value) =>
+                        _profileData["personalities"] = value),
+                ProfileEditMultiInput(
+                    label: "Skills",
+                    hintLabel: "",
+                    icon: "assets/icons/skill.svg",
+                    values: _profileData["skills"],
+                    onChanged: (value) => _profileData["skills"] = value),
                 // Doesn't have language , personalities , skills
                 const SizedBox(height: 20),
                 Padding(
@@ -500,6 +555,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveProfile() async {
+    ToastService.showToastNumber(1);
+    if (!changedCheck()) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "No changes need to be saved.");
+      return;
+    }
     if ( //如果資料不對，應該要在這裡阻斷
         _profileData['nickname'] == "" ||
             _profileData['gender'] == "" ||
@@ -517,6 +580,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Pleas filled the correct phone number");
+      return;
+    } else if (_profileData["nickname"].length > 20) {
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Nickname should be less than 20 characters");
       return;
     }
 
@@ -545,17 +614,91 @@ class _EditProfilePageState extends State<EditProfilePage> {
         showDialog(
           context: context,
           builder: (context) {
-            return const SystemMessage(content: "Profile Update Success");
+            return const SystemMessage(
+                title: "Profile Update Success",
+                content: "Your profile has been updated successfully");
           },
         );
+        profileUpdated = true;
+        _profileChangedCheckData = _profileData;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const SystemMessage(
+                  title: "Profile update failed",
+                  content:
+                      "The response time is too long, please check the connection and try again later.",
+                );
+              },
+            );
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                      title: "Profile update failed",
+                      content:
+                          "The connection is not stable, please check the connection and try again later.",
+                    ));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Profile update failed",
+                    content:
+                        "An unexpected error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          case 400:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Profile update failed",
+                    content:
+                        "Please check the profile input format and try againg later."));
+            break;
+          case 404:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Profile update failed",
+                    content: "The user does not exist, please log in again."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Profile update failed",
+                    content:
+                        "An unexpected server error occured, please contact us or try again later."));
+            break;
+        }
       } else {
         showDialog(
             context: context,
             builder: (context) {
-              return const SystemMessage(content: "Profile Update Failed");
+              return const SystemMessage(
+                  title: "Profile update failed",
+                  content:
+                      "An unexpected error occured, please contact us or try again later.");
             });
       }
     }
+  }
+
+  bool changedCheck() {
+    for (var key in _profileData.keys) {
+      if (_profileData[key] != _profileChangedCheckData[key]) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
@@ -566,4 +709,192 @@ class ProfileTheme {
   static const Color backgroundColor = Color(0xFFF5F6FA);
   static const Color textColor = Color(0xFF2E3A59);
   static const Color subtitleColor = Color(0xFF8F9BB3);
+}
+
+class ProfileEditMultiInput extends StatefulWidget {
+  const ProfileEditMultiInput({
+    super.key,
+    required this.label,
+    required this.hintLabel,
+    required this.icon,
+    required this.values,
+    required this.onChanged,
+    this.limit = 10,
+  });
+
+  final String label;
+  final String hintLabel;
+  final String icon;
+  final List<String> values;
+  final int limit;
+  final Function(List<String>) onChanged;
+
+  @override
+  State<ProfileEditMultiInput> createState() => _ProfileEditMultiInputState();
+}
+
+class _ProfileEditMultiInputState extends State<ProfileEditMultiInput> {
+  late List<TextEditingController> controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    controllers = widget.values
+        .map((value) => TextEditingController(text: value))
+        .toList();
+    ToastService.showToastNumber(1);
+  }
+
+  void _addNewInput() {
+    setState(() {
+      controllers.add(TextEditingController());
+    });
+  }
+
+  void _removeInput(int index) {
+    setState(() {
+      controllers.removeAt(index);
+      _updateValues();
+    });
+  }
+
+  void _updateValues() {
+    List<String> newValues = controllers
+        .map((controller) => controller.text.trim())
+        .where((value) => value.isNotEmpty)
+        .toList();
+    widget.onChanged(newValues);
+  }
+
+  Widget _buildInputTextField(int index) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      width: MediaQuery.of(context).size.width * 0.58,
+      child: Stack(
+        children: [
+          TextFormField(
+            controller: controllers[index],
+            decoration: InputDecoration(
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SvgPicture.asset(
+                    widget.icon,
+                    width: 20,
+                    height: 20,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.black26,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+                prefixIconColor: Colors.black26,
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xFFE9765B)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black12),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: widget.hintLabel,
+                hintStyle: const TextStyle(
+                  color: Colors.black26,
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _removeInput(index);
+                  },
+                  icon: const Icon(Icons.delete),
+                  color: Colors.black26,
+                  iconSize: 20.0,
+                )),
+            onChanged: (value) {
+              _updateValues();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 18.0),
+          child: Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            for (int i = 0; i < controllers.length; i++)
+              _buildInputTextField(i),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.58,
+              height: 1,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.58,
+              child: ElevatedButton(
+                onPressed: () {
+                  for (var item in controllers) {
+                    if (item.text.isEmpty) {
+                      ToastService.showErrorToast(
+                        context,
+                        message:
+                            "Please fill all the fields before adding new field",
+                        length: ToastLength.medium,
+                        expandedHeight: 100,
+                      );
+                      return;
+                    }
+                  }
+
+                  if (controllers.length == widget.limit) {
+                    ToastService.showErrorToast(
+                      context,
+                      message: "You can't add more than ${widget.limit} fields",
+                      length: ToastLength.medium,
+                      expandedHeight: 100,
+                    );
+                    return;
+                  }
+
+                  _addNewInput();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE9765B),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 15.0),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
 }

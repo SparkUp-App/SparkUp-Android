@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
+import 'package:spark_up/notificatoin_manager.dart';
 import 'package:spark_up/route.dart';
 import 'package:spark_up/secure_storage.dart';
 import 'package:spark_up/socket_service.dart';
@@ -13,6 +14,7 @@ class LogoutPage extends StatelessWidget {
     SecureStorage.delete(StoreKey.noProfile);
     SocketService.manager.disconnect();
     ChatRoomManager.manager.clear();
+    NotificationManager.reset();
     Navigator.of(context).pushReplacementNamed(RouteMap.loginPage);
   }
 
@@ -50,7 +52,9 @@ class LogoutPage extends StatelessWidget {
               margin:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteMap.notificationSettingPage);
+                },
                 icon: const Icon(Icons.notifications, color: Colors.grey),
                 label: const Text("Notification",
                     style: TextStyle(color: Colors.black)),
@@ -126,7 +130,9 @@ class LogoutPage extends StatelessWidget {
               margin:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteMap.licensePage);
+                },
                 icon: const Icon(Icons.card_travel, color: Colors.grey),
                 label: const Text("License",
                     style: TextStyle(color: Colors.black)),
@@ -147,7 +153,7 @@ class LogoutPage extends StatelessWidget {
               margin:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: () => Navigator.pushNamed(context, RouteMap.contactUsPage),
                 icon: const Icon(Icons.phone, color: Colors.grey),
                 label: const Text("Contact us",
                     style: TextStyle(color: Colors.black)),
@@ -163,27 +169,27 @@ class LogoutPage extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              height: 50.0,
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-              child: TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.info, color: Colors.grey),
-                label: const Text("About us",
-                    style: TextStyle(color: Colors.black)),
-                style: TextButton.styleFrom(
-                  overlayColor: const Color(0xFFF7AF8B),
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   height: 50.0,
+            //   margin:
+            //       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+            //   child: TextButton.icon(
+            //     onPressed: () {},
+            //     icon: const Icon(Icons.info, color: Colors.grey),
+            //     label: const Text("About us",
+            //         style: TextStyle(color: Colors.black)),
+            //     style: TextButton.styleFrom(
+            //       overlayColor: const Color(0xFFF7AF8B),
+            //       alignment: Alignment.centerLeft,
+            //       padding: const EdgeInsets.symmetric(
+            //           horizontal: 16.0, vertical: 8.0),
+            //       backgroundColor: Colors.white.withOpacity(0.9),
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(
               height: 15.0,
             ),

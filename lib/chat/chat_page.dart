@@ -155,7 +155,7 @@ class _ChatPageState extends State<ChatPage> {
                 builder: (context) => const SystemMessage(
                     title: "No access permission",
                     content:
-                        "You are not the member of this chat room.\n Contact the host or try again later."));
+                        "You are not the member of this chat room. Contact the host or try again later."));
             break;
           default:
             await showDialog(

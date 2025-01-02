@@ -8,6 +8,8 @@ import 'package:spark_up/data/profile.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/hold_event_tab.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/profile_tab.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toasty_box.dart';
 
 class ProfileShowPage extends StatefulWidget {
   const ProfileShowPage(
@@ -173,7 +175,7 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                         switch (level) {
                           0 => 'assets/member/Nebulas.png',
                           1 => 'assets/member/Proto Star.png',
-                          2 => 'asssets/member/Main Sequence.png',
+                          2 => 'assets/member/Main Sequence.png',
                           3 => 'assets/member/Red Giant.png',
                           4 => 'assets/member/Supernova.png',
                           int() => 'assets/member/Nebulas.png',
@@ -187,7 +189,8 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                 ),
                 const SizedBox(height: 16),
                 if (widget.editable) ...[
-                  SizedBox(
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
                     width: 130,
                     height: 32,
                     child: ElevatedButton(
@@ -197,14 +200,20 @@ class _ProfileShowPageState extends State<ProfileShowPage>
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      onPressed: () => Navigator.pushNamed(
-                          context, RouteMap.editProfile,
-                          arguments: profile),
-                      child: const Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          color: Color(0xFFF16743),
-                          fontWeight: FontWeight.bold,
+                      onPressed: () async {
+                        final update = await Navigator.pushNamed(
+                            context, RouteMap.editProfile,
+                            arguments: profile);
+                        if (update == true) setState(() {});
+                      },
+                      child: const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Edit Profile",
+                          style: TextStyle(
+                            color: Color(0xFFF16743),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -521,20 +530,125 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             );
           } else if (snapshot.hasError) {
             //other user view profile
-            if (!widget.editable) {
-              showDialog(
-                  context: context,
-                  builder: (context) => const SystemMessage(
-                      title: "Profile load failed",
-                      content: "Something went wrong please try again later."));
-              Navigator.pop(context);
-            }
-            return Center(
-              child: Text("${snapshot.error}"),
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!widget.editable) {
+                Navigator.pop(context);
+                ToastService.showErrorToast(context,
+                    length: ToastLength.medium,
+                    expandedHeight: 100,
+                    message:
+                        "Loading profile failed, please try again later.(Error: Local error)");
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => const SystemMessage(
+                        title: "Local error",
+                        content:
+                            "An unexpected local error occured please try again later."));
+              }
+            });
+            return profileLoadFailedScreen(snapshot.data);
           } else if (snapshot.hasData) {
-            if (snapshot.data!["data"] == null) {
-              return const Center(child: Text("Doesn't get data"));
+            if (!widget.editable && snapshot.data!["status"] != "success") {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (snapshot.data!["status"] == "error") {
+                  switch (snapshot.data!["data"]["message"]) {
+                    case "Timeout Error":
+                      ToastService.showErrorToast(context,
+                          length: ToastLength.medium,
+                          expandedHeight: 100,
+                          message:
+                              "Loading profile failed, please try again later. (Error: Timeout error)");
+                      break;
+                    case "Connection Error":
+                      ToastService.showErrorToast(context,
+                          length: ToastLength.medium,
+                          expandedHeight: 100,
+                          message:
+                              "Loading profile failed, please try again later. (Error: Connection error)");
+                      break;
+                    default:
+                      ToastService.showErrorToast(context,
+                          length: ToastLength.medium,
+                          expandedHeight: 100,
+                          message:
+                              "Loading profile failed, please try again later. (Error: Local error)");
+                      break;
+                  }
+                } else if (snapshot.data!["status"] == "faild") {
+                  switch (snapshot.data!["status_code"]) {
+                    case 404:
+                      ToastService.showErrorToast(context,
+                          length: ToastLength.medium,
+                          expandedHeight: 100,
+                          message:
+                              "Loading profile failed, please try again later. (Error: User not found)");
+                      break;
+                    default:
+                      ToastService.showErrorToast(context,
+                          length: ToastLength.medium,
+                          expandedHeight: 100,
+                          message:
+                              "Loading profile failed, please try again later. (Error: Server error)");
+                      break;
+                  }
+                }
+
+                Navigator.pop(context);
+              });
+              return profileLoadFailedScreen(snapshot.data);
+            } else if (snapshot.data!["status"] != "success") {
+              if (snapshot.data!["status"] == "error") {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  switch (snapshot.data!["data"]["message"]) {
+                    case "Timeout Error":
+                      showDialog(
+                          context: context,
+                          builder: (context) => const SystemMessage(
+                              title: "Timout error",
+                              content:
+                                  "The response time is too long, please check the connection and tyr again later."));
+                      break;
+                    case "Connection Error":
+                      showDialog(
+                          context: context,
+                          builder: (context) => const SystemMessage(
+                              title: "Connection error",
+                              content:
+                                  "The connection is unstable, please check the connection and try again later."));
+                      break;
+                    default:
+                      showDialog(
+                          context: context,
+                          builder: (context) => const SystemMessage(
+                              title: "Local error",
+                              content:
+                                  "An unexpected local error occured, please contact us or try again later."));
+                      break;
+                  }
+                });
+              } else if (snapshot.data!["status"] == "faild") {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  switch (snapshot.data!["status_code"]) {
+                    case 404:
+                      showDialog(
+                          context: context,
+                          builder: (context) => const SystemMessage(
+                                title: "User not found",
+                                content: "The user had no longer exist.",
+                              ));
+                      break;
+                    default:
+                      showDialog(
+                          context: context,
+                          builder: (context) => const SystemMessage(
+                              content:
+                                  "An unexpected server error occured, please contact us or try again later."));
+                      break;
+                  }
+                });
+              }
+              return profileLoadFailedScreen(snapshot.data!);
             }
 
             //Data Initial
@@ -699,31 +813,76 @@ class _ProfileShowPageState extends State<ProfileShowPage>
             );
           } else {
             //other user view profile
-            if (!widget.editable) {
-              showDialog(
-                  context: context,
-                  builder: (context) => const SystemMessage(
-                      content: "Something Went Wrong Pleas Try Againg Later"));
-              Navigator.pop(context);
-            }
-            return const Center(
-              child: Text("Error"),
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!widget.editable) {
+                ToastService.showErrorToast(context,
+                    length: ToastLength.medium,
+                    expandedHeight: 100,
+                    message:
+                        "Loading profile failed, please try again later.(Error: Local error)");
+                Navigator.pop(context);
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => const SystemMessage(
+                        title: "Local error",
+                        content:
+                            "An unexpected local error occured, please contact us or try again later."));
+              }
+            });
+            return profileLoadFailedScreen(snapshot.data);
           }
         });
   }
 
-  Widget profileLoadFailedScreen(){
+  Widget profileLoadFailedScreen(Map? response) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F2EF),
-      body: Column(children: [
-        const EmptyView(content: "Profile load failed"),
-        IconButton(
-          onPressed: () => setState((){}),
-          icon: const Icon(Icons.refresh),
-        ) 
-      ],)
-    );
+        appBar: AppBar(
+          leading: widget.fromHomePage
+              ? null
+              : IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  )),
+          title: const Text(
+            "Profile",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: const Color(0xFFF7AF8B),
+          elevation: 0,
+          actions: widget.fromHomePage
+              ? [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(RouteMap.logoutPage);
+                    },
+                  ),
+                ]
+              : null,
+        ),
+        backgroundColor: const Color(0xFFF7F2EF),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const EmptyView(
+                content:
+                    "Profile load failed, presse the button below to reload the page."),
+            IconButton(
+              onPressed: () => setState(() {}),
+              icon: const Icon(Icons.refresh),
+            )
+          ],
+        ));
   }
 
   @override

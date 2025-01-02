@@ -73,189 +73,193 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                 ],
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: currentStep > 0
-                                      ? TextButton(
-                                          style: const ButtonStyle(
-                                            splashFactory:
-                                                NoSplash.splashFactory,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              currentStep--;
-                                            });
-                                          },
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.38,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 10,
-                                                vertical: 5,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFFFD9464),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Positioned(
-                                                    left: 0.0,
-                                                    child: Icon(
-                                                      Icons
-                                                          .arrow_back_ios_rounded,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Back",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )))
-                                      : TextButton(
-                                          style: const ButtonStyle(
-                                            splashFactory:
-                                                NoSplash.splashFactory,
-                                          ),
-                                          onPressed: () {
-                                            widget.fromSetting
-                                                ? Navigator.pop(context)
-                                                : Navigator.pushNamed(
-                                                    context, RouteMap.homePage);
-                                          },
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.38,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 5),
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFF827C79),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Skip",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ))),
-                                ),
-                                Center(
-                                  child: currentStep < 4
-                                      ? TextButton(
-                                          style: const ButtonStyle(
-                                            splashFactory:
-                                                NoSplash.splashFactory,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              currentStep++;
-                                            });
-                                          },
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.38,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5.0),
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFF5F8E9F),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Next",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                      right: 0,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: currentStep > 0
+                                        ? TextButton(
+                                            style: const ButtonStyle(
+                                              splashFactory:
+                                                  NoSplash.splashFactory,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                currentStep--;
+                                              });
+                                            },
+                                            child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.38,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFFD9464),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: const Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Positioned(
+                                                      left: 0.0,
                                                       child: Icon(
-                                                        Icons.arrow_forward_ios,
+                                                        Icons
+                                                            .arrow_back_ios_rounded,
                                                         color: Colors.white,
-                                                      ))
-                                                ],
-                                              )))
-                                      : TextButton(
-                                          style: const ButtonStyle(
-                                            splashFactory:
-                                                NoSplash.splashFactory,
-                                          ),
-                                          onPressed: () {
-                                            widget.fromSetting
-                                                ? Navigator.pop(context)
-                                                : Navigator.pushNamed(
-                                                    context, RouteMap.homePage);
-                                          },
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.38,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5.0),
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFF5F8E9F),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: const Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Got it!",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ))),
-                                ),
-                              ],
+                                                    Text(
+                                                      "Back",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )))
+                                        : TextButton(
+                                            style: const ButtonStyle(
+                                              splashFactory:
+                                                  NoSplash.splashFactory,
+                                            ),
+                                            onPressed: () {
+                                              widget.fromSetting
+                                                  ? Navigator.pop(context)
+                                                  : Navigator.pushNamed(context,
+                                                      RouteMap.homePage);
+                                            },
+                                            child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.38,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 5),
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFF827C79),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: const Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "Skip",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ))),
+                                  ),
+                                  Center(
+                                    child: currentStep < 4
+                                        ? TextButton(
+                                            style: const ButtonStyle(
+                                              splashFactory:
+                                                  NoSplash.splashFactory,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                currentStep++;
+                                              });
+                                            },
+                                            child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.38,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5.0),
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFF5F8E9F),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: const Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "Next",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                        right: 0,
+                                                        child: Icon(
+                                                          Icons
+                                                              .arrow_forward_ios,
+                                                          color: Colors.white,
+                                                        ))
+                                                  ],
+                                                )))
+                                        : TextButton(
+                                            style: const ButtonStyle(
+                                              splashFactory:
+                                                  NoSplash.splashFactory,
+                                            ),
+                                            onPressed: () {
+                                              widget.fromSetting
+                                                  ? Navigator.pop(context)
+                                                  : Navigator.pushNamed(context,
+                                                      RouteMap.homePage);
+                                            },
+                                            child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.38,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5.0),
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFF5F8E9F),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: const Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "Got it!",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ))),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         )),

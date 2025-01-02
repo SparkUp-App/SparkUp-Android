@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:spark_up/chat/data/apply_message.dart';
 import 'package:spark_up/chat/data/approved_message.dart';
 import 'package:spark_up/chat/data/chat_message.dart';
 import 'package:spark_up/chat/data/rejected_message.dart';
@@ -11,6 +12,7 @@ import 'package:spark_up/chat/data/rejected_message.dart';
 typedef MessageCallback = void Function(ChatMessage message);
 typedef ApprovedCallback = void Function(ApprovedMessage message);
 typedef RejectedCallback = void Function(RejectedMessage message);
+typedef ApplyCallback = void Function(ApplyMessage message);
 typedef StatusCallback = void Function(SocketStatus status, String? message);
 
 class SocketService {
@@ -27,6 +29,7 @@ class SocketService {
   MessageCallback? onNewMessage;
   ApprovedCallback? onNewApprovedMessage;
   RejectedCallback? onNewRejectedMessage;
+  ApplyCallback? onNewApplyMessage;
   StatusCallback? onStatusChange;
 
   bool get isConnected => socket?.connected ?? false;
@@ -38,12 +41,14 @@ class SocketService {
     StatusCallback? onStatus,
     ApprovedCallback? onApprovedMessage,
     RejectedCallback? onRejectedMessage,
+    ApplyCallback? onApplyMessage,
   }) {
     _userId = userId;
     onNewMessage = onMessage;
     onStatusChange = onStatus;
     onNewApprovedMessage = onApprovedMessage;
     onNewRejectedMessage = onRejectedMessage;
+    onNewApplyMessage = onApplyMessage;
 
     debugPrint("Build Socket Connect");
     // Initialize socket with configuration
@@ -83,7 +88,8 @@ class SocketService {
       })
       ..on('new_message', _handleNewMessage)
       ..on('application_approved', _handleNewApproved)
-      ..on('application_rejected', _handleNewRejected);
+      ..on('application_rejected', _handleNewRejected)
+      ..on('new_application', _handleNewApply);
   }
 
   void _handleNewMessage(dynamic data) {
@@ -113,6 +119,17 @@ class SocketService {
       final message = RejectedMessage.initfromData(data);
       debugPrint('New message received: ${message.message}');
       onNewRejectedMessage?.call(message);
+    } catch (e) {
+      debugPrint('Error parsing message: $e');
+      onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
+    }
+  }
+
+  void _handleNewApply(dynamic data){
+    try {
+      final message = ApplyMessage.initfromData(data);
+      debugPrint('New message received: ${message.message}');
+      onNewApplyMessage?.call(message);
     } catch (e) {
       debugPrint('Error parsing message: $e');
       onStatusChange?.call(SocketStatus.error, 'Error parsing message: $e');
