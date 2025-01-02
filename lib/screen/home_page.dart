@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import "package:flutter/widgets.dart";
-import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/spark_Icon.dart";
 import "package:spark_up/screen/home_page_sub_screen/book_mark_&_apply_screen/bookmark_page.dart";
@@ -9,7 +7,6 @@ import "package:spark_up/screen/home_page_sub_screen/notification_screen/notific
 import "package:spark_up/screen/home_page_sub_screen/spark_screen/spark_page_eventType_decide.dart";
 import "package:spark_up/screen/home_page_sub_screen/profile_screen/profile_show_page.dart";
 import 'package:spark_up/network/network.dart';
-import "package:spark_up/socket_service.dart";
 
 class LazyLoadPage extends StatefulWidget {
   final Widget Function() builder;
@@ -127,9 +124,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context) => const sparkPageEventTypeDecide(),
                 ));
               },
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-              ),
+              shape: const CircleBorder(),
               backgroundColor: Colors.white,
               elevation: 0.0,
               child: const Icon(
