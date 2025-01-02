@@ -51,7 +51,19 @@ class Network {
         "status": "error",
         "data": {"message": "Connection Error"}
       };
+    } on HandshakeException catch (e) {
+      debugPrint("HandshakeException: $e");
+      return {
+        "status": "error",
+        "data": {"message": "Connection Error"}
+      };
     } on Error catch (e) {
+      debugPrint("Error: $e");
+      return {
+        "status": "error",
+        "data": {"message": "Error"}
+      };
+    } catch (e){
       debugPrint("Error: $e");
       return {
         "status": "error",
