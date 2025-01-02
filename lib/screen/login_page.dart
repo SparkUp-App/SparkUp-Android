@@ -171,7 +171,6 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.transparent,
                   body: Center(
                     child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(), //物理動畫
                       child: Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 50.0, horizontal: 30.0),
