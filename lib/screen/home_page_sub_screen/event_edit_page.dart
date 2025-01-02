@@ -114,7 +114,7 @@ List<Widget> _buildEditFields() {
 
         // Add time picker for start and end dates
         fields.add(_buildTimePicker(
-          label: "${_formatLabel(key)} TIME",
+          label: "${_formatLabel(key)} time",
           time: TimeOfDay.fromDateTime(initialDate),
           onTimeChanged: (newTime) {
             setState(() {
@@ -279,7 +279,7 @@ List<Widget> _buildEditFields() {
 
   String _formatLabel(String key) {
     // Implement your formatting logic here
-    return key.replaceAll('_', ' ').toUpperCase();
+    return "${key.replaceAll('_', ' ')[0].toUpperCase()}${key.replaceAll('_', ' ').substring(1).toLowerCase()}";
   }
 
 Widget _buildSaveButton() {
@@ -321,6 +321,16 @@ Widget _buildSaveButton() {
                   context: context,
                   builder: (context) => const SystemMessage(
                     content: "Title cannot be empty",
+                  ),
+                );
+                return;
+              }
+
+              if(editData['title'].length > 30){
+                await showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                    content: "Title cannot be longer than 30 characters",
                   ),
                 );
                 return;
