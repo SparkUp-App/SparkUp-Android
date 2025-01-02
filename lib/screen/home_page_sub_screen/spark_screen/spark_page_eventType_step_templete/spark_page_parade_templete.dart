@@ -19,8 +19,8 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
         children: [
           NoteCard(message: 'Please briefly introduce your parade.'),
           Textfield(
-            label: 'Introduce',
-            hintLabel: 'Please Introduce',
+            label: 'Introduction of this parade',
+            hintLabel: 'Please introduce',
             maxLine: 5,
             value: basePost.attributes["Introduce"] ?? "",
             onChanged: (newValue) {
@@ -31,7 +31,7 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           ),
           Textfield(
             label: 'Address',
-            hintLabel: 'Please desribe the Address',
+            hintLabel: 'Enter address',
             maxLine: 1,
             value: basePost.attributes["Address"] ?? "",
             onChanged: (newValue) {
@@ -42,7 +42,7 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           ),
           MultiInput(
             label: 'Parade route',
-            hintLabel: 'Enter Entry Parade route',
+            hintLabel: 'Enter parade route',
             values: basePost.attributes["Parade route"]?? [],
           onChanged:(newValues) {
             setState(() {
@@ -63,7 +63,7 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "What are the participation guidelines that participants need to know? "),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter Participation guidelines',
+            hintLabel: 'Enter participation guidelines',
             maxLine: 1,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
@@ -83,7 +83,7 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {

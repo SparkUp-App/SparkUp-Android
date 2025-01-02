@@ -20,7 +20,7 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
           NoteCard(message: 'Briefly explain the rules need to be follow and how to win this competition.'),
           Textfield(
             label: 'Rules',
-            hintLabel: 'Please desribe the rules',
+            hintLabel: 'Enter rules',
             maxLine: 4,
             value: basePost.attributes["Rules"] ?? "",
             onChanged: (newValue) {

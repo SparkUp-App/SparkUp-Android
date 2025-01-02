@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/route.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
   final String category;
@@ -9,45 +10,24 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 根据 category 动态设置 URL
-    String teachingStrategiesUrl1 = '';
-    String teachingStrategiesUrl2 = '';
+    // 根據 category 動態設置 URL
+    final Map<String, List<String>> categoryUrls = {
+      'Competition': ['https://reurl.cc/mRlerj', 'https://reurl.cc/qnnKag'],
+      'Exhibition': ['https://reurl.cc/1XXkYV', 'https://reurl.cc/mRRk3V'],
+      'Meal': ['https://reurl.cc/044aZk', 'https://reurl.cc/Eggb1A'],
+      'Parade': ['https://reurl.cc/G55GED', 'https://reurl.cc/mRRk3V'],
+      'Roommate': ['https://reurl.cc/XZZaZE', 'https://reurl.cc/M66M6W'],
+      'Social': ['https://reurl.cc/mRRkMY', 'https://reurl.cc/1XXkv9'],
+      'Speech': ['https://reurl.cc/WAA8G5', 'https://reurl.cc/mRRk0G'],
+      'Sport': ['https://reurl.cc/eGGVyM', 'https://reurl.cc/866bXM'],
+      'Study': ['https://reurl.cc/KddvVR', 'https://reurl.cc/lNNMEv'],
+      'Travel': ['https://reurl.cc/qnnKr0', 'https://reurl.cc/d11qLk'],
+    };
 
-    // 根据 category 设置不同的 URL
-    if (category == 'Competition') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/mRlerj';
-      teachingStrategiesUrl2 = 'https://reurl.cc/qnnKag'; // ok
-    } else if (category == 'Exhibition') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/1XXkYV';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V'; // ok
-    } else if (category == 'Meal') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/044aZk';
-      teachingStrategiesUrl2 = 'https://reurl.cc/Eggb1A'; // ok
-    } else if (category == 'Parade') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/G55GED';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk3V'; // ok
-    } else if (category == 'Roommate') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/XZZaZE';
-      teachingStrategiesUrl2 = 'https://reurl.cc/M66M6W'; // ok
-    } else if (category == 'Social') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/mRRkMY';
-      teachingStrategiesUrl2 = 'https://reurl.cc/1XXkv9'; // ok
-    } else if (category == 'Speech') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/WAA8G5';
-      teachingStrategiesUrl2 = 'https://reurl.cc/mRRk0G'; // ok
-    } else if (category == 'Sport') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/eGGVyM';
-      teachingStrategiesUrl2 = 'https://reurl.cc/866bXM';// ok
-    }else if (category == 'Study') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/KddvVR';
-      teachingStrategiesUrl2 = 'https://reurl.cc/lNNMEv';// ok
-    } else if (category == 'Travel') {
-      teachingStrategiesUrl1 = 'https://reurl.cc/qnnKr0';
-      teachingStrategiesUrl2 = 'https://reurl.cc/d11qLk'; // ok 
-    }  else {
-      teachingStrategiesUrl1 = 'https://example.com/general-teaching-strategies';
-      teachingStrategiesUrl2 = 'https://example.com/general-classroom-activities';
-    }
+    final urls = categoryUrls[category] ?? [
+      'https://example.com/general-teaching-strategies',
+      'https://example.com/general-classroom-activities'
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -68,139 +48,57 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
+              decoration: const BoxDecoration(
+                color: Colors.white,
               ),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.check_circle,
-                                color: Color(0xFFE9765B),
-                                size: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  'Your post has been successfully posted under "$category".',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFF2D3142),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildSuccessCard(category),
                     const SizedBox(height: 24),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Available Resources',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFF2D3142),
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          ResourceCard(
-                            title: 'Template plan of $category 1',
-                            description: 'Access comprehensive tips',
-                            icon: Icons.school,
-                            url: teachingStrategiesUrl1,  // Use dynamic URL
-                            onTap: () {
-                              print('Navigating to Teaching Strategies...');
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          ResourceCard(
-                            title: 'Template plan of $category 2',
-                            description: 'Access comprehensive tips',
-                            icon: Icons.school,
-                            url: teachingStrategiesUrl2,  // Use dynamic URL
-                            onTap: () {
-                              print('Navigating to Teaching Strategies...');
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildResourcesCard(category, urls),
                   ],
                 ),
               ),
             ),
           ),
-          Container(
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -4),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, RouteMap.homePage),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE9765B),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Back to Home',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+          _buildBottomButton(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuccessCard(String category) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.check_circle,
+            color: Color(0xFFE9765B),
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Your post has been successfully posted under "$category".',
+              style: const TextStyle(
+                fontSize: 18,
+                color: Color(0xFF2D3142),
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -208,29 +106,136 @@ class SparkPageInformationOfAdditionalTeaching extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildResourcesCard(String category, List<String> urls) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Available Resources',
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xFF2D3142),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ResourceCard(
+            title: 'Template plan of $category 1',
+            description: 'Access comprehensive tips',
+            icon: Icons.school,
+            url: urls[0],
+            onTap: () {
+              debugPrint('Accessing template plan 1...');
+            },
+          ),
+          const SizedBox(height: 12),
+          ResourceCard(
+            title: 'Template plan of $category 2',
+            description: 'Access comprehensive tips',
+            icon: Icons.school,
+            url: urls[1],
+            onTap: () {
+              debugPrint('Accessing template plan 2...');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomButton(BuildContext context) {
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => Navigator.pushNamed(context, RouteMap.homePage),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFE9765B),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 0,
+          ),
+          child: const Text(
+            'Back to Home',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-// ResourceCard class remains unchanged
 class ResourceCard extends StatelessWidget {
   final String title;
   final String description;
   final IconData icon;
-  final String url;  // Added a URL property
+  final String url;
   final VoidCallback onTap;
 
   const ResourceCard({
+    super.key,
     required this.title,
     required this.description,
     required this.icon,
-    required this.url, // Pass URL to the constructor
+    required this.url,
     required this.onTap,
   });
 
-  Future<void> _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> _launchURL(BuildContext context) async {
+    try {
+      if (await canLaunchUrlString(url)) {
+        await launchUrlString(url);
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('無法開啟連結'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('錯誤: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -240,8 +245,8 @@ class ResourceCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          _launchURL(url);  // Use _launchURL method
-          onTap();  // Optionally, you can keep the custom onTap behavior
+          _launchURL(context);
+          onTap();
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(
@@ -298,6 +303,74 @@ class ResourceCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class WebViewPage extends StatefulWidget {
+  final String url;
+
+  const WebViewPage({super.key, required this.url});
+
+  @override
+  State<WebViewPage> createState() => _WebViewPageState();
+}
+
+class _WebViewPageState extends State<WebViewPage> {
+  late final WebViewController controller;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              isLoading = true;
+            });
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {
+            debugPrint('WebView error: ${error.description}');
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('WebView'),
+        backgroundColor: const Color(0xFFE9765B),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              controller.reload();
+            },
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          WebViewWidget(controller: controller),
+          if (isLoading)
+            const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFE9765B),
+              ),
+            ),
+        ],
       ),
     );
   }

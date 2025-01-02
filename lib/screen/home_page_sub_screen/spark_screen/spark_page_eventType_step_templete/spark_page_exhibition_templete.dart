@@ -20,8 +20,8 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
         children: [
           NoteCard(message: 'Please give a brief introduction to the exhibition.'),
           Textfield(
-            label: 'Introduction',
-            hintLabel: 'Please Introduction',
+            label: 'Introduction of this exhibition',
+            hintLabel: 'Please introduction',
             maxLine: 5,
             value: basePost.attributes["Introduction"] ?? "",
             onChanged: (newValue) {
@@ -32,7 +32,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
           ),
           Textfield(
             label: 'Ticket price',
-            hintLabel: 'Please Ticket price',
+            hintLabel: 'Enter ticket price',
             maxLine: 5,
             value: basePost.attributes["Ticket price"] ?? "",
             onChanged: (newValue) {
@@ -54,7 +54,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
           NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {
