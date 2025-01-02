@@ -116,7 +116,7 @@ class ChatRoomManager {
 
           if (WidgetsBinding.instance.lifecycleState ==
                   AppLifecycleState.resumed &&
-              NotificationManager.foregroundNewMessage) {
+              NotificationManager.foregroundNewMessage && currentPostId == null) {
             // App Foreground Notification
 
             // Display SnackBar in app
