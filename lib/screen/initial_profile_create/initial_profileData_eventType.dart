@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/system_message.dart';
