@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/chat/chat_room_manager.dart';
 import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/base_post.dart';
 import 'package:spark_up/network/network.dart';
@@ -504,6 +505,8 @@ void updateStepperShow(){
           length: ToastLength.medium,
           expandedHeight: 100,
           message: "Event Create Successful");
+      
+      ChatRoomManager.manager.refresh();
 
     Navigator.push(
       context,
