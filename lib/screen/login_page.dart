@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
-import "package:spark_up/background_notification_service.dart";
 import "package:spark_up/chat/chat_room_manager.dart";
 import "package:spark_up/common_widget/exit_dialog.dart";
 import "package:spark_up/common_widget/system_message.dart";
@@ -8,6 +6,7 @@ import "package:spark_up/const_variable.dart";
 import "package:spark_up/data/profile.dart";
 import "package:spark_up/network/network.dart";
 import "package:spark_up/network/path/auth_path.dart";
+import "package:spark_up/notificatoin_manager.dart";
 import "package:spark_up/route.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:spark_up/secure_storage.dart";
@@ -172,7 +171,6 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.transparent,
                   body: Center(
                     child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(), //物理動畫
                       child: Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 50.0, horizontal: 30.0),
@@ -213,6 +211,31 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 47,
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      if (emailController.text.length > 255) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                        "Input email address is not legal."));
+                                        setState(() {});
+                                        return;
+                                      }
+
+                                      if (passwordController.text.length >
+                                          255) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const SystemMessage(
+                                                    title: "Login Failed",
+                                                    content:
+                                                        "Input password is not legal."));
+                                        setState(() {});
+                                        return;
+                                      }
+
                                       if (emailController.text.isEmpty) {
                                         emailEmpty = true;
                                       }
@@ -231,14 +254,15 @@ class _LoginPageState extends State<LoginPage> {
                                         return;
                                       }
 
-                                      if( !emailRegex.hasMatch(emailController.text)){
+                                      if (!emailRegex
+                                          .hasMatch(emailController.text)) {
                                         showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 const SystemMessage(
                                                     title: "Login Failed",
                                                     content:
-                                                    "Please enter a valid email address"));
+                                                        "Please enter a valid email address"));
                                         setState(() {});
                                         return;
                                       }
@@ -265,6 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                                       if (context.mounted) {
                                         debugPrint("${response["status"]}");
                                         if (response["status"] == "success") {
+                                          NotificationManager.init();
                                           SecureStorage.store(StoreKey.userId,
                                               "${response["data"]["user_id"]}");
                                           Network.manager.saveUserId(
@@ -281,7 +306,10 @@ class _LoginPageState extends State<LoginPage> {
                                                         .socketApproveCallback,
                                                 onRejectedMessage:
                                                     ChatRoomManager.manager
-                                                        .socketRejectedCallback);
+                                                        .socketRejectedCallback,
+                                                onApplyMessage: ChatRoomManager
+                                                    .manager
+                                                    .socketApplyCallback);
                                             ChatRoomManager.manager.getData();
                                             SecureStorage.store(
                                                 StoreKey.noProfile, "No");
@@ -304,7 +332,8 @@ class _LoginPageState extends State<LoginPage> {
                                               builder: (context) =>
                                                   const SystemMessage(
                                                       title: "Login Failed",
-                                                      content: "No user found. \nPlease check the email and password."));
+                                                      content:
+                                                          "No user found. \nPlease check the email and password."));
                                         }
                                       }
                                     },

@@ -7,6 +7,8 @@ import 'package:spark_up/data/applicant_list_received.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/applicant_path.dart';
 import 'package:spark_up/route.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toasty_box.dart';
 
 class RequestTag extends StatefulWidget {
   const RequestTag({super.key});
@@ -321,17 +323,83 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
 
       if (context.mounted) {
         if (response["status"] == "success") {
-          showDialog(
-              context: context,
-              builder: (context) =>
-                  const SystemMessage(content: "Approve Successs"));
+          ToastService.showSuccessToast(
+            context,
+            message: "Approve Success",
+            length: ToastLength.medium,
+            expandedHeight: 100,
+          );
+          // showDialog(
+          //     context: context,
+          //     builder: (context) =>
+          //         const SystemMessage(title: "Approve Success",content: "You have approved the user"));
           approve = true;
           widget.removeApplyUserCard(widget.applicantUser);
+        } else if (response["status"] == "error") {
+          switch (response["data"]["message"]) {
+            case "Timeour Error":
+              showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Approve Failed",
+                    content:
+                        "The response time is too long, please check the connection and try again later."),
+              );
+              break;
+            case "Connection Error":
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "The connection is unstable, please check the connection and try again later."));
+              break;
+            default:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "An unexpected local error occrued, please contact us or try again later."));
+              break;
+          }
+        } else if (response["status"] == "faild") {
+          switch (response["status_code"]) {
+            case 404:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "The applicant request is not found, the user might have cancel the request."));
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
+            case 409:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "This event are reach the maximum number of participant."));
+              reject = true;
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
+            default:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "An unexpected server error occured, please contact us or try again later."));
+              break;
+          }
         } else {
           showDialog(
               context: context,
               builder: (context) => const SystemMessage(
-                  content: "Something Went Wrong Pleas Try Again Later"));
+                  title: "Approve Failed",
+                  content:
+                      "An unexpected error occured, please contact us or try again later."));
         }
       }
 
@@ -359,17 +427,83 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
 
       if (context.mounted) {
         if (response["status"] == "success") {
-          showDialog(
-              context: context,
-              builder: (context) =>
-                  const SystemMessage(content: "Reject Successs"));
+          ToastService.showSuccessToast(
+            context,
+            message: "Reject Success",
+            length: ToastLength.medium,
+            expandedHeight: 100,
+          );
+          // showDialog(
+          //     context: context,
+          //     builder: (context) =>
+          //         const SystemMessage(title: "Approve Success",content: "You have approved the user"));
           reject = true;
           widget.removeApplyUserCard(widget.applicantUser);
+        } else if (response["status"] == "error") {
+          switch (response["data"]["message"]) {
+            case "Timeour Error":
+              showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Reject Failed",
+                    content:
+                        "The response time is too long, please check the connection and try again later."),
+              );
+              break;
+            case "Connection Error":
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "The connection is unstable, please check the connection and try again later."));
+              break;
+            default:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "An unexpected local error occrued, please contact us or try again later."));
+              break;
+          }
+        } else if (response["status"] == "faild") {
+          switch (response["status_code"]) {
+            case 404:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "The applicant request is not found, the user might have cancel the request."));
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
+            case 409:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "This event are reach the maximum number of participant."));
+              reject = true;
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
+            default:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "An unexpected server error occured, please contact us or try again later."));
+              break;
+          }
         } else {
           showDialog(
               context: context,
               builder: (context) => const SystemMessage(
-                  content: "Something Went Wrong Pleas Try Again Later"));
+                  title: "Reject Failed",
+                  content:
+                      "An unexpected error occured, please contact us or try again later."));
         }
       }
 

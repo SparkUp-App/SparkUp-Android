@@ -41,7 +41,7 @@ class UserHead extends StatelessWidget {
             switch (level) {
               0 => 'assets/member/Nebulas.png',
               1 => 'assets/member/Proto Star.png',
-              2 => 'asssets/member/Main Sequence.png',
+              2 => 'assets/member/Main Sequence.png',
               3 => 'assets/member/Red Giant.png',
               4 => 'assets/member/Supernova.png',
               int() => 'assets/member/Nebulas.png',

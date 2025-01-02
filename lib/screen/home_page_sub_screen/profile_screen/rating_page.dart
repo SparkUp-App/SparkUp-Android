@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spark_up/network/network.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/my_rat_preview_tag.dart';
 import 'package:spark_up/screen/home_page_sub_screen/profile_screen/to_rate_tag.dart';
 
@@ -14,11 +15,13 @@ class RatingPage extends StatefulWidget {
 class _RatingPageState extends State<RatingPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late bool selfRating;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    selfRating = Network.manager.userId == widget.userId;
+    _tabController = TabController(length: selfRating ? 2 : 1, vsync: this);
   }
 
   @override
@@ -54,24 +57,33 @@ class _RatingPageState extends State<RatingPage>
                 indicatorColor: const Color(0xFFF5A278),
                 indicatorWeight: 3,
                 indicatorSize: TabBarIndicatorSize.tab,
-                tabs: const [
-                  Tab(text: 'To Rate'),
-                  Tab(text: 'My Preview'),
-                ],
+                tabs: selfRating
+                    ? const [
+                        Tab(text: 'To Rate'),
+                        Tab(text: 'My Preview'),
+                      ]
+                    : const [
+                        Tab(text: 'My Preview'),
+                      ],
               ),
             ),
             Expanded(
               child: TabBarView(
-                controller: _tabController,
-                children: [
-                  TorateTag(
-                    userId: widget.userId,
-                  ),
-                  MyRatPreviewTag(
-                    userId: widget.userId,
-                  )
-                ],
-              ),
+                  controller: _tabController,
+                  children: selfRating
+                      ? [
+                          TorateTag(
+                            userId: widget.userId,
+                          ),
+                          MyRatPreviewTag(
+                            userId: widget.userId,
+                          )
+                        ]
+                      : [
+                          MyRatPreviewTag(
+                            userId: widget.userId,
+                          )
+                        ]),
             )
           ],
         ));
