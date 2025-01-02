@@ -374,6 +374,16 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                           "The applicant request is not found, the user might have cancel the request."));
               widget.removeApplyUserCard(widget.applicantUser);
               break;
+            case 409:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Approve Failed",
+                      content:
+                          "This event are reach the maximum number of participant."));
+              reject = true;
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
             default:
               showDialog(
                   context: context,
@@ -466,6 +476,16 @@ class _ApplyUserCardState extends State<ApplyUserCard> {
                       title: "Reject Failed",
                       content:
                           "The applicant request is not found, the user might have cancel the request."));
+              widget.removeApplyUserCard(widget.applicantUser);
+              break;
+            case 409:
+              showDialog(
+                  context: context,
+                  builder: (context) => const SystemMessage(
+                      title: "Reject Failed",
+                      content:
+                          "This event are reach the maximum number of participant."));
+              reject = true;
               widget.removeApplyUserCard(widget.applicantUser);
               break;
             default:
