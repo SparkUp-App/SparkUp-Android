@@ -16,11 +16,10 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
       content: Column(
         children: [
           NoteCard(message: "First, let’s decide some basic information for your activity."),
-          
           SizedBox(height: 16,),
           Textfield(
             label: "Title",
-            hintLabel: "Enter Title Here",
+            hintLabel: "Enter title here",
             value: basePost.title,
             onChanged: (newValue) => setState(() => basePost.title = newValue ?? ""),
             isRequired: true,
@@ -28,7 +27,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
           ),
           Textfield(
             label: "Location",
-            hintLabel: "Enter Location Here",
+            hintLabel: "Enter location here",
             value: basePost.location,
             onChanged: (newValue) => setState(() => basePost.location = newValue ?? ""),
             isRequired: true,
@@ -45,7 +44,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
           ),
           // 修改這裡的日期時間選擇器邏輯
           _buildDatePicker(
-            label: "Event Start Date",
+            label: "Event start date",
             date: basePost.eventStartDate,
             onDateChanged: (date) => setState(() {
               basePost.eventStartDate = DateTime(
@@ -60,7 +59,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             context: context,
           ),
           _buildTimePicker(
-            label: "Event Start Time",
+            label: "Event start time",
             time: TimeOfDay.fromDateTime(basePost.eventStartDate),
             onTimeChanged: (time) => setState(() {
               basePost.eventStartDate = DateTime(
@@ -75,7 +74,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             context: context,
           ),
           _buildDatePicker(
-            label: "Event End Date",
+            label: "Event end date",
             date: basePost.eventEndDate,
             onDateChanged: (date) => setState(() {
               basePost.eventEndDate = DateTime(
@@ -90,7 +89,7 @@ List<Step> createBaseInfoStep(int currentStep, BasePost basePost, double screenS
             context: context,
           ),
           _buildTimePicker(
-            label: "Event End Time",
+            label: "Event end time",
             time: TimeOfDay.fromDateTime(basePost.eventEndDate),
             onTimeChanged: (time) => setState(() {
               basePost.eventEndDate = DateTime(

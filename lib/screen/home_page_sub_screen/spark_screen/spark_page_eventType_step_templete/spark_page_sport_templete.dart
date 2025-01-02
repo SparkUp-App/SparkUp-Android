@@ -16,12 +16,12 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
         children: [
           NoteCard(message: 'What kind of exercise are you planning to do?'),
           SparkupSingleChoose(
-            label: 'Sport Type',
+            label: 'Select sport type',
             hintlabel:'Please select sport type',
             availableTags: sportType,
             onChanged: (selectedSport) {
               setState(() {
-                basePost.attributes["Selected Sport"] = selectedSport;
+                basePost.attributes["Selected sport"] = selectedSport;
                 print(basePost.attributes);
               });
             },
@@ -30,32 +30,32 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
             label: 'Rule',
             hintLabel: 'Enter rule',
             maxLine: 4,
-            value: basePost.attributes["Sports Rule"] ?? "",
+            value: basePost.attributes["Rule"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Sports Rule"] = newValue ?? "";
+                basePost.attributes["Rule"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Winning Prize',
-            hintLabel: 'Enter Winning Prize',
+            label: 'Winning prize',
+            hintLabel: 'Enter winning prize',
             maxLine: 1,
-            value: basePost.attributes["Winning Prize"] ?? "",
+            value: basePost.attributes["Winning prize"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Winning Prize"] = newValue ?? "";
+                basePost.attributes["Winning prize"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Entry Fee',
-            hintLabel: 'Enter Entry Fee',
+            label: 'Entry fee',
+            hintLabel: 'Enter entry fee',
             maxLine: 1,
-            value: basePost.attributes["Entry Fee"] ?? "",
+            value: basePost.attributes["Entry fee"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Entry Fee"] = newValue ?? "";
+                basePost.attributes["Entry fee"] = newValue ?? "";
               });
             },
             onlyNumber: true,
@@ -74,13 +74,13 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
 
           SizedBox(height: 16,),
           Textfield(
-            label: 'Requirements of Participants',
+            label: 'Requirements of participants',
             hintLabel: 'Enter requirements',
             maxLine: 4,
-            value: basePost.attributes["Requirements of Participants"] ?? "",
+            value: basePost.attributes["Requirements of participants"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Requirements of Participants"] = newValue ?? "";
+                basePost.attributes["Requirements of participants"] = newValue ?? "";
               });
             },
           ),
@@ -96,7 +96,7 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
           NoteCard(message: "Anything you would like to add to the participants"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter requirements',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {

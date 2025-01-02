@@ -60,7 +60,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             ),
-            hint: const Text('Select Here', style: TextStyle(color: Colors.black26)),
+            hint: Text('Select ${widget.label}', style: const TextStyle(color: Colors.black26)),
             items: widget.options.map((String option) {
               return DropdownMenuItem<String>(
                 value: option,

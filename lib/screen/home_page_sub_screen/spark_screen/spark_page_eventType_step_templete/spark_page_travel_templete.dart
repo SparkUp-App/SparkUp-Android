@@ -15,19 +15,19 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
         children: [
           NoteCard(message: "Please briefly introduce your travel."),
           Textfield(
-            label: 'Introduce',
-            hintLabel: 'Enter Introduce',
+            label: 'Introduction',
+            hintLabel: 'Enter introduction',
             maxLine: 5,
-            value: basePost.attributes["Introduce"] ?? "",
+            value: basePost.attributes["introduction"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Introduce"] = newValue ?? "";
+                basePost.attributes["introduction"] = newValue ?? "";
               });
             },
           ),
           Textfield(
             label: 'Price',
-            hintLabel: 'Enter Price',
+            hintLabel: 'Enter price',
             maxLine: 1,
             value: basePost.attributes["Price"] ?? "",
             onChanged: (newValue) {
@@ -39,7 +39,7 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
           ),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter Participation guidelines',
+            hintLabel: 'Enter participation guidelines',
             maxLine: 1,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
@@ -75,7 +75,7 @@ Step(
       NoteCard(message: "Anything you would like to add to the participants"),
       Textfield(
         label: 'Notes',
-        hintLabel: 'Enter requirements',
+        hintLabel: 'Enter notes',
         maxLine: 5,
         value: basePost.content ?? "",
         onChanged: (newValue) {

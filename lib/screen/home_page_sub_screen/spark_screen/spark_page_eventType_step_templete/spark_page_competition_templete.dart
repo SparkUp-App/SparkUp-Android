@@ -19,7 +19,7 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
         children: [
           NoteCard(message: 'Briefly explain the rules need to be follow and how to win this competition.'),
           Textfield(
-            label: 'Rule',
+            label: 'Rules',
             hintLabel: 'Please desribe the rules',
             maxLine: 4,
             value: basePost.attributes["Rules"] ?? "",
@@ -41,24 +41,24 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
         children: [
           NoteCard(message: "What kind of participants are you looking for ?"),
           Textfield(
-            label: 'Requirements of Participants',
+            label: 'Requirements of participants',
             hintLabel: 'Enter requirements',
             maxLine: 4,
-            value: basePost.attributes["Requirements of Participants"] ?? "",
+            value: basePost.attributes["Requirements of participants"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Requirements of Participants"] = newValue ?? "";
+                basePost.attributes["Requirements of participants"] = newValue ?? "";
               });
             },
           ),
           Textfield(
-            label: 'Entry Fee',
-            hintLabel: 'Enter Entry Fee',
+            label: 'Entry fee',
+            hintLabel: 'Enter entry fee',
             maxLine: 1,
-            value: basePost.attributes["Entry Fee"] ?? "",
+            value: basePost.attributes["Entry fee"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Entry Fee"] = newValue ?? "";
+                basePost.attributes["Entry fee"] = newValue ?? "";
               });
             },
             onlyNumber: true,
@@ -76,12 +76,12 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
         children: [
           NoteCard(message: "A well prize can appeal more people to participant your competition."),
           MultiInput(
-            label: 'Prize',
-            hintLabel: 'Enter Entry Prizes',
-            values:  basePost.attributes["Prize"] ?? [],
+            label: 'Prizes',
+            hintLabel: 'Enter entry prizes',
+            values:  basePost.attributes["Prizes"] ?? [],
           onChanged:(newValues) {
             setState(() {
-              basePost.attributes["Prize"] = newValues;
+              basePost.attributes["Prizes"] = newValues;
             });
           },
           )
@@ -96,7 +96,7 @@ List<Step> createCompetitionSteps(int currentStep, BasePost basePost, Function s
           NoteCard(message: "Anything you would like to add to the participants"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter requirements',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {
