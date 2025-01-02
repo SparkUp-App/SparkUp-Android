@@ -58,11 +58,13 @@ class _MessageTagState extends State<MessageTag> {
                       children: [
                         for (var chatRoom in ChatRoomManager.manager.roomList
                             .value) ...[chatRoomCard(chatRoom)],
-                        if (isLoading) ...[const RequestSkeletonListRandomLength()],
+                        if (isLoading) ...[
+                          const RequestSkeletonListRandomLength()
+                        ],
                         if (ChatRoomManager.manager.error) ...[
-                          const Center(
-                            child: Text(
-                                "Something Went Wrong\n Please Try Again Later"),
+                          const EmptyView(
+                            content:
+                                "Something Went Wrong\n Please Try Again Later",
                           )
                         ],
                       ],
@@ -116,6 +118,7 @@ class _MessageTagState extends State<MessageTag> {
                                   color: Color(0xFF4B4B4B),
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Container(
