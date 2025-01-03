@@ -21,7 +21,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
           NoteCard(message: 'Please give a brief introduction to the exhibition.'),
           Textfield(
             label: 'Introduction of this exhibition',
-            hintLabel: 'Please introduction',
+            hintLabel: 'Enter introduction',
             maxLine: 5,
             value: basePost.attributes["Introduction"] ?? "",
             onChanged: (newValue) {
