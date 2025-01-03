@@ -57,7 +57,14 @@ class Network {
         "status": "error",
         "data": {"message": "Connection Error"}
       };
-    } on Error catch (e) {
+    } on http.ClientException catch (e){
+      debugPrint("ClientException: $e");
+      return {
+        "status" : "error",
+        "data" : {"message" : "Connection Error"}
+      };
+    }
+    on Error catch (e) {
       debugPrint("Error: $e");
       return {
         "status": "error",
