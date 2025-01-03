@@ -22,7 +22,7 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: 'What is the topic of your speech this time?  Who will be the speaker?'),
           Textfield(
             label: 'Topic',
-            hintLabel: 'Please desribe Topic',
+            hintLabel: 'Enter topic',
             maxLine: 1,
             value: basePost.attributes["Topic"] ?? "",
             onChanged: (newValue) {
@@ -32,8 +32,8 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
             },
           ),
           Textfield(
-            label: '',
-            hintLabel: 'Please desribe Speaker',
+            label: 'Speaker',
+            hintLabel: 'Enter speaker',
             maxLine: 1,
             value: basePost.attributes["Speaker"] ?? "",
             onChanged: (newValue) {
@@ -43,8 +43,8 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
             },
           ),
           Textfield(
-            label: 'Introduce the Topic',
-            hintLabel: 'Please desribe Introduce the Topic',
+            label: 'Introduction of the topic',
+            hintLabel: 'Enter introduction',
             maxLine: 5,
             value: basePost.attributes["Introduce the Topic"] ?? "",
             onChanged: (newValue) {
@@ -55,7 +55,7 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
           ),
           Textfield(
             label: 'Entry fee (optional)',
-            hintLabel: 'Enter Entry fee',
+            hintLabel: 'Enter entry fee',
             maxLine: 1,
             value: basePost.attributes["Entry fee"] ?? "",
             onChanged: (newValue) {
@@ -63,6 +63,7 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
                 basePost.attributes["Entry fee"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
         ],
       ),
@@ -76,13 +77,13 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
         children: [
           NoteCard(message: "What kind of participants are you looking for ?"),
           Textfield(
-            label: 'Requirements for Participants',
-            hintLabel: 'Enter Requirements for Participants',
+            label: 'Requirements for participants',
+            hintLabel: 'Enter requirements for participants',
             maxLine: 4,
-            value: basePost.attributes["Requirements for Participants"] ?? "",
+            value: basePost.attributes["Requirements for participants"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Requirements for Participants"] = newValue ?? "";
+                basePost.attributes["Requirements for participants"] = newValue ?? "";
               });
             },
           ),
@@ -97,7 +98,7 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {

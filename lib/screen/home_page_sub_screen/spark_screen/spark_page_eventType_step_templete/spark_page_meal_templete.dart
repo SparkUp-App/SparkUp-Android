@@ -20,7 +20,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           NoteCard(message: 'Please introduce the restaurant and what its signature dishes are.'),
           Textfield(
             label: 'Restaurant name',
-            hintLabel: 'Please desribe Restaurant name',
+            hintLabel: 'Enter restaurant name',
             maxLine: 1,
             value: basePost.attributes["Restaurant name"] ?? "",
             onChanged: (newValue) {
@@ -31,7 +31,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           ),
           Textfield(
             label: 'Signature dishes',
-            hintLabel: 'Please desribe  Signature dishes',
+            hintLabel: 'Enter signature dishes',
             maxLine: 1,
             value: basePost.attributes["Signature dishes"] ?? "",
             onChanged: (newValue) {
@@ -42,7 +42,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           ),
           Textfield(
             label: 'Link of the restaurant',
-            hintLabel: 'Link of the restaurant',
+            hintLabel: 'Enter link',
             maxLine: 1,
             value: basePost.attributes["Link of the restaurant"] ?? "",
             onChanged: (newValue) {
@@ -52,8 +52,8 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
             },
           ),
           Textfield(
-            label: 'Intro of the restaurant',
-            hintLabel: 'Please desribe Intro of the restaurants',
+            label: 'Introduction of the restaurant',
+            hintLabel: 'Please introduce',
             maxLine: 4,
             value: basePost.attributes["Intro of the restaurant"] ?? "",
             onChanged: (newValue) {
@@ -75,7 +75,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           NoteCard(message: "What are the participation guidelines that participants need to know? "),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter Participation guidelines',
+            hintLabel: 'Enter participation guidelines',
             maxLine: 4,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
@@ -86,7 +86,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           ),
           Textfield(
             label: 'Price',
-            hintLabel: 'Enter Entry fee',
+            hintLabel: 'Enter price',
             maxLine: 1,
             value: basePost.attributes["Price"] ?? "",
             onChanged: (newValue) {
@@ -107,7 +107,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           NoteCard(message: "Finally, is there anything you would like to share that we haven't mentioned previously?"),
           Textfield(
             label: 'Notes',
-            hintLabel: 'Enter anything you want to share that we have not mentioned previously',
+            hintLabel: 'Enter notes',
             maxLine: 5,
             value: basePost.content ?? "",
             onChanged: (newValue) {

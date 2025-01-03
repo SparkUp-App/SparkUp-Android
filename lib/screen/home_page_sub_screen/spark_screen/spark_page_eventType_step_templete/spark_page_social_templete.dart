@@ -73,6 +73,7 @@ List<Step> createSocialSteps(int currentStep, BasePost basePost, Function setSta
                 basePost.attributes["Entry fee"] = newValue ?? "";
               });
             },
+            onlyNumber: true,
           ),
         ],
       ),

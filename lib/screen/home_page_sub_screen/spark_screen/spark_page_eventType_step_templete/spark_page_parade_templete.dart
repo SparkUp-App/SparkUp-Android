@@ -20,29 +20,19 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: 'Please briefly introduce your parade.'),
           Textfield(
             label: 'Introduction of this parade',
-            hintLabel: 'Please introduce',
+            hintLabel: 'Enter introduction',
             maxLine: 5,
-            value: basePost.attributes["Introduce"] ?? "",
+            value: basePost.attributes["Introduction"] ?? "",
             onChanged: (newValue) {
               setState(() {
-                basePost.attributes["Introduce"] = newValue ?? "";
+                basePost.attributes["Introduction"] = newValue ?? "";
               });
             },
           ),
-          Textfield(
-            label: 'Address',
-            hintLabel: 'Enter address',
-            maxLine: 1,
-            value: basePost.attributes["Address"] ?? "",
-            onChanged: (newValue) {
-              setState(() {
-                basePost.attributes["Address"] = newValue ?? "";
-              });
-            },
-          ),
+          
           MultiInput(
             label: 'Parade route',
-            hintLabel: 'Enter parade route',
+            hintLabel: 'Enter destination',
             values: basePost.attributes["Parade route"]?? [],
           onChanged:(newValues) {
             setState(() {
