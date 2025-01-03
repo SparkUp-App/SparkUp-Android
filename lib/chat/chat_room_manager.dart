@@ -90,14 +90,15 @@ class ChatRoomManager {
     return;
   }
 
-  void socketMessageCallback(ChatMessage message) {
+  void socketMessageCallback(ChatMessage message) async {
     // For Update Current Room Message
     if (message.postId == currentPostId) {
       updateMessage.value = message;
     }
 
+    int i;
     // For Update Chat Room List
-    for (int i = 0; i < roomCount; i++) {
+    for (i = 0; i < roomCount; i++) {
       if (roomList.value[i].postId == message.postId) {
         ChatListReceived updateChatRoom;
         updateChatRoom = roomList.value[i];
@@ -177,6 +178,91 @@ class ChatRoomManager {
         roomList.value = [updateChatRoom, ...roomList.value];
         break;
       }
+    }
+
+    if(i == roomCount){
+      await refresh();
+          for (i = 0; i < roomCount; i++) {
+      if (roomList.value[i].postId == message.postId) {
+        ChatListReceived updateChatRoom;
+        updateChatRoom = roomList.value[i];
+        LatestMessage updateLatestMessage = LatestMessage(
+            id: message.id,
+            senderId: message.senderId,
+            senderName: message.senderName,
+            content: message.content,
+            createTime: message.createdAt);
+        updateChatRoom.latestMessage = updateLatestMessage;
+        if (message.senderId != Network.manager.userId &&
+            currentPostId != message.postId) {
+          updateChatRoom.unreadCount++;
+
+          BuildContext? context = MyApp.navigatorKey.currentContext;
+
+          if (WidgetsBinding.instance.lifecycleState ==
+                  AppLifecycleState.resumed &&
+              NotificationManager.foregroundNewMessage && currentPostId == null) {
+            // App Foreground Notification
+
+            // Display SnackBar in app
+            if (context != null) {
+              AudioPlayer().play(AssetSource('notification_ring.wav'));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                content: Container(
+                  padding: const EdgeInsets.all(18.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "New Message - ${message.postTitle}",
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        "${message.senderName}: ${message.content}",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                duration: const Duration(seconds: 3),
+              ));
+            }
+          }
+        }
+
+        if (WidgetsBinding.instance.lifecycleState ==
+                AppLifecycleState.paused &&
+            NotificationManager.backgroundNewMessage &&
+            message.senderId != Network.manager.userId) {
+          // App Background Notification
+          BackgroundNotificationService.manager.handleIncomingMessage(message);
+        }
+
+        roomList.value.removeAt(i);
+        roomList.value = [updateChatRoom, ...roomList.value];
+        break;
+      }
+    }
     }
   }
 
