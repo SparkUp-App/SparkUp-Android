@@ -115,7 +115,7 @@ class _TopicMultiInputState extends State<TopicMultiInput> {
                 borderSide: BorderSide(color: Colors.black12),
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              hintText: 'Enter describe',
+              hintText: 'Enter destination',
               hintStyle: const TextStyle(
                 color: Colors.black26,
               ),

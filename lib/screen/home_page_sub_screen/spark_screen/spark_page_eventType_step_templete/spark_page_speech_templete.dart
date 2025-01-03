@@ -78,7 +78,7 @@ List<Step> createSpeechSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "What kind of participants are you looking for ?"),
           Textfield(
             label: 'Requirements for participants',
-            hintLabel: 'Enter requirements for participants',
+            hintLabel: 'Enter requirements',
             maxLine: 4,
             value: basePost.attributes["Requirements for participants"] ?? "",
             onChanged: (newValue) {

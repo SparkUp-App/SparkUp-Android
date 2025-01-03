@@ -53,7 +53,7 @@ List<Step> createParadeSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "What are the participation guidelines that participants need to know? "),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter participation guidelines',
+            hintLabel: 'Enter guidelines',
             maxLine: 1,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {

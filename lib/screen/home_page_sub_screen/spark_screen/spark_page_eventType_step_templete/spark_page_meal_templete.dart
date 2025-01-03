@@ -53,7 +53,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           ),
           Textfield(
             label: 'Introduction of the restaurant',
-            hintLabel: 'Please introduce',
+            hintLabel: 'Enter introduction',
             maxLine: 4,
             value: basePost.attributes["Intro of the restaurant"] ?? "",
             onChanged: (newValue) {
@@ -75,7 +75,7 @@ List<Step> createMealSteps(int currentStep, BasePost basePost, Function setState
           NoteCard(message: "What are the participation guidelines that participants need to know? "),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter participation guidelines',
+            hintLabel: 'Enter guidelines',
             maxLine: 4,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {

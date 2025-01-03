@@ -39,8 +39,8 @@ List<Step> createTravelSteps(int currentStep, BasePost basePost, Function setSta
           ),
           Textfield(
             label: 'Participation guidelines',
-            hintLabel: 'Enter participation guidelines',
-            maxLine: 1,
+            hintLabel: 'Enter guidelines',
+            maxLine: 5,
             value: basePost.attributes["Participation guidelines"] ?? "",
             onChanged: (newValue) {
               setState(() {

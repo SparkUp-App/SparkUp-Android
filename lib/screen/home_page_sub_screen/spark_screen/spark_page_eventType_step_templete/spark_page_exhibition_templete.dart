@@ -33,7 +33,7 @@ List<Step> createExhibitionSteps(int currentStep, BasePost basePost, Function se
           Textfield(
             label: 'Ticket price',
             hintLabel: 'Enter ticket price',
-            maxLine: 5,
+            maxLine: 1,
             value: basePost.attributes["Ticket price"] ?? "",
             onChanged: (newValue) {
               setState(() {
