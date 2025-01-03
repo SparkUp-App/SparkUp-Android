@@ -23,7 +23,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
         children: [
           NoteCard(message: 'Please give us an introduction about your place.'),
           CustomDropdown(
-              label: 'Select type',
+              label: 'Type',
               value: basePost.attributes["Type"],
               options: liveList,
               onChanged: (newValue) {
@@ -77,7 +77,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
         children: [
           NoteCard(message: "What kind of roommate are you looking for ?"),
           CustomDropdown(
-              label: 'Select gender',
+              label: 'Gender',
               value: basePost.attributes["Gender"],
               options: liveGenderList,
               onChanged: (newValue) {
@@ -153,7 +153,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           ),
           Textfield(
             label: 'Rent(monthly)',
-            hintLabel: 'Enter security deposit',
+            hintLabel: 'Enter rent',
             value: basePost.attributes["Rent(monthly)"] ?? "",
           onChanged:(newValues) {
             setState(() {

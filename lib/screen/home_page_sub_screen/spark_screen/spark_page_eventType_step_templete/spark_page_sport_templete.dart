@@ -16,7 +16,7 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
         children: [
           NoteCard(message: 'What kind of exercise are you planning to do?'),
           SparkupSingleChoose(
-            label: 'Select sport type',
+            label: 'Sport type',
             hintlabel:'Please select sport type',
             availableTags: sportType,
             onChanged: (selectedSport) {
@@ -38,8 +38,8 @@ List<Step> createSportSteps(int currentStep, BasePost basePost, Function setStat
             },
           ),
           Textfield(
-            label: 'Winning prize',
-            hintLabel: 'Enter winning prize',
+            label: 'Prize',
+            hintLabel: 'Enter prize',
             maxLine: 1,
             value: basePost.attributes["Winning prize"] ?? "",
             onChanged: (newValue) {

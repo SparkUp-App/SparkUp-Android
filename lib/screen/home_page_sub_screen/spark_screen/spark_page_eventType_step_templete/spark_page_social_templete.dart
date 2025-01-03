@@ -20,8 +20,8 @@ List<Step> createSocialSteps(int currentStep, BasePost basePost, Function setSta
         children: [
           NoteCard(message: 'Please briefly introduce your activity.'),
           Textfield(
-            label: 'Your activity',
-            hintLabel: 'Please desribe Your activity',
+            label: 'Introduction of your activity', 
+            hintLabel: 'Enter introduction',
             maxLine: 5,
             value: basePost.attributes["Your activity"] ?? "",
             onChanged: (newValue) {
@@ -54,7 +54,7 @@ List<Step> createSocialSteps(int currentStep, BasePost basePost, Function setSta
           NoteCard(message: "What kind of participants are you looking for ?"),
           Textfield(
             label: 'Requirements for participants',
-            hintLabel: 'Enter requirements for participants',
+            hintLabel: 'Enter requirements',
             maxLine: 4,
             value: basePost.attributes["Requirements for participants"] ?? "",
             onChanged: (newValue) {
