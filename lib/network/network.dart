@@ -51,7 +51,26 @@ class Network {
         "status": "error",
         "data": {"message": "Connection Error"}
       };
-    } on Error catch (e) {
+    } on HandshakeException catch (e) {
+      debugPrint("HandshakeException: $e");
+      return {
+        "status": "error",
+        "data": {"message": "Connection Error"}
+      };
+    } on http.ClientException catch (e){
+      debugPrint("ClientException: $e");
+      return {
+        "status" : "error",
+        "data" : {"message" : "Connection Error"}
+      };
+    }
+    on Error catch (e) {
+      debugPrint("Error: $e");
+      return {
+        "status": "error",
+        "data": {"message": "Error"}
+      };
+    } catch (e){
       debugPrint("Error: $e");
       return {
         "status": "error",

@@ -3,6 +3,7 @@ import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card.dart';
 import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
@@ -38,16 +39,61 @@ class _ParticipatedPageState extends State<ParticipatedPage> {
         pathMid: ["${widget.userId}"],
         data: {"page": page, "per_page": perPage});
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout error",
+                    content:
+                        "The response time is too long, please check the connection and try againg later."));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection error",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local error",
+                    content:
+                        "An unexpected local error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server error",
+                    content:
+                        "An unexpected server error occured, please contact us or try againg later."));
+            break;
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occured, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
-    } else {
-      //TODO Request Failed Process
     }
 
     isLoading = false;
@@ -66,14 +112,61 @@ class _ParticipatedPageState extends State<ParticipatedPage> {
         pathMid: ["${widget.userId}"],
         data: {"page": page, "per_page": perPage});
 
-    if (response["status"] == "success") {
-      List<Map> postList = List<Map>.from(response["data"]["posts"]);
-      for (var post in postList) {
-        receivedPostList.add(ListReceivePost.initfromData(post));
+    if (context.mounted) {
+      if (response["status"] == "success") {
+        List<Map> postList = List<Map>.from(response["data"]["posts"]);
+        for (var post in postList) {
+          receivedPostList.add(ListReceivePost.initfromData(post));
+        }
+        pages = response["data"]["pages"];
+        noMoreData = page >= pages;
+        page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout error",
+                    content:
+                        "The response time is too long, please check the connection and try againg later."));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection error",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local error",
+                    content:
+                        "An unexpected local error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server error",
+                    content:
+                        "An unexpected server error occured, please contact us or try againg later."));
+            break;
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occured, please contact us or try again later."));
       }
-      pages = response["data"]["pages"];
-      noMoreData = page >= pages;
-      page++;
     }
 
     isLoading = false;

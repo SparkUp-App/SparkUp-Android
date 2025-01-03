@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:spark_up/common_widget/event_card_skeleton.dart';
 import 'package:spark_up/common_widget/no_more_data.dart';
 import 'package:spark_up/common_widget/rating_person_skeleton.dart';
 import 'package:spark_up/common_widget/spark_Icon.dart';
@@ -19,7 +16,8 @@ class TorateTag extends StatefulWidget {
   State<TorateTag> createState() => _TorateTagState();
 }
 
-class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixin {
+class _TorateTagState extends State<TorateTag>
+    with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
   bool noMoreData = false;
   int page = 1, pages = 0, perPage = 20;
@@ -32,7 +30,8 @@ class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixi
     referenceableList = [];
     getReferenceableList();
     _scrollController.addListener(() {
-      if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.offset ==
+          _scrollController.position.maxScrollExtent) {
         getReferenceableList();
       }
     });
@@ -69,13 +68,51 @@ class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixi
         page++;
         pages = response["data"]["pages"];
         noMoreData = page > pages;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout error",
+                    content:
+                        "The response time is too long, please check the connection and try againg later."));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection error",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local error",
+                    content:
+                        "An unexpected local error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server error",
+                    content:
+                        "An unexpected server error occured, please contact us or try againg later."));
+            break;
+        }
       } else {
         showDialog(
-          context: context,
-          builder: (context) => const SystemMessage(
-            content: "Something Went Wrong Please Try Again Later",
-          ),
-        );
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occured, please contact us or try again later."));
       }
     }
 
@@ -86,7 +123,7 @@ class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (!referenceableList.isEmpty||isLoading) {
+    if (!referenceableList.isEmpty || isLoading) {
       return RefreshIndicator(
         child: SingleChildScrollView(
           controller: _scrollController,
@@ -140,7 +177,6 @@ class _TorateTagState extends State<TorateTag> with AutomaticKeepAliveClientMixi
           ),
         ),
       );
-      
     }
   }
 }
@@ -200,13 +236,51 @@ class _RateCardState extends State<RateCard> {
           builder: (context) => const SystemMessage(content: "Rate Successful"),
         );
         rateComplete = true;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Rate Failed",
+                    content:
+                        "The response time is too long, please check the connection and try againg later."));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Rate Falied",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Rate Failed",
+                    content:
+                        "An unexpected local error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Rate Failed",
+                    content:
+                        "An unexpected server error occured, please contact us or try againg later."));
+            break;
+        }
       } else {
         showDialog(
-          context: context,
-          builder: (context) => const SystemMessage(
-            content: "Something Went Wrong\nPlease Try Again Later",
-          ),
-        );
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Rate Failed",
+                content:
+                    "An unexpected error occured, please contact us or try again later."));
       }
     }
 

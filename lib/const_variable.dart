@@ -19,7 +19,7 @@ List<String> liveList = ['Apartment', 'House','Shared Accommodation','Suite'];
 List<String> liveGenderList = ['Male','Female','No limit'];
 //Phone Number Checker 10 ~ 15 Digits
 RegExp phoneRegex = RegExp(r'^\d{10,15}$');
-RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{3,}$');
 
 enum Gender{

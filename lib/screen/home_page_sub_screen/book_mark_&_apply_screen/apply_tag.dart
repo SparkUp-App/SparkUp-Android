@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spark_up/common_widget/empty_view.dart';
 import 'package:spark_up/common_widget/event_card.dart';
+import 'package:spark_up/common_widget/system_message.dart';
 import 'package:spark_up/data/list_receive_post.dart';
 import 'package:spark_up/network/network.dart';
 import 'package:spark_up/network/path/user_path.dart';
@@ -53,6 +54,51 @@ class _ApplyTagState extends State<ApplyTag>
         pages = response["data"]["pages"];
         isEnd = page >= pages;
         page++;
+      } else if (response["status"] == "error") {
+        switch (response["data"]["message"]) {
+          case "Timeout Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Timeout error",
+                    content:
+                        "The response time is too long, please check the connection and try againg later."));
+            break;
+          case "Connection Error":
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Connection error",
+                    content:
+                        "The connection is unstable, please check the connection and try again later."));
+            break;
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Local error",
+                    content:
+                        "An unexpected local error occured, please contact us or try again later."));
+            break;
+        }
+      } else if (response["status"] == "faild") {
+        switch (response["status_code"]) {
+          default:
+            showDialog(
+                context: context,
+                builder: (context) => const SystemMessage(
+                    title: "Server error",
+                    content:
+                        "An unexpected server error occured, please contact us or try againg later."));
+            break;
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => const SystemMessage(
+                title: "Error",
+                content:
+                    "An unexpected error occured, please contact us or try again later."));
       }
     }
 
