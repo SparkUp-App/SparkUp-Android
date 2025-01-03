@@ -326,14 +326,39 @@ class _LoginPageState extends State<LoginPage> {
                                                     .initialProfileDataPage);
                                           }
                                           debugPrint("Login success");
-                                        } else {
+                                        } else if(response["status"] == "error"){
+                                          switch (response["data"]["message"]){
+                                            case "Timeout Error":
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed", content: "The response time is too long, pleas check the connection and try again later."));
+                                              break;
+                                            case "Connection Error":
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed", content: "The connection is unstable, please check the connection and try again later."));
+                                              break;
+                                            default:
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed", content: "An unexpected local error occured, please contact us or try again later."));
+                                              break;
+                                          }
+                                        } else if (response["status"] == "faild"){
+                                          switch (response["status_code"]){
+                                            case 401:
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed", content: "No user found.\nPlease check the email and password."));
+                                              break;
+                                            case 400:
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed", content: "No user found. \nPlease check the email and password."));
+                                              break;
+                                            default:
+                                              showDialog(context: context, builder: (context) => const SystemMessage(title: "Login Failed",content: "An unexpected server error occured, please contact us or try again later."));
+                                              break;
+                                          }
+                                        }
+                                        else {
                                           showDialog(
                                               context: context,
                                               builder: (context) =>
                                                   const SystemMessage(
                                                       title: "Login Failed",
                                                       content:
-                                                          "No user found. \nPlease check the email and password."));
+                                                          "An unexpected error occured, please contact us or try again later."));
                                         }
                                       }
                                     },
