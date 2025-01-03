@@ -46,18 +46,18 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
             },
           ),
           MultiInput(
-            label: 'Furniture and Equipment',
-            hintLabel: 'Enter Entry some of it',
-            values: basePost.attributes["Furniture and Equipment"]?? [],
+            label: 'Furniture and equipment',
+            hintLabel: 'Enter something',
+            values: basePost.attributes["Furniture and equipment"]?? [],
           onChanged:(newValues) {
             setState(() {
-              basePost.attributes["Furniture and Equipment"] = newValues;
+              basePost.attributes["Furniture and equipment"] = newValues;
             });
           },
           ),
           MultiInput(
             label: 'Amenities',
-            hintLabel: 'Enter Entry some of it',
+            hintLabel: 'Enter something',
             values: basePost.attributes["Amenities"]?? [],
           onChanged:(newValues) {
             setState(() {
@@ -77,7 +77,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
         children: [
           NoteCard(message: "What kind of roommate are you looking for ?"),
           CustomDropdown(
-              label: 'Gender',
+              label: 'Select gender',
               value: basePost.attributes["Gender"],
               options: liveGenderList,
               onChanged: (newValue) {
@@ -100,7 +100,7 @@ List<Step> createRoommateSteps(int currentStep, BasePost basePost, Function setS
           ),
           Textfield(
             label: 'Lifestyle',
-            hintLabel: 'Enter Lifestyle',
+            hintLabel: 'Enter lifestyle',
             maxLine: 3,
             value: basePost.attributes["Lifestyle"] ?? "",
             onChanged: (newValue) {
