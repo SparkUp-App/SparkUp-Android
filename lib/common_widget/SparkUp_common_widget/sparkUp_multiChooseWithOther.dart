@@ -128,7 +128,7 @@ class _SparkupSingleChooseState extends State<SparkupSingleChoose> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _selectedTag ?? 'Please choose ${widget.label}',
+                    _selectedTag ?? '${widget.label}',
                     style: TextStyle(
                       color: _selectedTag != null ? Colors.black : Colors.grey,
                     ),
